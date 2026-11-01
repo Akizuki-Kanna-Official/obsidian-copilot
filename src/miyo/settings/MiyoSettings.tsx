@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import { Button } from "@/components/ui/button";
 import { SegmentedControl } from "@/components/ui/segmented-control";
 import { SettingSection } from "@/components/ui/setting-section";
@@ -59,24 +60,27 @@ const RelayTag: React.FC = () => (
 function connectorStatusText(status: CapabilityStatus): string {
   switch (status) {
     case "available":
-      return "Connected — tunnel & sign-in active";
+      return t("Connected — tunnel & sign-in active", "已连接 — 隧道和登录均有效");
     case "unavailable":
-      return "Not set up — finish tunnel & sign-in in Miyo";
+      return t(
+        "Not set up — finish tunnel & sign-in in Miyo",
+        "未设置 — 请在 Miyo 中完成隧道配置和登录"
+      );
     default:
-      return "Checking…";
+      return t("Checking…", "正在检查…");
   }
 }
 
 function chatSyncStatusText(status: CapabilityStatus): string {
   switch (status) {
     case "available":
-      return "Ready · chats indexed";
+      return t("Ready · chats indexed", "已就绪 · 聊天已建立索引");
     case "syncing":
-      return "Syncing chats…";
+      return t("Syncing chats…", "正在同步聊天…");
     case "unavailable":
-      return "Not set up — add chat sources in Miyo";
+      return t("Not set up — add chat sources in Miyo", "未设置 — 请在 Miyo 中添加聊天来源");
     default:
-      return "Checking…";
+      return t("Checking…", "正在检查…");
   }
 }
 
@@ -323,7 +327,12 @@ export const MiyoSettings: React.FC = () => {
       return "error";
     }
     if (outcome === "error" && mountedRef.current) {
-      new Notice("Couldn't confirm this vault with Miyo. Please try again.");
+      new Notice(
+        t(
+          "Couldn't confirm this vault with Miyo. Please try again.",
+          "无法向 Miyo 确认此知识库，请重试。"
+        )
+      );
     }
     return outcome;
   }, [attemptConnection]);
@@ -358,8 +367,10 @@ export const MiyoSettings: React.FC = () => {
       if (outcome === "unreachable")
         setConnectionError({
           endpoint: `remote:${getSettings().miyoServerUrl}`,
-          message:
+          message: t(
             "Couldn't connect to this server. Check the address, access, and that Miyo is running, then retry.",
+            "无法连接此服务器。请检查地址、访问权限及 Miyo 是否正在运行，然后重试。"
+          ),
         });
       return;
     }
@@ -397,7 +408,10 @@ export const MiyoSettings: React.FC = () => {
       } catch {
         setConnectionError({
           endpoint: `${mode}:${urlDraft}`,
-          message: "Enter a valid HTTP or HTTPS server address, without embedded credentials.",
+          message: t(
+            "Enter a valid HTTP or HTTPS server address, without embedded credentials.",
+            "请输入有效的 HTTP 或 HTTPS 服务器地址，地址中不能包含登录凭据。"
+          ),
         });
         return;
       }
@@ -479,7 +493,9 @@ export const MiyoSettings: React.FC = () => {
             onClick={() => void saveAndConnect()}
             disabled={refreshing}
           >
-            {refreshing && !settings.enableMiyo ? "Connecting…" : "Connect"}
+            {refreshing && !settings.enableMiyo
+              ? t("Connecting…", "正在连接…")
+              : t("Connect", "连接")}
           </Button>
         ) : (
           <MiyoConnectionControl
@@ -491,7 +507,9 @@ export const MiyoSettings: React.FC = () => {
       </MiyoConnectionPanel>
 
       <div className="tw-space-y-2">
-        <div className="tw-text-xs tw-font-semibold tw-text-muted">Powered by Miyo</div>
+        <div className="tw-text-xs tw-font-semibold tw-text-muted">
+          {t("Powered by Miyo", "由 Miyo 提供支持")}
+        </div>
 
         <MiyoAvailabilityNotice
           enabled={settings.enableMiyo}
@@ -511,14 +529,20 @@ export const MiyoSettings: React.FC = () => {
                 aria-disabled={!searchToggleUsable}
               >
                 <CapabilityRow
-                  title="Semantic search for agents"
-                  description="Gives Copilot agents a Miyo search tool to find notes by meaning, not just keywords."
+                  title={t("Semantic search for agents", "智能体语义搜索")}
+                  description={t(
+                    "Gives Copilot agents a Miyo search tool to find notes by meaning, not just keywords.",
+                    "为 Copilot 智能体提供 Miyo 搜索工具，按语义查找笔记，而不只是匹配关键词。"
+                  )}
                   control={
                     <SettingSwitch
                       checked={settings.enableMiyoSearchSkill}
                       onCheckedChange={(next) => updateSetting("enableMiyoSearchSkill", next)}
                       disabled={!searchToggleUsable}
-                      aria-label="Enable Miyo semantic search for agents"
+                      aria-label={t(
+                        "Enable Miyo semantic search for agents",
+                        "为智能体启用 Miyo 语义搜索"
+                      )}
                     />
                   }
                 />
@@ -535,14 +559,17 @@ export const MiyoSettings: React.FC = () => {
               {searchActive && (
                 <div>
                   <CapabilityRow
-                    title="Search scope"
-                    description="Only the current vault, or everything Miyo has indexed."
+                    title={t("Search scope", "搜索范围")}
+                    description={t(
+                      "Only the current vault, or everything Miyo has indexed.",
+                      "仅搜索当前知识库，或搜索 Miyo 已建立索引的全部内容。"
+                    )}
                     control={
                       <SegmentedControl
-                        aria-label="Search scope"
+                        aria-label={t("Search scope", "搜索范围")}
                         options={[
-                          { label: "Current vault", value: "current" },
-                          { label: "Unrestricted", value: "unrestricted" },
+                          { label: t("Current vault", "当前知识库"), value: "current" },
+                          { label: t("Unrestricted", "不限范围"), value: "unrestricted" },
                         ]}
                         value={settings.miyoSearchAll ? "unrestricted" : "current"}
                         onChange={(value) =>
@@ -557,7 +584,7 @@ export const MiyoSettings: React.FC = () => {
                       folders={shownSearchFolders?.folders ?? undefined}
                       error={
                         shownSearchFolders?.folders === null
-                          ? "Couldn't load your Miyo folders."
+                          ? t("Couldn't load your Miyo folders.", "无法加载你的 Miyo 文件夹。")
                           : undefined
                       }
                       selected={settings.miyoExtraSearchFolders}
@@ -571,8 +598,11 @@ export const MiyoSettings: React.FC = () => {
 
               {searchActive && (
                 <CapabilityRow
-                  title="Maximum results"
-                  description="The most notes one search returns to the agent. Fewer uses less context."
+                  title={t("Maximum results", "结果数量上限")}
+                  description={t(
+                    "The most notes one search returns to the agent. Fewer uses less context.",
+                    "一次搜索返回给智能体的笔记数量上限。数量越少，占用的上下文越少。"
+                  )}
                   control={
                     <SettingSlider
                       value={settings.miyoSearchMaxResults}
@@ -589,8 +619,11 @@ export const MiyoSettings: React.FC = () => {
 
               {searchActive && (
                 <CapabilityRow
-                  title="Search variants"
-                  description="How many rephrasings of the question one search can add."
+                  title={t("Search variants", "搜索改写次数")}
+                  description={t(
+                    "How many rephrasings of the question one search can add.",
+                    "一次搜索最多可额外使用多少种问题改写。"
+                  )}
                   control={
                     <SettingSlider
                       value={settings.miyoSearchMaxVariants}
@@ -606,13 +639,21 @@ export const MiyoSettings: React.FC = () => {
               )}
 
               <MiyoStatusRow
-                title="Search chat"
-                description="Search your ChatGPT / Claude chats indexed by Miyo."
+                title={t("Search chat", "搜索聊天记录")}
+                description={t(
+                  "Search your ChatGPT / Claude chats indexed by Miyo.",
+                  "搜索 Miyo 已建立索引的 ChatGPT / Claude 聊天记录。"
+                )}
                 status={status.chatSync}
                 statusText={chatSyncStatusText(status.chatSync)}
-                actionLabel="Manage in Miyo"
+                actionLabel={t("Manage in Miyo", "在 Miyo 中管理")}
                 remoteInstruction={
-                  connectedRemote ? "Manage chat sources on the Miyo host." : undefined
+                  connectedRemote
+                    ? t(
+                        "Manage chat sources on the Miyo host.",
+                        "请在运行 Miyo 的主机上管理聊天来源。"
+                      )
+                    : undefined
                 }
                 onAction={() => window.open(MIYO_CHATS_DEEPLINK_URL, "_blank")}
                 disabled={!capabilitiesEnabled}
@@ -629,18 +670,26 @@ export const MiyoSettings: React.FC = () => {
           </div>
         </div>
       </div>
-      <SettingSection label="External apps">
+      <SettingSection label={t("External apps", "外部应用")}>
         <MiyoStatusRow
           title={
             <>
-              Connector <RelayTag />
+              {t("Connector", "连接器")}
+              <RelayTag />
             </>
           }
-          description="Let ChatGPT / Claude access files through Miyo. Separate from Copilot’s connection above."
+          description={t(
+            "Let ChatGPT / Claude access files through Miyo. Separate from Copilot’s connection above.",
+            "允许 ChatGPT / Claude 通过 Miyo 访问文件。此连接独立于上方的 Copilot 连接。"
+          )}
           status={status.connector}
           statusText={connectorStatusText(status.connector)}
-          actionLabel="Set up in Miyo"
-          remoteInstruction={connectedRemote ? "Set up Relay on the Miyo host." : undefined}
+          actionLabel={t("Set up in Miyo", "在 Miyo 中设置")}
+          remoteInstruction={
+            connectedRemote
+              ? t("Set up Relay on the Miyo host.", "请在运行 Miyo 的主机上设置 Relay。")
+              : undefined
+          }
           onAction={() => window.open(MIYO_CONNECT_DEEPLINK_URL, "_blank")}
         />
       </SettingSection>

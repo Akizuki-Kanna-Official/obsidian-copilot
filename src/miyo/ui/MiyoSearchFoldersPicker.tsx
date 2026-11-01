@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import type { MiyoSearchFolderOption } from "@/miyo/miyoUtils";
@@ -29,7 +30,9 @@ export function MiyoSearchFoldersPicker({
 
   return (
     <div className="tw-space-y-2 tw-pb-4">
-      <div className="tw-text-xs tw-text-muted">Also search these Miyo folders</div>
+      <div className="tw-text-xs tw-text-muted">
+        {t("Also search these Miyo folders", "同时搜索以下 Miyo 文件夹")}
+      </div>
       {error ? (
         <div className="tw-flex tw-items-center tw-gap-1.5 tw-text-xs tw-text-error">
           <XCircle className="tw-size-3.5 tw-shrink-0" />
@@ -38,10 +41,12 @@ export function MiyoSearchFoldersPicker({
       ) : !folders ? (
         <div className="tw-flex tw-items-center tw-gap-2 tw-text-xs tw-text-muted">
           <Loader2 className="tw-size-3.5 tw-shrink-0 tw-animate-spin" />
-          <span>Loading Miyo folders…</span>
+          <span>{t("Loading Miyo folders…", "正在加载 Miyo 文件夹…")}</span>
         </div>
       ) : rows.length === 0 ? (
-        <div className="tw-text-xs tw-text-muted">Miyo has no other folders yet.</div>
+        <div className="tw-text-xs tw-text-muted">
+          {t("Miyo has no other folders yet.", "Miyo 尚无其他文件夹。")}
+        </div>
       ) : (
         <div className="tw-flex tw-flex-col tw-gap-2">
           {rows.map((row) => (
@@ -61,8 +66,8 @@ export function MiyoSearchFoldersPicker({
                 }
               />
               <span className="tw-truncate">{row.name}</span>
-              {row.isChat && <Badge variant="secondary">Chat</Badge>}
-              {row.missing && <Badge variant="outline">Not in Miyo</Badge>}
+              {row.isChat && <Badge variant="secondary">{t("Chat", "聊天")}</Badge>}
+              {row.missing && <Badge variant="outline">{t("Not in Miyo", "不在 Miyo 中")}</Badge>}
             </label>
           ))}
         </div>

@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import { processCommandPrompt } from "@/commands/customCommandUtils";
 import { MenuCommandModal, type ContentState } from "@/components/command-ui";
 import { useApp } from "@/context";
@@ -156,14 +157,20 @@ export function CustomCommandChatModalContent({
       // An explicit command model overrides the default, so setting a default cannot repair it. https://github.com/Brevilabs/obsidian-copilot-private/issues/616
       new Notice(
         command.modelKey
-          ? "This command's model is unavailable. Edit the command in Settings → Copilot → Command to choose another, then rerun."
-          : "Configure a model in Settings → Copilot → Command, then rerun the command."
+          ? t(
+              "This command's model is unavailable. Edit the command in Settings → Copilot → Command to choose another, then rerun.",
+              "此命令使用的模型不可用。请前往“设置 → Copilot → 命令”选择其他模型，然后重新运行。"
+            )
+          : t(
+              "Configure a model in Settings → Copilot → Command, then rerun the command.",
+              "请前往“设置 → Copilot → 命令”配置模型，然后重新运行命令。"
+            )
       );
       setIsLoading(false);
     },
     onNonAbortError: (error) => {
       logError("Error generating response:", error);
-      new Notice("Error generating response. Please try again.");
+      new Notice(t("Error generating response. Please try again.", "生成回复时出错，请重试。"));
       setIsLoading(false);
     },
   });
@@ -213,7 +220,7 @@ export function CustomCommandChatModalContent({
       } catch (error) {
         logError("Error running command prompt:", error);
         if (isMountedRef.current) {
-          new Notice("Failed to send message. Please try again.");
+          new Notice(t("Failed to send message. Please try again.", "发送消息失败，请重试。"));
         }
       } finally {
         if (isMountedRef.current) {
@@ -247,7 +254,7 @@ export function CustomCommandChatModalContent({
     if (!followUpValue.trim()) return;
     // Preserve the instruction while the user repairs an unavailable selection. https://github.com/Brevilabs/obsidian-copilot-private/issues/616
     if (!resolvedModel) {
-      new Notice("Select a model to continue.");
+      new Notice(t("Select a model to continue.", "请选择模型以继续。"));
       return;
     }
 
@@ -297,9 +304,9 @@ export function CustomCommandChatModalContent({
     const cleaned = cleanMessageForCopy(text);
     try {
       await navigator.clipboard.writeText(cleaned);
-      new Notice("Copied to clipboard");
+      new Notice(t("Copied to clipboard", "已复制到剪贴板"));
     } catch {
-      new Notice("Failed to copy to clipboard");
+      new Notice(t("Failed to copy to clipboard", "复制到剪贴板失败"));
     }
   }, [editedText, finalText, streamingText]);
 
@@ -518,7 +525,7 @@ export class CustomCommandChatModal {
 
     const handleReplace = (message: string) => {
       if (!this.replaceGuard) {
-        new Notice("No selection to replace.");
+        new Notice(t("No selection to replace.", "未选中要替换的内容。"));
         return;
       }
 
@@ -526,11 +533,11 @@ export class CustomCommandChatModal {
       const result = this.replaceGuard.replace(cleanedMessage);
 
       if (!result.ok) {
-        new Notice(result.message ?? "Cannot replace.");
+        new Notice(result.message ?? t("Cannot replace.", "无法替换。"));
         return;
       }
 
-      new Notice("Message replaced in the active note.");
+      new Notice(t("Message replaced in the active note.", "已替换当前笔记中的内容。"));
       this.close();
     };
 

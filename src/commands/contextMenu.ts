@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import { getCommandId, sortCommandsByOrder } from "@/commands/customCommandUtils";
 import { getCachedCustomCommands } from "@/commands/state";
 import { COMMAND_IDS } from "@/constants";
@@ -31,13 +32,13 @@ export function registerContextMenu(menu: Menu, obsidianApp: App): void {
     if (!submenu) return;
 
     submenu.addItem((subItem) => {
-      subItem.setTitle("Quick Ask").onClick(() => {
+      subItem.setTitle(t("Quick Ask", "快捷提问")).onClick(() => {
         execute(`copilot:${COMMAND_IDS.TRIGGER_QUICK_ASK}`);
       });
     });
 
     submenu.addItem((subItem) => {
-      subItem.setTitle("Trigger quick command").onClick(() => {
+      subItem.setTitle(t("Trigger quick command", "运行快捷命令")).onClick(() => {
         execute(`copilot:${COMMAND_IDS.TRIGGER_QUICK_COMMAND}`);
       });
     });

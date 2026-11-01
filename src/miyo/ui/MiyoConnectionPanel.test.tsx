@@ -1,3 +1,4 @@
+import * as obsidian from "obsidian";
 import { fireEvent, render, screen } from "@testing-library/react";
 import React from "react";
 import { MiyoConnectionPanel, type MiyoConnectionPanelProps } from "./MiyoConnectionPanel";
@@ -25,6 +26,21 @@ function renderPanel(overrides: Partial<MiyoConnectionPanelProps> = {}) {
 
 describe("MiyoConnectionPanel", () => {
   describe("MiyoConnectionPanel()", () => {
+    it("localizes controls while preserving server addresses and connection mode values", () => {
+      const language = jest.spyOn(obsidian, "getLanguage").mockReturnValue("zh");
+      try {
+        const props = renderPanel({ mode: "remote", address: "http://miyo-home:8742" });
+        expect(screen.getByRole("status").textContent).toBe("已连接");
+        expect(screen.getByLabelText<HTMLInputElement>("服务器地址").value).toBe(
+          "http://miyo-home:8742"
+        );
+        fireEvent.click(screen.getByRole("radio", { name: /本机/ }));
+        expect(props.onModeChange).toHaveBeenCalledWith("local");
+      } finally {
+        language.mockRestore();
+      }
+    });
+
     it(`attaches Connected to the active local title while browsing remote (${ISSUE_URL})`, () => {
       renderPanel({ mode: "remote" });
       expect(screen.getByRole("status").textContent).toBe("Connected");

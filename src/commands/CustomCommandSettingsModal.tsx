@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import { App, Modal } from "obsidian";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -56,7 +57,7 @@ function CustomCommandSettingsModalContent({
     }
 
     if (!command.content.trim()) {
-      newErrors.content = "Prompt is required";
+      newErrors.content = t("Prompt is required", "请输入提示词");
     }
 
     if (Object.keys(newErrors).length > 0) {
@@ -70,24 +71,24 @@ function CustomCommandSettingsModalContent({
   return (
     <div className="tw-flex tw-flex-col tw-gap-4 tw-p-4">
       <div className="tw-flex tw-flex-col tw-gap-2">
-        <Label htmlFor="title">Name</Label>
+        <Label htmlFor="title">{t("Name", "名称")}</Label>
         <Input
           id="title"
           value={command.title}
           onChange={(e) => handleUpdate("title", e.target.value)}
-          placeholder="Enter command name"
+          placeholder={t("Enter command name", "输入命令名称")}
         />
         {errors.title && <div className="tw-text-sm tw-text-error">{errors.title}</div>}
       </div>
 
       <div className="tw-flex tw-flex-col tw-gap-2">
-        <Label htmlFor="content">Prompt</Label>
+        <Label htmlFor="content">{t("Prompt", "提示词")}</Label>
         <CustomPromptSyntaxInstruction />
         <Textarea
           id="content"
           value={command.content}
           onChange={(e) => handleUpdate("content", e.target.value)}
-          placeholder="Enter command prompt"
+          placeholder={t("Enter command prompt", "输入命令提示词")}
           className="tw-min-h-[200px]"
         />
         {errors.content && <div className="tw-text-sm tw-text-error">{errors.content}</div>}
@@ -105,7 +106,7 @@ function CustomCommandSettingsModalContent({
           checked={command.showInContextMenu}
           onCheckedChange={(checked) => handleUpdate("showInContextMenu", checked)}
         />
-        <Label htmlFor="showInContextMenu">Show in context menu</Label>
+        <Label htmlFor="showInContextMenu">{t("Show in context menu", "在右键菜单中显示")}</Label>
       </div>
 
       <div className="tw-flex tw-items-center tw-gap-2">
@@ -114,15 +115,15 @@ function CustomCommandSettingsModalContent({
           checked={command.showInSlashMenu}
           onCheckedChange={(checked) => handleUpdate("showInSlashMenu", checked)}
         />
-        <Label htmlFor="showInSlashMenu">Show in slash menu</Label>
+        <Label htmlFor="showInSlashMenu">{t("Show in slash menu", "在斜杠菜单中显示")}</Label>
       </div>
 
       <div className="tw-flex tw-justify-end tw-gap-2">
         <Button variant="secondary" onClick={onCancel}>
-          Cancel
+          {t("Cancel", "取消")}
         </Button>
         <Button variant="default" onClick={handleSubmit}>
-          Save
+          {t("Save", "保存")}
         </Button>
       </div>
     </div>
@@ -140,7 +141,7 @@ export class CustomCommandSettingsModal extends Modal {
   ) {
     super(app);
     // @ts-ignore
-    this.setTitle("Edit command");
+    this.setTitle(t("Edit command", "编辑命令"));
   }
 
   onOpen() {

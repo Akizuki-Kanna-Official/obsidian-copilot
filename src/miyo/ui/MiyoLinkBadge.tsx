@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import { MiyoLogo } from "@/miyo/ui/MiyoLogo";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import React from "react";
@@ -17,11 +18,11 @@ export const MiyoLinkBadge: React.FC = () => {
         >
           <MiyoLogo className="tw-size-3 tw-text-normal" />
           <span id={labelId} className="tw-hidden">
-            Found by Miyo
+            {t("Found by Miyo", "由 Miyo 找到")}
           </span>
         </span>
       </TooltipTrigger>
-      <TooltipContent>Found by Miyo</TooltipContent>
+      <TooltipContent>{t("Found by Miyo", "由 Miyo 找到")}</TooltipContent>
     </Tooltip>
   );
 };

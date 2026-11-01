@@ -1,3 +1,4 @@
+import * as obsidian from "obsidian";
 import { processPrompt } from "@/commands/customCommandUtils";
 import { validateCommandName } from "@/commands/customCommandUtils";
 import { CustomCommand } from "@/commands/type";
@@ -17,6 +18,7 @@ import { logWarn } from "@/logger";
 import { mockTFile } from "@/__tests__/mockObsidian";
 
 jest.mock("obsidian", () => ({
+  getLanguage: jest.fn(() => "en"),
   Notice: jest.fn(),
   TFile: jest.fn(),
   Vault: jest.fn(),
@@ -862,6 +864,16 @@ describe("customCommandUtils", () => {
   });
 
   describe("validateCommandName()", () => {
+    it("returns Chinese validation copy without changing the supplied command name", () => {
+      const language = jest.spyOn(obsidian, "getLanguage").mockReturnValue("zh");
+      try {
+        expect(validateCommandName("", [])).toBe("命令名称不能为空");
+        expect(validateCommandName("My English command", [])).toBeNull();
+      } finally {
+        language.mockRestore();
+      }
+    });
+
     const baseCommands = [
       {
         title: "Command One",

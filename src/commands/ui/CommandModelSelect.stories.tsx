@@ -9,3 +9,12 @@ const meta = {
 export default meta;
 export const DefaultModel: StoryObj<CommandModelSelectProps> = { args: { value: "" } };
 export const ExplicitModel: StoryObj<CommandModelSelectProps> = { args: { value: "gpt4o" } };
+
+export const LongModelLabel: StoryObj<CommandModelSelectProps> = {
+  args: {
+    value: "custom-model",
+    options: [
+      { label: "团队自定义模型 / Team custom model (OpenAI-compatible)", value: "custom-model" },
+    ],
+  },
+};

@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import {
   COPILOT_COMMAND_CONTEXT_MENU_ENABLED,
   COPILOT_COMMAND_CONTEXT_MENU_ORDER,
@@ -44,11 +45,14 @@ export function validateCommandName(
   const trimmedName = name.trim();
 
   if (!trimmedName) {
-    return "Command name cannot be empty";
+    return t("Command name cannot be empty", "命令名称不能为空");
   }
 
   if (name !== trimmedName) {
-    return "Command name cannot have leading or trailing spaces";
+    return t(
+      "Command name cannot have leading or trailing spaces",
+      "命令名称的开头和结尾不能有空格"
+    );
   }
 
   if (currentCommandName && name === currentCommandName) {
@@ -58,11 +62,14 @@ export function validateCommandName(
   // eslint-disable-next-line no-control-regex -- command paths must reject embedded control bytes
   const invalidChars = /[#<>:"/\\|?*[\]^\x00-\x1F]/g;
   if (invalidChars.test(trimmedName)) {
-    return 'Command name contains invalid characters. Avoid using: < > : " / \\ | ? * [ ] ^';
+    return t(
+      'Command name contains invalid characters. Avoid using: < > : " / \\ | ? * [ ] ^',
+      '命令名称包含无效字符，请勿使用：< > : " / \\ | ? * [ ] ^'
+    );
   }
 
   if (commands.some((cmd) => cmd.title.toLowerCase() === trimmedName.toLowerCase())) {
-    return "A command with this name already exists";
+    return t("A command with this name already exists", "已存在同名命令");
   }
 
   return null;
@@ -243,7 +250,7 @@ async function extractVariablesFromPrompt(
           variableResult.files.push(activeNote);
         }
       } else {
-        new Notice("No active note found.");
+        new Notice(t("No active note found.", "未找到当前笔记。"));
       }
     } else if (variableNameLower === "activewebtab") {
       continue;

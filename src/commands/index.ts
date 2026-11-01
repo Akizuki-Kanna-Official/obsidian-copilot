@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import { logFileManager } from "@/logFileManager";
 import { FileCache } from "@/cache/fileCache";
 import { clearLegacyCaches } from "@/cache/legacyCaches";
@@ -100,7 +101,12 @@ export function registerCommands(plugin: CopilotPlugin, publish: PublishFile) {
     const tokenCount = await plugin.chainOwner
       .getCurrentChainManager()
       .chatModelManager.countTokens(selectedText);
-    new Notice(`Selected text contains ${wordCount} words and ${tokenCount} tokens.`);
+    new Notice(
+      t(
+        `Selected text contains ${wordCount} words and ${tokenCount} tokens.`,
+        `选中文本包含 ${wordCount} 个词和 ${tokenCount} 个词元。`
+      )
+    );
   });
 
   addCommand(plugin, COMMAND_IDS.COUNT_TOTAL_VAULT_TOKENS, async () => {
@@ -109,10 +115,10 @@ export function registerCommands(plugin: CopilotPlugin, publish: PublishFile) {
       const totalTokens = await plugin.chainOwner
         .getCurrentChainManager()
         .chatModelManager.countTokens(allContent);
-      new Notice(`Total tokens in your vault: ${totalTokens}`);
+      new Notice(t(`Total tokens in your vault: ${totalTokens}`, `知识库词元总数：${totalTokens}`));
     } catch (error) {
       logError("Error counting tokens: ", error);
-      new Notice("An error occurred while counting tokens.");
+      new Notice(t("An error occurred while counting tokens.", "统计词元时出错。"));
     }
   });
 
@@ -153,12 +159,14 @@ export function registerCommands(plugin: CopilotPlugin, publish: PublishFile) {
     }
 
     if (isSourceModeOn(plugin.app)) {
-      new Notice("Quick command is not available in source mode.");
+      new Notice(
+        t("Quick command is not available in source mode.", "源码模式下无法使用快捷命令。")
+      );
       return false;
     }
 
     if (!activeView || !activeView.editor) {
-      new Notice("No active editor found.");
+      new Notice(t("No active editor found.", "未找到当前编辑器。"));
       return false;
     }
 
@@ -166,7 +174,12 @@ export function registerCommands(plugin: CopilotPlugin, publish: PublishFile) {
     const selectedText = editor.getSelection();
 
     if (!selectedText.trim()) {
-      new Notice("Please select some text first. Selected text is required for quick commands.");
+      new Notice(
+        t(
+          "Please select some text first. Selected text is required for quick commands.",
+          "请先选中文本，快捷命令需要对选中的文本进行操作。"
+        )
+      );
       return false;
     }
 
@@ -187,7 +200,7 @@ export function registerCommands(plugin: CopilotPlugin, publish: PublishFile) {
       behaviorConfig: {
         autoExecuteOnOpen: false,
         hideContentAreaOnIdle: true,
-        commandLabel: "Quick Command",
+        commandLabel: t("Quick Command", "快捷命令"),
         commandIcon: null,
         showIncludeNoteContext: true,
         firstSubmitTransform: (input, includeNoteContext) =>
@@ -206,7 +219,12 @@ export function registerCommands(plugin: CopilotPlugin, publish: PublishFile) {
     addCommand(plugin, COMMAND_IDS.REFRESH_MIYO_INDEX, async () => {
       const settings = getSettings();
       if (!settings.enableMiyo) {
-        new Notice("Miyo is disconnected. Connect it in Copilot settings, then retry.");
+        new Notice(
+          t(
+            "Miyo is disconnected. Connect it in Copilot settings, then retry.",
+            "Miyo 未连接。请在 Copilot 设置中连接，然后重试。"
+          )
+        );
         return;
       }
       const customUrl = getMiyoCustomUrl(settings);
@@ -214,19 +232,36 @@ export function registerCommands(plugin: CopilotPlugin, publish: PublishFile) {
       // concrete recovery action instead of the generic unavailable message.
       // https://github.com/Brevilabs/obsidian-copilot-private/issues/282
       if (!isDesktopRuntime() && !customUrl) {
-        new Notice("A remote Miyo connection is required on mobile.");
+        new Notice(
+          t("A remote Miyo connection is required on mobile.", "移动端需要连接远程 Miyo 服务。")
+        );
         return;
       }
       try {
         await requestMiyoIndexRefresh(plugin.app);
-        new Notice("Miyo vault scan started. Open Miyo to check indexing progress.");
+        new Notice(
+          t(
+            "Miyo vault scan started. Open Miyo to check indexing progress.",
+            "已开始扫描 Miyo 知识库，请打开 Miyo 查看索引进度。"
+          )
+        );
       } catch (error) {
         logError("Failed to refresh the Miyo index:", error);
         if (error instanceof MiyoRequestError && error.status === 404) {
-          new Notice("This vault is not registered with Miyo. Register it in Miyo, then retry.");
+          new Notice(
+            t(
+              "This vault is not registered with Miyo. Register it in Miyo, then retry.",
+              "此知识库尚未注册到 Miyo。请先在 Miyo 中注册，然后重试。"
+            )
+          );
           return;
         }
-        new Notice("Miyo is unavailable. Open Miyo, then retry the refresh.");
+        new Notice(
+          t(
+            "Miyo is unavailable. Open Miyo, then retry the refresh.",
+            "Miyo 不可用。请打开 Miyo，然后重新刷新。"
+          )
+        );
       }
     });
   }
@@ -240,10 +275,10 @@ export function registerCommands(plugin: CopilotPlugin, publish: PublishFile) {
       await FileCache.getInstance<string>().clear(plugin.app.vault);
       await clearLegacyCaches(plugin.app);
 
-      new Notice("All Copilot caches cleared successfully");
+      new Notice(t("All Copilot caches cleared successfully", "已清除所有 Copilot 缓存"));
     } catch (error) {
       logError("Error clearing Copilot caches:", error);
-      new Notice("Failed to clear Copilot caches");
+      new Notice(t("Failed to clear Copilot caches", "清除 Copilot 缓存失败"));
     }
   });
 
@@ -253,36 +288,36 @@ export function registerCommands(plugin: CopilotPlugin, publish: PublishFile) {
       await logFileManager.openLogFile();
     } catch (error) {
       logError("Error creating Copilot log file:", error);
-      new Notice("Failed to create Copilot log file.");
+      new Notice(t("Failed to create Copilot log file.", "创建 Copilot 日志文件失败。"));
     }
   });
 
   addCommand(plugin, COMMAND_IDS.CLEAR_LOG_FILE, async () => {
     try {
       await logFileManager.clear();
-      new Notice("Copilot log cleared.");
+      new Notice(t("Copilot log cleared.", "已清除 Copilot 日志。"));
     } catch (error) {
       logError("Error clearing Copilot log file:", error);
-      new Notice("Failed to clear Copilot log file.");
+      new Notice(t("Failed to clear Copilot log file.", "清除 Copilot 日志文件失败。"));
     }
   });
 
   addEditorCommand(plugin, COMMAND_IDS.ADD_SELECTION_TO_CHAT_CONTEXT, async (editor: Editor) => {
     const selectedText = editor.getSelection();
     if (!selectedText) {
-      new Notice("No text selected");
+      new Notice(t("No text selected", "未选中文本"));
       return;
     }
 
     const activeFile = plugin.app.workspace.getActiveFile();
     if (!activeFile) {
-      new Notice("No active file");
+      new Notice(t("No active file", "没有当前文件"));
       return;
     }
 
     const selectionRange = editor.listSelections()[0];
     if (!selectionRange) {
-      new Notice("Could not determine selection range");
+      new Notice(t("Could not determine selection range", "无法确定选区范围"));
       return;
     }
 
@@ -306,7 +341,7 @@ export function registerCommands(plugin: CopilotPlugin, publish: PublishFile) {
 
   addCommand(plugin, COMMAND_IDS.ADD_WEB_SELECTION_TO_CHAT_CONTEXT, async () => {
     if (!isDesktopRuntime()) {
-      new Notice("Web selection is only available on desktop");
+      new Notice(t("Web selection is only available on desktop", "网页文本选区仅在桌面端可用"));
       return;
     }
 
@@ -318,13 +353,13 @@ export function registerCommands(plugin: CopilotPlugin, publish: PublishFile) {
       const leaf = service.getActiveLeaf() ?? service.getLastActiveLeaf();
 
       if (!leaf) {
-        new Notice("No active web tab found");
+        new Notice(t("No active web tab found", "未找到当前网页标签页"));
         return;
       }
 
       const selectedMarkdown = await service.getSelectedMarkdown(leaf);
       if (!selectedMarkdown.trim()) {
-        new Notice("No text selected in the web tab");
+        new Notice(t("No text selected in the web tab", "未在网页标签页中选中文本"));
         return;
       }
 
@@ -344,7 +379,7 @@ export function registerCommands(plugin: CopilotPlugin, publish: PublishFile) {
       await plugin.activateChatViewForContext();
     } catch (error) {
       logError("Error adding web selection to context:", error);
-      new Notice("Failed to get web selection");
+      new Notice(t("Failed to get web selection", "获取网页选区失败"));
     }
   });
 
@@ -370,7 +405,12 @@ export function registerCommands(plugin: CopilotPlugin, publish: PublishFile) {
   addCommand(plugin, COMMAND_IDS.DOWNLOAD_YOUTUBE_SCRIPT, async () => {
     const isPaidUser = await checkIsPaidUser(plugin.app, { trigger: "tool_call" });
     if (!isPaidUser) {
-      new Notice("Download YouTube transcript is a Copilot Plus feature");
+      new Notice(
+        t(
+          "Download YouTube transcript is a Copilot Plus feature",
+          "下载 YouTube 字幕是 Copilot Plus 功能"
+        )
+      );
       return;
     }
 
@@ -386,18 +426,18 @@ export function registerCommands(plugin: CopilotPlugin, publish: PublishFile) {
     }
 
     if (isSourceModeOn(plugin.app)) {
-      new Notice("Quick Ask is not available in source mode.");
+      new Notice(t("Quick Ask is not available in source mode.", "源码模式下无法使用快捷提问。"));
       return false;
     }
 
     if (!activeView || !activeView.editor) {
-      new Notice("No active editor found.");
+      new Notice(t("No active editor found.", "未找到当前编辑器。"));
       return false;
     }
 
     const view = activeView.editor.cm;
     if (!view) {
-      new Notice("Could not access CodeMirror editor.");
+      new Notice(t("Could not access CodeMirror editor.", "无法访问 CodeMirror 编辑器。"));
       return false;
     }
 

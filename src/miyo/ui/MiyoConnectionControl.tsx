@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import { Button } from "@/components/ui/button";
 import { TriangleAlert } from "lucide-react";
 import React from "react";
@@ -30,8 +31,11 @@ export const MiyoAvailabilityNotice: React.FC<MiyoAvailabilityNoticeProps> = ({
       <TriangleAlert className="tw-size-4 tw-shrink-0 tw-text-warning" />
       <span className="tw-min-w-0 tw-flex-1">
         {enabled
-          ? "Miyo is unavailable. Check your server, then retry the connection above."
-          : "Connect to Miyo to configure these capabilities."}
+          ? t(
+              "Miyo is unavailable. Check your server, then retry the connection above.",
+              "Miyo 不可用。请检查服务器，然后在上方重试连接。"
+            )
+          : t("Connect to Miyo to configure these capabilities.", "连接 Miyo 后即可配置这些功能。")}
       </span>
     </div>
   );
@@ -50,7 +54,7 @@ export const MiyoConnectionControl: React.FC<MiyoConnectionControlProps> = ({
       onClick={onRetry}
       disabled={checking}
     >
-      Check connection
+      {t("Check connection", "检查连接")}
     </Button>
     <Button
       variant="secondary"
@@ -59,7 +63,7 @@ export const MiyoConnectionControl: React.FC<MiyoConnectionControlProps> = ({
       onClick={onDisconnect}
       disabled={checking}
     >
-      Disconnect
+      {t("Disconnect", "断开连接")}
     </Button>
   </div>
 );

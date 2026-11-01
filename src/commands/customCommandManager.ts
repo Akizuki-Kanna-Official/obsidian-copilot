@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import { App, TFile } from "obsidian";
 import {
   getCommandFilePath,
@@ -109,7 +110,10 @@ export class CustomCommandManager {
         const newFileExists = this.app.vault.getAbstractFileByPath(filePath);
         if (newFileExists) {
           throw new CustomError(
-            "Error saving custom prompt. Please check if the title already exists."
+            t(
+              "Error saving custom prompt. Please check if the title already exists.",
+              "保存自定义提示词失败，请检查是否已有同名标题。"
+            )
           );
         }
         const prevCommandFile = this.app.vault.getAbstractFileByPath(prevFilePath);
