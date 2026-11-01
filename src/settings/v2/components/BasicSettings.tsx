@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import { ConfirmModal } from "@/components/modals/ConfirmModal";
 import { Button } from "@/components/ui/button";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
@@ -45,7 +46,9 @@ const AgentsSection: React.FC = () => {
     // https://github.com/Brevilabs/obsidian-copilot-private/issues/373
     return (
       <>
-        <DesktopOnlySettingsPanel message="Agent settings are available on desktop." />
+        <DesktopOnlySettingsPanel
+          message={t("Agent settings are available on desktop.", "智能体设置仅在桌面端可用。")}
+        />
         <QuickChatPanel />
       </>
     );
@@ -83,7 +86,7 @@ export const BasicSettings: React.FC = () => {
       queue = queue.then(() =>
         writeAgentsFile(app, "", next).catch((error) => {
           logError("Failed to save vault instructions.", error);
-          new Notice("Failed to save AGENTS.md.");
+          new Notice(t("Failed to save AGENTS.md.", "保存 AGENTS.md 失败。"));
         })
       );
       return queue;
@@ -99,25 +102,38 @@ export const BasicSettings: React.FC = () => {
       await openAgentsFile(app, "");
     } catch (error) {
       logError("Failed to open vault AGENTS.md.", error);
-      new Notice(error instanceof Error ? error.message : "Failed to open AGENTS.md.");
+      new Notice(
+        error instanceof Error
+          ? error.message
+          : t("Failed to open AGENTS.md.", "打开 AGENTS.md 失败。")
+      );
     }
   };
 
   const applyFolderChange = () => {
     const validation = validateCopilotFolder(folderDraft, app.vault.configDir);
     if (!validation.ok) {
-      new Notice(`Invalid Copilot folder: ${validation.reason}`, 5000);
+      new Notice(
+        t(
+          `Invalid Copilot folder: ${validation.reason}`,
+          `Copilot 文件夹无效：${validation.reason}`
+        ),
+        5000
+      );
       return;
     }
     const folder = validation.folder;
     if (folder === persistedRoot) {
-      new Notice("That's already the Copilot folder.", 3000);
+      new Notice(t("That's already the Copilot folder.", "这已经是当前的 Copilot 文件夹。"), 3000);
       return;
     }
     const conflict = findCopilotRootFileConflict(app, folder);
     if (conflict) {
       new Notice(
-        `"${conflict}" is an existing file, so "${folder}" can't be used as a folder. Choose another location.`,
+        t(
+          `"${conflict}" is an existing file, so "${folder}" can't be used as a folder. Choose another location.`,
+          `“${conflict}”是现有文件，因此无法将“${folder}”用作文件夹。请选择其他位置。`
+        ),
         8000
       );
       return;
@@ -128,9 +144,22 @@ export const BasicSettings: React.FC = () => {
       () => {
         void applyCopilotRootChange(app, folder)
           .then(() => ensureCopilotSubfolders(app.vault, { copilotFolder: folder }))
-          .then(() => new Notice(`Copilot folder changed to "${folder}".`, 4000))
+          .then(
+            () =>
+              new Notice(
+                t(`Copilot folder changed to "${folder}".`, `Copilot 文件夹已更改为“${folder}”。`),
+                4000
+              )
+          )
           .catch(
-            () => new Notice("Failed to change the Copilot folder. Check the Copilot log.", 5000)
+            () =>
+              new Notice(
+                t(
+                  "Failed to change the Copilot folder. Check the Copilot log.",
+                  "更改 Copilot 文件夹失败，请查看 Copilot 日志。"
+                ),
+                5000
+              )
           );
       },
       <CopilotFolderChangeNotice
@@ -139,8 +168,8 @@ export const BasicSettings: React.FC = () => {
         containsMarkdown={containsMarkdown}
       />,
       "",
-      containsMarkdown ? "Use folder" : "Change folder",
-      "Cancel",
+      containsMarkdown ? t("Use folder", "使用此文件夹") : t("Change folder", "更改文件夹"),
+      t("Cancel", "取消"),
       () => setFolderDraft(persistedRoot)
     ).open();
   };
@@ -154,7 +183,13 @@ export const BasicSettings: React.FC = () => {
       const missingVars = requiredVars.filter((v) => !format.includes(v));
 
       if (missingVars.length > 0) {
-        new Notice(`Error: Missing required variables: ${missingVars.join(", ")}`, 4000);
+        new Notice(
+          t(
+            `Error: Missing required variables: ${missingVars.join(", ")}`,
+            `错误：缺少必填变量：${missingVars.join(", ")}`
+          ),
+          4000
+        );
         return;
       }
 
@@ -165,7 +200,13 @@ export const BasicSettings: React.FC = () => {
         .replace(/\{\$topic}/g, "");
 
       if (illegalChars.test(formatWithoutVars)) {
-        new Notice(`Error: Format contains illegal characters (\\/:*?"<>|)`, 4000);
+        new Notice(
+          t(
+            `Error: Format contains illegal characters (\\/:*?"<>|)`,
+            `错误：格式包含不允许的字符（\\/:*?"<>|）`
+          ),
+          4000
+        );
         return;
       }
 
@@ -179,10 +220,19 @@ export const BasicSettings: React.FC = () => {
 
       updateSetting("defaultConversationNoteName", format);
       setConversationNoteName(format);
-      new Notice(`Format applied successfully! Example: ${customFileName}`, 4000);
+      new Notice(
+        t(
+          `Format applied successfully! Example: ${customFileName}`,
+          `格式已应用！示例：${customFileName}`
+        ),
+        4000
+      );
     } catch (error) {
       new Notice(
-        `Error applying format: ${error instanceof Error ? error.message : String(error)}`,
+        t(
+          `Error applying format: ${error instanceof Error ? error.message : String(error)}`,
+          `应用格式时出错：${error instanceof Error ? error.message : String(error)}`
+        ),
         4000
       );
     } finally {
@@ -196,32 +246,40 @@ export const BasicSettings: React.FC = () => {
 
       <AgentsSection />
 
-      <SettingSection label="General">
+      <SettingSection label={t("General", "常规")}>
         <SettingItem
           type="select"
-          title="Open plugin in"
-          description="Choose where to open the plugin."
+          title={t("Open plugin in", "插件打开位置")}
+          description={t("Choose where to open the plugin.", "选择插件打开的位置。")}
           value={settings.defaultOpenArea}
           onChange={(value) => updateSetting("defaultOpenArea", value as DEFAULT_OPEN_AREA)}
           options={[
-            { label: "Sidebar view", value: DEFAULT_OPEN_AREA.VIEW },
-            { label: "Editor", value: DEFAULT_OPEN_AREA.EDITOR },
+            { label: t("Sidebar view", "侧边栏"), value: DEFAULT_OPEN_AREA.VIEW },
+            { label: t("Editor", "编辑区"), value: DEFAULT_OPEN_AREA.EDITOR },
           ]}
         />
 
         <SettingItem
           type="select"
-          title="Send shortcut"
+          title={t("Send shortcut", "发送快捷键")}
           description={
             <div className="tw-flex tw-items-center tw-gap-1.5">
-              <span className="tw-leading-none">Keyboard shortcut to send messages.</span>
+              <span className="tw-leading-none">
+                {t("Keyboard shortcut to send messages.", "用于发送消息的键盘快捷键。")}
+              </span>
               <HelpTooltip
                 content={
                   <div className="tw-flex tw-max-w-96 tw-flex-col tw-gap-2 tw-py-4">
                     <div className="tw-text-xs tw-text-muted">
-                      If your selected shortcut doesn&#39;t work, check{" "}
-                      <strong>Obsidian → Hotkeys</strong> to see if another command is using the
-                      same key combination.
+                      {t(
+                        "If your selected shortcut doesn't work, check",
+                        "如果所选快捷键无效，请检查"
+                      )}{" "}
+                      <strong>{t("Obsidian → Hotkeys", "Obsidian → 快捷键")}</strong>
+                      {t(
+                        " to see if another command is using the same key combination.",
+                        "，确认是否有其他命令占用了相同的组合键。"
+                      )}
                     </div>
                   </div>
                 }
@@ -238,16 +296,22 @@ export const BasicSettings: React.FC = () => {
 
         <SettingItem
           type="switch"
-          title="Auto-attach active note"
-          description="Attach the note open in the editor to each new chat. With this off, add it from Add context or with @ when you need it."
+          title={t("Auto-attach active note", "自动附加当前笔记")}
+          description={t(
+            "Attach the note open in the editor to each new chat. With this off, add it from Add context or with @ when you need it.",
+            "在每个新对话中附加编辑器里打开的笔记。关闭后，可在需要时通过“添加上下文”或 @ 手动添加。"
+          )}
           checked={settings.autoAttachActiveNote}
           onCheckedChange={(checked) => updateSetting("autoAttachActiveNote", checked)}
         />
 
         <SettingItem
           type="custom"
-          title="Copilot folder location"
-          description="Where Copilot keeps chats, commands, memory, and more. Its other folders live inside this one."
+          title={t("Copilot folder location", "Copilot 文件夹位置")}
+          description={t(
+            "Where Copilot keeps chats, commands, memory, and more. Its other folders live inside this one.",
+            "Copilot 保存对话、命令、记忆等数据的位置。其他 Copilot 文件夹均位于此文件夹内。"
+          )}
         >
           <div className="tw-flex tw-items-center tw-gap-2">
             <Input
@@ -262,21 +326,21 @@ export const BasicSettings: React.FC = () => {
               }}
               placeholder="copilot"
               className="tw-w-full sm:tw-w-[160px]"
-              aria-label="Copilot folder"
+              aria-label={t("Copilot folder", "Copilot 文件夹")}
             />
             <Button
               variant="secondary"
               onClick={applyFolderChange}
-              aria-label="Apply Copilot folder"
+              aria-label={t("Apply Copilot folder", "应用 Copilot 文件夹")}
             >
-              Apply
+              {t("Apply", "应用")}
             </Button>
             <Button
               variant="secondary"
               size="icon"
               onClick={() => revealFolderInExplorer(app, settings.copilotFolder)}
-              aria-label="Open Copilot folder"
-              title="Open Copilot folder"
+              aria-label={t("Open Copilot folder", "打开 Copilot 文件夹")}
+              title={t("Open Copilot folder", "打开 Copilot 文件夹")}
             >
               <Folder className="tw-size-4" />
             </Button>
@@ -284,7 +348,7 @@ export const BasicSettings: React.FC = () => {
         </SettingItem>
       </SettingSection>
 
-      <SettingSection label="Custom instructions">
+      <SettingSection label={t("Custom instructions", "自定义指令")}>
         <LegacyChatPromptsNotice />
         {vaultInstructions !== null && (
           <VaultInstructionsSetting
@@ -298,11 +362,14 @@ export const BasicSettings: React.FC = () => {
         )}
       </SettingSection>
 
-      <SettingSection label="Saving chats">
+      <SettingSection label={t("Saving chats", "保存对话")}>
         <SettingItem
           type="switch"
-          title="Autosave chats as Markdown"
-          description="Writes each chat to a Markdown note in your vault after every user message and AI response. With this off, agent chats still appear in Recent chats; only the Markdown note is skipped."
+          title={t("Autosave chats as Markdown", "自动将对话保存为 Markdown")}
+          description={t(
+            "Writes each chat to a Markdown note in your vault after every user message and AI response. With this off, agent chats still appear in Recent chats; only the Markdown note is skipped.",
+            "每次发送消息或收到 AI 回复后，将对话写入仓库中的 Markdown 笔记。关闭后，智能体对话仍会显示在“最近对话”中，只是不再保存为 Markdown 笔记。"
+          )}
           checked={settings.autosaveChat}
           onCheckedChange={(checked) => updateSetting("autosaveChat", checked)}
         />
@@ -314,33 +381,42 @@ export const BasicSettings: React.FC = () => {
           <CollapsibleContent>
             <SettingItem
               type="custom"
-              title="Chat note name template"
+              title={t("Chat note name template", "对话笔记命名模板")}
               description={
                 <div className="tw-flex tw-items-start tw-gap-1.5 ">
-                  <span className="tw-leading-none">Customize the names of saved chat notes.</span>
+                  <span className="tw-leading-none">
+                    {t("Customize the names of saved chat notes.", "自定义保存的对话笔记名称。")}
+                  </span>
                   <HelpTooltip
                     content={
                       <div className="tw-flex tw-max-w-96 tw-flex-col tw-gap-2 tw-py-4">
                         <div className="tw-text-sm tw-font-medium tw-text-accent">
-                          Note: All the following variables must be included in the template.
+                          {t(
+                            "Note: All the following variables must be included in the template.",
+                            "注意：模板必须包含以下所有变量。"
+                          )}
                         </div>
                         <div>
                           <div className="tw-text-sm tw-font-medium tw-text-muted">
-                            Available variables:
+                            {t("Available variables:", "可用变量：")}
                           </div>
                           <ul className="tw-pl-4 tw-text-sm tw-text-muted">
                             <li>
-                              <strong>{"{$date}"}</strong>: Date in YYYYMMDD format
+                              <strong>{"{$date}"}</strong>
+                              {t(": Date in YYYYMMDD format", "：日期，格式为 YYYYMMDD")}
                             </li>
                             <li>
-                              <strong>{"{$time}"}</strong>: Time in HHMMSS format
+                              <strong>{"{$time}"}</strong>
+                              {t(": Time in HHMMSS format", "：时间，格式为 HHMMSS")}
                             </li>
                             <li>
-                              <strong>{"{$topic}"}</strong>: Chat topic
+                              <strong>{"{$topic}"}</strong>
+                              {t(": Chat topic", "：对话主题")}
                             </li>
                           </ul>
                           <i className="tw-mt-2 tw-text-sm tw-text-muted">
-                            Example: {"{$date}_{$time}__{$topic}"} →
+                            {t("Example: ", "示例：")}
+                            {"{$date}_{$time}__{$topic}"} →
                             20250114_153232__polish_this_article_[[Readme]]
                           </i>
                         </div>
@@ -371,10 +447,10 @@ export const BasicSettings: React.FC = () => {
                   {isChecking ? (
                     <>
                       <Loader2 className="tw-mr-2 tw-size-4 tw-animate-spin" />
-                      Apply
+                      {t("Apply", "应用")}
                     </>
                   ) : (
-                    "Apply"
+                    t("Apply", "应用")
                   )}
                 </Button>
               </div>

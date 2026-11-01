@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import {
   AgentBackendHeader,
   AgentDefaultModelSetting,
@@ -70,7 +71,11 @@ export const AgentSettings: React.FC = () => {
       icon: <d.Icon className="tw-size-4" />,
       label: d.displayName,
     })),
-    { id: QUICK_CHAT_TAB_ID, icon: <MessageCircle className="tw-size-4" />, label: "Quick Chat" },
+    {
+      id: QUICK_CHAT_TAB_ID,
+      icon: <MessageCircle className="tw-size-4" />,
+      label: t("Quick Chat", "快捷聊天"),
+    },
   ];
 
   const selectedTabId = tabs.some((tab) => tab.id === selectedTab) ? selectedTab : tabs[0].id;
@@ -83,11 +88,14 @@ export const AgentSettings: React.FC = () => {
 
   return (
     <section className="tw-space-y-4">
-      <SettingSection label="Agents">
+      <SettingSection label={t("Agents", "智能体")}>
         <SettingItem
           type="select"
-          title="Default agent"
-          description="The agent new chats start with. Picking another agent's model in a chat also changes this."
+          title={t("Default agent", "默认智能体")}
+          description={t(
+            "The agent new chats start with. Picking another agent's model in a chat also changes this.",
+            "新对话默认使用的智能体。在对话中选择其他智能体的模型时，也会更新此设置。"
+          )}
           value={activeBackendValue}
           onChange={(value) =>
             setSettings((cur) => ({ agentMode: { ...cur.agentMode, activeBackend: value } }))
@@ -176,9 +184,12 @@ const BackendPanel: React.FC<{
         <div className="tw-flex tw-items-start tw-gap-2 tw-rounded-lg tw-border tw-border-solid tw-px-3 tw-py-2.5 tw-text-xs tw-text-normal tw-bg-warning/10 tw-border-warning/40">
           <AlertTriangle className="tw-mt-0.5 tw-size-4 tw-shrink-0 tw-text-warning" />
           <div className="tw-leading-relaxed">
-            <span className="tw-font-semibold">Cloud service.</span> Self-Host Mode is on, but{" "}
-            {descriptor.displayName} runs in the cloud — your prompts leave your machine for a third
-            party. It stays available; use it only if you're comfortable with that.
+            <span className="tw-font-semibold">{t("Cloud service.", "云端服务。")}</span>
+            {t(" Self-Host Mode is on, but", "已启用自托管模式，但")} {descriptor.displayName}
+            {t(
+              " runs in the cloud — your prompts leave your machine for a third party. It stays available; use it only if you're comfortable with that.",
+              "运行在云端，你的提示词会离开本机并发送给第三方。此选项仍可使用，请确认接受这一点后再使用。"
+            )}
           </div>
         </div>
       )}

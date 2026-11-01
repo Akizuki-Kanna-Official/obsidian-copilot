@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import { SettingItem } from "@/components/ui/setting-item";
 import { SettingSection } from "@/components/ui/setting-section";
 import React from "react";
@@ -22,15 +23,23 @@ export const QuickChatModelSettings: React.FC<QuickChatModelSettingsProps> = ({
 }) => (
   <SettingSection>
     <div className="tw-flex tw-min-w-0 tw-flex-col tw-py-4">
-      <span className="tw-text-base tw-font-semibold">Quick Chat models</span>
+      <span className="tw-text-base tw-font-semibold">
+        {t("Quick Chat models", "快捷聊天模型")}
+      </span>
       <span className="tw-text-xs tw-text-muted">
-        Models shown in the chat model picker. Add providers on the BYOK tab.
+        {t(
+          "Models shown in the chat model picker. Add providers on the BYOK tab.",
+          "在聊天模型选择器中显示的模型。可在“自备密钥（BYOK）”页添加服务商。"
+        )}
       </span>
     </div>
     <SettingItem
       type="select"
-      title="Default model"
-      description="The model new chats start with. Pick from your enabled Quick Chat models."
+      title={t("Default model", "默认模型")}
+      description={t(
+        "The model new chats start with. Pick from your enabled Quick Chat models.",
+        "新对话默认使用的模型，请从已启用的快捷聊天模型中选择。"
+      )}
       value={defaultModelId ?? "Select model"}
       onChange={(value) => {
         if (value === "Select model") return;
@@ -39,9 +48,9 @@ export const QuickChatModelSettings: React.FC<QuickChatModelSettingsProps> = ({
       options={
         defaultModelId !== undefined
           ? options
-          : [{ label: "Select model", value: "Select model" }, ...options]
+          : [{ label: t("Select model", "选择模型"), value: "Select model" }, ...options]
       }
-      placeholder="Model"
+      placeholder={t("Model", "模型")}
     />
     <div className="tw-py-4">{children}</div>
   </SettingSection>

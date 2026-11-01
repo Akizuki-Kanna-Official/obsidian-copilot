@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import { useChatBackendModelOptions } from "@/hooks/useChatBackendModelOptions";
 import { QuickCommandModelSetting } from "@/settings/v2/components/ui/QuickCommandModelSetting";
 import React, { useMemo, useRef } from "react";
@@ -70,25 +71,28 @@ const MobileCommandCard: React.FC<{
   const dropdownActions: MobileCardDropdownAction<CustomCommand>[] = [
     {
       icon: <PenLine className="tw-size-4" />,
-      label: "Edit",
+      label: t("Edit", "编辑"),
       onClick: handleEdit,
     },
     {
       icon: <CopyPlus className="tw-size-4" />,
-      label: "Duplicate",
+      label: t("Duplicate", "创建副本"),
       onClick: onCopy,
     },
     {
       icon: <Trash2 className="tw-size-4" />,
-      label: "Delete",
+      label: t("Delete", "删除"),
       onClick: (cmd) => {
         new ConfirmModal(
           app,
           () => onRemove(cmd),
-          `Are you sure you want to delete the command "${cmd.title}"? This will permanently remove the command file and cannot be undone.`,
-          "Delete Command",
-          "Delete",
-          "Cancel"
+          t(
+            `Are you sure you want to delete the command "${cmd.title}"? This will permanently remove the command file and cannot be undone.`,
+            `确定要删除命令“${cmd.title}”吗？这会永久删除命令文件，且无法撤销。`
+          ),
+          t("Delete Command", "删除命令"),
+          t("Delete", "删除"),
+          t("Cancel", "取消")
         ).open();
       },
       variant: "destructive",
@@ -99,11 +103,14 @@ const MobileCommandCard: React.FC<{
     <div className="tw-flex tw-flex-wrap tw-justify-around">
       <div className="tw-flex tw-items-center tw-justify-between tw-gap-2">
         <div className="tw-flex tw-items-center tw-gap-1">
-          <span className="tw-text-sm tw-font-medium">Right-click</span>
+          <span className="tw-text-sm tw-font-medium">{t("Right-click", "右键菜单")}</span>
           <HelpTooltip
             content={
               <div className="tw-max-w-xs tw-text-xs">
-                Shows the command when you right-click in the editor.
+                {t(
+                  "Shows the command when you right-click in the editor.",
+                  "在编辑器右键菜单中显示此命令。"
+                )}
               </div>
             }
           />
@@ -123,10 +130,12 @@ const MobileCommandCard: React.FC<{
       </div>
       <div className="tw-flex tw-items-center tw-justify-between  tw-gap-2">
         <div className="tw-flex tw-items-center tw-gap-1">
-          <span className="tw-text-sm tw-font-medium">Slash menu</span>
+          <span className="tw-text-sm tw-font-medium">{t("Slash menu", "斜杠菜单")}</span>
           <HelpTooltip
             content={
-              <div className="tw-max-w-xs tw-text-xs">Shows the command in the chat's / menu.</div>
+              <div className="tw-max-w-xs tw-text-xs">
+                {t("Shows the command in the chat's / menu.", "在对话的 / 菜单中显示此命令。")}
+              </div>
             }
           />
         </div>
@@ -157,7 +166,7 @@ const MobileCommandCard: React.FC<{
       primaryAction={{
         icon: <PenLine className="tw-size-4" />,
         onClick: handleEdit,
-        tooltip: "Edit command",
+        tooltip: t("Edit command", "编辑命令"),
       }}
       dropdownActions={dropdownActions}
       containerRef={containerRef}
@@ -259,7 +268,7 @@ const SortableTableRow: React.FC<{
             variant="ghost"
             size="icon"
             onClick={safeAsyncHandler(async () => onCopy(command))}
-            title="Duplicate command"
+            title={t("Duplicate command", "创建命令副本")}
           >
             <CopyPlus className="tw-size-4" />
           </Button>
@@ -270,10 +279,13 @@ const SortableTableRow: React.FC<{
               new ConfirmModal(
                 app,
                 handleDelete,
-                `Are you sure you want to delete the command "${command.title}"? This will permanently remove the command file and cannot be undone.`,
-                "Delete Command",
-                "Delete",
-                "Cancel"
+                t(
+                  `Are you sure you want to delete the command "${command.title}"? This will permanently remove the command file and cannot be undone.`,
+                  `确定要删除命令“${command.title}”吗？这会永久删除命令文件，且无法撤销。`
+                ),
+                t("Delete Command", "删除命令"),
+                t("Delete", "删除"),
+                t("Cancel", "取消")
               ).open();
             }}
           >
@@ -319,10 +331,12 @@ export const CommandSettings: React.FC = () => {
     try {
       await CustomCommandManager.getInstance().deleteCommand(command);
 
-      new Notice(`Command "${command.title}" deleted successfully!`);
+      new Notice(
+        t(`Command "${command.title}" deleted successfully!`, `命令“${command.title}”已删除！`)
+      );
     } catch (error) {
       logError("Failed to delete command:", error);
-      new Notice("Failed to delete command. Please try again.");
+      new Notice(t("Failed to delete command. Please try again.", "删除命令失败，请重试。"));
       throw error;
     }
   };
@@ -339,7 +353,7 @@ export const CommandSettings: React.FC = () => {
       });
     } catch (error) {
       logError("Failed to duplicate command:", error);
-      new Notice("Failed to duplicate command. Please try again.");
+      new Notice(t("Failed to duplicate command. Please try again.", "创建命令副本失败，请重试。"));
     }
   };
 
@@ -378,7 +392,7 @@ export const CommandSettings: React.FC = () => {
           <div className="tw-space-y-2">
             {commands.length === 0 ? (
               <div className="tw-rounded-lg tw-border tw-border-border tw-bg-primary tw-p-8 tw-text-center tw-text-muted">
-                No custom commands yet.
+                {t("No custom commands yet.", "暂无自定义命令。")}
               </div>
             ) : (
               commands.map((command) => (
@@ -403,18 +417,25 @@ export const CommandSettings: React.FC = () => {
     <div className="tw-space-y-4" ref={containerRef}>
       <section className={cn("tw-flex tw-flex-col tw-gap-4")}>
         <div className="tw-flex tw-flex-col tw-gap-2">
-          <div className="tw-text-xl tw-font-bold">Custom commands</div>
+          <div className="tw-text-xl tw-font-bold">{t("Custom commands", "自定义命令")}</div>
           <div className="tw-text-sm tw-text-muted">
-            Preset prompts you trigger from the editor right-click menu or with a <code>/</code>{" "}
-            command in chat.
+            {t(
+              "Preset prompts you trigger from the editor right-click menu or with a ",
+              "预设提示词，可从编辑器右键菜单触发，也可在对话中通过"
+            )}
+            <code>/</code> {t("command in chat.", "命令触发。")}
           </div>
         </div>
 
         <div className="tw-flex tw-items-start tw-gap-2 tw-rounded-md tw-border tw-border-solid tw-border-border tw-p-4 tw-text-muted tw-bg-interactive-accent/10">
           <Info className="tw-size-5 tw-shrink-0 tw-text-accent" />{" "}
           <div>
-            Commands load automatically from the Markdown files in your custom commands folder{" "}
-            <strong>{customPromptsFolder}</strong>. Editing a file updates its command.
+            {t(
+              "Commands load automatically from the Markdown files in your custom commands folder",
+              "命令会从自定义命令文件夹中的 Markdown 文件自动加载："
+            )}{" "}
+            <strong>{customPromptsFolder}</strong>
+            {t(". Editing a file updates its command.", "。编辑文件后，对应命令会自动更新。")}
           </div>
         </div>
 
@@ -426,8 +447,11 @@ export const CommandSettings: React.FC = () => {
           />
           <SettingItem
             type="switch"
-            title="Command templating"
-            description="Fill in variables like {activenote}, {foldername}, or {#tag} in commands. Turn off to send commands exactly as written."
+            title={t("Command templating", "命令模板变量")}
+            description={t(
+              "Fill in variables like {activenote}, {foldername}, or {#tag} in commands. Turn off to send commands exactly as written.",
+              "自动填入命令中的 {activenote}、{foldername} 或 {#tag} 等变量。关闭后将原样发送命令。"
+            )}
             checked={settings.enableCustomPromptTemplating}
             onCheckedChange={(checked) => {
               updateSetting("enableCustomPromptTemplating", checked);
@@ -435,14 +459,17 @@ export const CommandSettings: React.FC = () => {
           />
           <SettingItem
             type="select"
-            title="Command sort order"
-            description="How commands are ordered in the slash menu."
+            title={t("Command sort order", "命令排序方式")}
+            description={t(
+              "How commands are ordered in the slash menu.",
+              "斜杠菜单中的命令排列顺序。"
+            )}
             value={settings.promptSortStrategy}
             onChange={(value) => updateSetting("promptSortStrategy", value)}
             options={[
-              { label: "Recency", value: PromptSortStrategy.TIMESTAMP },
-              { label: "Alphabetical", value: PromptSortStrategy.ALPHABETICAL },
-              { label: "Manual", value: PromptSortStrategy.MANUAL },
+              { label: t("Recency", "最近使用"), value: PromptSortStrategy.TIMESTAMP },
+              { label: t("Alphabetical", "按字母顺序"), value: PromptSortStrategy.ALPHABETICAL },
+              { label: t("Manual", "手动排序"), value: PromptSortStrategy.MANUAL },
             ]}
           />
         </SettingSection>
@@ -456,12 +483,15 @@ export const CommandSettings: React.FC = () => {
                   new ConfirmModal(
                     app,
                     generateDefaultCommands,
-                    "This will add default commands to your custom prompts folder. Do you want to continue?",
-                    "Generate default commands"
+                    t(
+                      "This will add default commands to your custom prompts folder. Do you want to continue?",
+                      "这会将默认命令添加到自定义提示词文件夹。是否继续？"
+                    ),
+                    t("Generate default commands", "生成默认命令")
                   ).open()
                 }
               >
-                Generate defaults
+                {t("Generate defaults", "生成默认命令")}
               </Button>
             </div>
             <Button
@@ -483,7 +513,7 @@ export const CommandSettings: React.FC = () => {
               }}
             >
               <Plus className="tw-size-2 md:tw-size-4" />
-              Add command
+              {t("Add command", "添加命令")}
             </Button>
           </div>
 
@@ -497,14 +527,17 @@ export const CommandSettings: React.FC = () => {
                 <TableHeader>
                   <TableRow>
                     <TableHead className="tw-w-10"></TableHead>
-                    <TableHead>Name</TableHead>
+                    <TableHead>{t("Name", "名称")}</TableHead>
                     <TableHead className="tw-w-24 tw-text-center">
                       <div className="tw-flex tw-items-center tw-justify-center tw-gap-1">
-                        Right-click
+                        {t("Right-click", "右键菜单")}
                         <HelpTooltip
                           content={
                             <div className="tw-max-w-xs tw-text-xs">
-                              Shows the command when you right-click in the editor.
+                              {t(
+                                "Shows the command when you right-click in the editor.",
+                                "在编辑器右键菜单中显示此命令。"
+                              )}
                             </div>
                           }
                         />
@@ -512,17 +545,20 @@ export const CommandSettings: React.FC = () => {
                     </TableHead>
                     <TableHead className="tw-w-28 tw-text-center">
                       <div className="tw-flex tw-items-center tw-justify-center tw-gap-1">
-                        Slash menu
+                        {t("Slash menu", "斜杠菜单")}
                         <HelpTooltip
                           content={
                             <div className="tw-max-w-xs tw-text-xs">
-                              Shows the command in the chat's / menu.
+                              {t(
+                                "Shows the command in the chat's / menu.",
+                                "在对话的 / 菜单中显示此命令。"
+                              )}
                             </div>
                           }
                         />
                       </div>
                     </TableHead>
-                    <TableHead className="tw-w-32 tw-text-center">Actions</TableHead>
+                    <TableHead className="tw-w-32 tw-text-center">{t("Actions", "操作")}</TableHead>
                   </TableRow>
                 </TableHeader>
                 <SortableContext
@@ -533,7 +569,7 @@ export const CommandSettings: React.FC = () => {
                     {commands.length === 0 ? (
                       <TableRow>
                         <TableCell colSpan={5} className="tw-py-8 tw-text-center tw-text-muted">
-                          No custom commands yet.
+                          {t("No custom commands yet.", "暂无自定义命令。")}
                         </TableCell>
                       </TableRow>
                     ) : (

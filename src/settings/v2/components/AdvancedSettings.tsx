@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import { Button } from "@/components/ui/button";
 import { SettingItem } from "@/components/ui/setting-item";
 import { SettingSection } from "@/components/ui/setting-section";
@@ -28,7 +29,10 @@ import React, { useCallback, useEffect, useState } from "react";
 import { isDesktopRuntime } from "@/utils/desktopRuntime";
 import { safeAsyncHandler } from "@/utils/safeAsyncHandler";
 
-const DESKTOP_UNAVAILABLE_FRAME_LOG_PATH = "(the agent activity log is desktop-only)";
+const DESKTOP_UNAVAILABLE_FRAME_LOG_PATH = t(
+  "(the agent activity log is desktop-only)",
+  "（智能体活动日志仅在桌面端可用）"
+);
 
 export const AdvancedSettings: React.FC = () => {
   const app = useApp();
@@ -57,7 +61,9 @@ export const AdvancedSettings: React.FC = () => {
 
   const handleReportIssue = useCallback(() => {
     if (!isDesktopRuntime()) {
-      new Notice("Reporting an issue is available on desktop only.");
+      new Notice(
+        t("Reporting an issue is available on desktop only.", "问题报告功能仅在桌面端可用。")
+      );
       return;
     }
     void (async () => {
@@ -72,7 +78,9 @@ export const AdvancedSettings: React.FC = () => {
 
   const handleOpenFrameLog = useCallback(async () => {
     if (!isDesktopRuntime()) {
-      new Notice("The agent activity log is available on desktop only.");
+      new Notice(
+        t("The agent activity log is available on desktop only.", "智能体活动日志仅在桌面端可用。")
+      );
       return;
     }
     try {
@@ -80,22 +88,24 @@ export const AdvancedSettings: React.FC = () => {
       await acpFrameSink.open();
       setFrameLogPath(acpFrameSink.getPath());
     } catch {
-      new Notice("Failed to open the agent activity log.");
+      new Notice(t("Failed to open the agent activity log.", "打开智能体活动日志失败。"));
     }
   }, []);
 
   const handleClearFrameLog = useCallback(async () => {
     if (!isDesktopRuntime()) {
-      new Notice("The agent activity log is available on desktop only.");
+      new Notice(
+        t("The agent activity log is available on desktop only.", "智能体活动日志仅在桌面端可用。")
+      );
       return;
     }
     try {
       const { acpFrameSink } = await import("@/agentMode");
       await acpFrameSink.clear();
       setFrameLogPath(acpFrameSink.getPath());
-      new Notice("Agent activity log cleared.");
+      new Notice(t("Agent activity log cleared.", "已清空智能体活动日志。"));
     } catch {
-      new Notice("Failed to clear the agent activity log.");
+      new Notice(t("Failed to clear the agent activity log.", "清空智能体活动日志失败。"));
     }
   }, []);
 
@@ -106,13 +116,22 @@ export const AdvancedSettings: React.FC = () => {
       new ConfirmModal(
         app,
         () => resolve(true),
-        "This will remove all API keys for this vault from the Obsidian Keychain, data.json, " +
-          "and memory. You will need to re-enter them. Any credential backup files written " +
-          "during the v4 upgrade are left in place — delete those yourself once you no longer " +
-          "need them.",
-        "\u26A0\uFE0F Forget All Secrets",
-        "Remove",
-        "Cancel",
+        t(
+          "This will remove all API keys for this vault from the Obsidian Keychain, data.json, ",
+          "这会从 Obsidian 钥匙串、data.json 和内存中移除此仓库的所有 API 密钥。"
+        ) +
+          t(
+            "and memory. You will need to re-enter them. Any credential backup files written ",
+            "之后需要重新输入密钥。升级到 v4 时生成的凭据备份文件"
+          ) +
+          t(
+            "during the v4 upgrade are left in place — delete those yourself once you no longer ",
+            "会保留在原处；不再需要时，请自行"
+          ) +
+          t("need them.", "删除。"),
+        t("⚠️ Forget All Secrets", "⚠️ 清除所有密钥"),
+        t("Remove", "移除"),
+        t("Cancel", "取消"),
         () => resolve(false)
       ).open();
     });
@@ -138,7 +157,7 @@ export const AdvancedSettings: React.FC = () => {
       );
     } catch (error) {
       logError("Failed to forget secrets.", error);
-      new Notice("Failed to remove API keys. Please try again.");
+      new Notice(t("Failed to remove API keys. Please try again.", "移除 API 密钥失败，请重试。"));
     } finally {
       setForgetting(false);
     }
@@ -148,28 +167,42 @@ export const AdvancedSettings: React.FC = () => {
     <div className="tw-space-y-4">
       <LegacyChatPromptsNotice />
 
-      <SettingSection label="Others">
+      <SettingSection label={t("Others", "其他")}>
         <SettingItem
           type="custom"
-          title="API key storage"
+          title={t("API key storage", "API 密钥存储")}
           description={
             !keychainAvailable ? (
               <>
-                Update Obsidian to <code>1.11.4+</code> to use the{" "}
-                <strong className="tw-font-semibold tw-text-normal">Obsidian Keychain</strong>. Keys
-                cannot be loaded or saved in this build.
+                {t("Update Obsidian to ", "请将 Obsidian 更新至")}
+                <code>1.11.4+</code>
+                {t(" to use the", "以使用")}{" "}
+                <strong className="tw-font-semibold tw-text-normal">
+                  {t("Obsidian Keychain", "Obsidian 钥匙串")}
+                </strong>
+                {t(
+                  ". Keys cannot be loaded or saved in this build.",
+                  "。此版本无法加载或保存密钥。"
+                )}
               </>
             ) : keychainAppearsEmpty ? (
               <span className="tw-text-warning">
-                No API keys found in this device&apos;s{" "}
-                <strong className="tw-font-semibold tw-text-normal">Obsidian Keychain</strong>.
-                Re-enter your API keys in the relevant settings sections — each device has a
-                separate Keychain.
+                {t("No API keys found in this device's", "此设备未在以下位置找到 API 密钥：")}{" "}
+                <strong className="tw-font-semibold tw-text-normal">
+                  {t("Obsidian Keychain", "Obsidian 钥匙串")}
+                </strong>
+                {t(
+                  ". Re-enter your API keys in the relevant settings sections — each device has a separate Keychain.",
+                  "。请在相应设置中重新输入 API 密钥，每台设备的钥匙串相互独立。"
+                )}
               </span>
             ) : (
               <>
-                API keys are stored in this device&apos;s{" "}
-                <strong className="tw-font-semibold tw-text-normal">Obsidian Keychain</strong>.
+                {t("API keys are stored in this device's", "API 密钥存储在此设备的")}{" "}
+                <strong className="tw-font-semibold tw-text-normal">
+                  {t("Obsidian Keychain", "Obsidian 钥匙串")}
+                </strong>
+                .
               </>
             )
           }
@@ -178,12 +211,12 @@ export const AdvancedSettings: React.FC = () => {
             {keychainAvailable ? (
               <div className="tw-inline-flex tw-items-center tw-gap-1.5 tw-rounded-md tw-bg-success tw-px-3 tw-py-1 tw-text-smallest tw-font-semibold tw-text-success">
                 <ShieldCheck className="tw-size-4" />
-                Obsidian Keychain
+                {t("Obsidian Keychain", "Obsidian 钥匙串")}
               </div>
             ) : (
               <div className="tw-inline-flex tw-items-center tw-gap-1.5 tw-rounded-md tw-border tw-border-border tw-bg-secondary tw-px-3 tw-py-1 tw-text-smallest tw-font-semibold tw-text-muted">
                 <Info className="tw-size-4" />
-                Unavailable
+                {t("Unavailable", "不可用")}
               </div>
             )}
             <Button
@@ -194,12 +227,15 @@ export const AdvancedSettings: React.FC = () => {
               title={
                 keychainAvailable
                   ? undefined
-                  : "Update Obsidian to 1.11.4+ to delete Keychain entries."
+                  : t(
+                      "Update Obsidian to 1.11.4+ to delete Keychain entries.",
+                      "请将 Obsidian 更新至 1.11.4 或更高版本，以删除钥匙串条目。"
+                    )
               }
               className="tw-gap-1.5"
             >
               <Trash2 className="tw-size-4" />
-              {forgetting ? "Removing..." : "Delete All Keys"}
+              {forgetting ? t("Removing...", "正在移除…") : t("Delete All Keys", "删除所有密钥")}
             </Button>
           </div>
         </SettingItem>

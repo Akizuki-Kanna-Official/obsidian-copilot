@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import { CustomModel, ProjectConfig } from "@/aiParams";
 import { BUILTIN_SKILLS } from "@/builtinSkills/builtinSkills";
 import { atom, createStore, useAtomValue } from "jotai";
@@ -898,21 +899,42 @@ function validateSkillsFolder(
   const segments = cleaned.split("/");
   for (const segment of segments) {
     if (segment.length === 0) {
-      return { ok: false, reason: "Folder path cannot contain empty segments (//)." };
+      return {
+        ok: false,
+        reason: t(
+          "Folder path cannot contain empty segments (//).",
+          "文件夹路径不能包含空路径段（//）。"
+        ),
+      };
     }
     if (segment === "..") {
-      return { ok: false, reason: 'Folder path cannot contain ".." segments.' };
+      return {
+        ok: false,
+        reason: t('Folder path cannot contain ".." segments.', "文件夹路径不能包含“..”路径段。"),
+      };
     }
     if (segment === ".") {
-      return { ok: false, reason: 'Folder path cannot contain "." segments.' };
+      return {
+        ok: false,
+        reason: t('Folder path cannot contain "." segments.', "文件夹路径不能包含“.”路径段。"),
+      };
     }
     if (CONTROL_CHAR_RE.test(segment)) {
-      return { ok: false, reason: "Folder path contains illegal control characters." };
+      return {
+        ok: false,
+        reason: t(
+          "Folder path contains illegal control characters.",
+          "文件夹路径包含不允许的控制字符。"
+        ),
+      };
     }
     if (/[<>:"|?*]/.test(segment)) {
       return {
         ok: false,
-        reason: 'Folder path contains characters not allowed in folder names (< > : " | ? *).',
+        reason: t(
+          'Folder path contains characters not allowed in folder names (< > : " | ? *).',
+          '文件夹路径包含名称中不允许使用的字符（< > : " | ? *）。'
+        ),
       };
     }
   }
@@ -929,15 +951,21 @@ export function validateCopilotFolder(
   configDir?: string
 ): { ok: true; folder: string } | { ok: false; reason: string } {
   if (typeof value !== "string" || value.trim().length === 0) {
-    return { ok: false, reason: "Folder name cannot be empty." };
+    return { ok: false, reason: t("Folder name cannot be empty.", "文件夹名称不能为空。") };
   }
   const trimmed = value.trim();
   if (/^[/\\]/.test(trimmed) || /^[a-zA-Z]:/.test(trimmed)) {
-    return { ok: false, reason: "Folder path must be relative to the vault root." };
+    return {
+      ok: false,
+      reason: t(
+        "Folder path must be relative to the vault root.",
+        "文件夹路径必须相对于仓库根目录。"
+      ),
+    };
   }
   const cleaned = trimmed.replace(/\\/g, "/").replace(/\/+$/, "");
   if (cleaned.length === 0) {
-    return { ok: false, reason: "Folder name cannot be empty." };
+    return { ok: false, reason: t("Folder name cannot be empty.", "文件夹名称不能为空。") };
   }
   const normalizedConfigDir = configDir
     ?.trim()
@@ -953,35 +981,71 @@ export function validateCopilotFolder(
   ) {
     return {
       ok: false,
-      reason: "Folder path cannot use the Obsidian config folder.",
+      reason: t(
+        "Folder path cannot use the Obsidian config folder.",
+        "不能使用 Obsidian 配置文件夹作为此路径。"
+      ),
     };
   }
   for (const segment of cleaned.split("/")) {
     if (segment.length === 0) {
-      return { ok: false, reason: "Folder path cannot contain empty segments (//)." };
+      return {
+        ok: false,
+        reason: t(
+          "Folder path cannot contain empty segments (//).",
+          "文件夹路径不能包含空路径段（//）。"
+        ),
+      };
     }
     if (segment === "..") {
-      return { ok: false, reason: 'Folder path cannot contain ".." segments.' };
+      return {
+        ok: false,
+        reason: t('Folder path cannot contain ".." segments.', "文件夹路径不能包含“..”路径段。"),
+      };
     }
     // Obsidian does not index dot folders, so every Copilot feature must see a visible root.
     // https://github.com/Brevilabs/obsidian-copilot-private/issues/712
     if (segment.startsWith(".")) {
-      return { ok: false, reason: "Folder names cannot start with a dot." };
+      return {
+        ok: false,
+        reason: t("Folder names cannot start with a dot.", "文件夹名称不能以点号开头。"),
+      };
     }
     if (CONTROL_CHAR_RE.test(segment)) {
-      return { ok: false, reason: "Folder path contains illegal control characters." };
+      return {
+        ok: false,
+        reason: t(
+          "Folder path contains illegal control characters.",
+          "文件夹路径包含不允许的控制字符。"
+        ),
+      };
     }
     if (/[<>:"|?*]/.test(segment)) {
       return {
         ok: false,
-        reason: 'Folder path contains characters not allowed in folder names (< > : " | ? *).',
+        reason: t(
+          'Folder path contains characters not allowed in folder names (< > : " | ? *).',
+          '文件夹路径包含名称中不允许使用的字符（< > : " | ? *）。'
+        ),
       };
     }
     if (/[. ]$/.test(segment)) {
-      return { ok: false, reason: "Folder names cannot end with a dot or space." };
+      return {
+        ok: false,
+        reason: t(
+          "Folder names cannot end with a dot or space.",
+          "文件夹名称不能以点号或空格结尾。"
+        ),
+      };
     }
     if (WINDOWS_RESERVED_NAME_RE.test(segment)) {
-      return { ok: false, reason: `"${segment}" is a name reserved by Windows.` };
+      return {
+        ok: false,
+        reason: t(
+          `"${segment}" is a name reserved by Windows.`,
+          `“${segment}”是 Windows 保留名称。`
+        ),
+      };
     }
   }
   return { ok: true, folder: cleaned };

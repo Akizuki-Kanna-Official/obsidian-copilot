@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import {
   deriveConversationsFolder,
   deriveCustomPromptsFolder,
@@ -33,27 +34,27 @@ interface SubFolderSpec {
 
 const SUBFOLDER_SPECS: readonly SubFolderSpec[] = [
   {
-    label: "Chat conversations",
+    label: t("Chat conversations", "聊天记录"),
     legacyValue: (s) => s.defaultSaveFolder,
     derive: deriveConversationsFolder,
   },
   {
-    label: "Custom prompts",
+    label: t("Custom prompts", "自定义提示词"),
     legacyValue: (s) => s.customPromptsFolder,
     derive: deriveCustomPromptsFolder,
   },
   {
-    label: "System prompts",
+    label: t("System prompts", "系统提示词"),
     legacyValue: (s) => s.userSystemPromptsFolder,
     derive: deriveSystemPromptsFolder,
   },
   {
-    label: "Agent skills",
+    label: t("Agent skills", "智能体技能"),
     legacyValue: (s) => s.agentMode.skills.folder,
     derive: deriveSkillsFolder,
   },
   {
-    label: "Memory",
+    label: t("Memory", "记忆"),
     legacyValue: (s) => s.memoryFolderName,
     derive: deriveMemoryFolder,
   },

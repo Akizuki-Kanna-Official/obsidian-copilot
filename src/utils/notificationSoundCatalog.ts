@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 interface Strike {
   readonly hz: readonly number[];
   readonly at: number;
@@ -13,25 +14,25 @@ export interface NotificationSoundSpec {
 
 export const NOTIFICATION_SOUNDS = {
   piano: {
-    label: "Piano key",
+    label: t("Piano key", "钢琴音"),
     wave: "triangle",
     peakGain: 0.15,
     strikes: [{ hz: [440], at: 0, seconds: 0.6 }],
   },
   marimba: {
-    label: "Marimba",
+    label: t("Marimba", "马林巴琴"),
     wave: "sine",
     peakGain: 0.18,
     strikes: [{ hz: [587.33], at: 0, seconds: 0.32 }],
   },
   bell: {
-    label: "Bell",
+    label: t("Bell", "铃声"),
     wave: "sine",
     peakGain: 0.12,
     strikes: [{ hz: [659.25, 987.77], at: 0, seconds: 1.4 }],
   },
   doorbell: {
-    label: "Doorbell",
+    label: t("Doorbell", "门铃"),
     wave: "sine",
     peakGain: 0.16,
     strikes: [

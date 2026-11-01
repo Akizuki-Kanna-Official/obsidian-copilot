@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import { ModelEnableList, type ModelEnableGroup } from "@/components/ui/ModelEnableList";
 import { logError } from "@/logger";
 import {
@@ -49,8 +50,9 @@ export const ChatModelEnableList: React.FC = () => {
 
   const emptyState = (
     <span>
-      No models yet. Add a provider on the <span className="tw-font-medium">BYOK</span> tab to use
-      it in Quick Chat.
+      {t("No models yet. Add a provider on the ", "尚无模型。请前往")}
+      <span className="tw-font-medium">{t("BYOK", "自备密钥（BYOK）")}</span>
+      {t(" tab to use it in Quick Chat.", "页添加服务商，即可在快捷聊天中使用。")}
     </span>
   );
 
@@ -60,7 +62,7 @@ export const ChatModelEnableList: React.FC = () => {
       onToggle={handleToggle}
       query={query}
       onQueryChange={setQuery}
-      searchPlaceholder="Search chat models…"
+      searchPlaceholder={t("Search chat models…", "搜索聊天模型…")}
       emptyState={emptyState}
     />
   );

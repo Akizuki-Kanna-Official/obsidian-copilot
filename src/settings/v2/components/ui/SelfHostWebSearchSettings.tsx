@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import { SettingItem } from "@/components/ui/setting-item";
 import type { SelfHostSearchProvider } from "@/settings/model";
 import { ArrowUpRight } from "lucide-react";
@@ -13,29 +14,29 @@ interface SearchProviderConfig {
 
 const SEARCH_PROVIDER_CONFIGS: Record<SelfHostSearchProvider, SearchProviderConfig> = {
   firecrawl: {
-    apiKeyTitle: "Firecrawl API Key",
-    description: "Web search & fetch via Firecrawl.",
+    apiKeyTitle: t("Firecrawl API Key", "Firecrawl API 密钥"),
+    description: t("Web search & fetch via Firecrawl.", "通过 Firecrawl 搜索和抓取网页。"),
     label: "Firecrawl",
     placeholder: "fc-…",
     signupUrl: "https://firecrawl.link/logan-yang",
   },
   perplexity: {
-    apiKeyTitle: "Perplexity API Key",
-    description: "Web search via Perplexity Sonar.",
+    apiKeyTitle: t("Perplexity API Key", "Perplexity API 密钥"),
+    description: t("Web search via Perplexity Sonar.", "通过 Perplexity Sonar 搜索网页。"),
     label: "Perplexity Sonar",
     placeholder: "pplx-…",
     signupUrl: "https://docs.perplexity.ai",
   },
   parallel: {
-    apiKeyTitle: "Parallel API Key",
-    description: "Web search via Parallel.",
+    apiKeyTitle: t("Parallel API Key", "Parallel API 密钥"),
+    description: t("Web search via Parallel.", "通过 Parallel 搜索网页。"),
     label: "Parallel",
     placeholder: "parallel-…",
     signupUrl: "https://platform.parallel.ai/",
   },
   exa: {
-    apiKeyTitle: "Exa API Key",
-    description: "Web search via Exa.",
+    apiKeyTitle: t("Exa API Key", "Exa API 密钥"),
+    description: t("Web search via Exa.", "通过 Exa 搜索网页。"),
     label: "Exa",
     placeholder: "exa-…",
     signupUrl: "https://dashboard.exa.ai/api-keys",
@@ -68,8 +69,11 @@ export const SelfHostWebSearchSettings: React.FC<SelfHostWebSearchSettingsProps>
     <>
       <SettingItem
         type="select"
-        title="Web search provider"
-        description="Agents search the web through this provider with your API key."
+        title={t("Web search provider", "网页搜索服务商")}
+        description={t(
+          "Agents search the web through this provider with your API key.",
+          "智能体使用你的 API 密钥，通过此服务商搜索网页。"
+        )}
         value={provider}
         onChange={(value) => onProviderChange(value as SelfHostSearchProvider)}
         options={SEARCH_PROVIDER_OPTIONS}
@@ -88,7 +92,8 @@ export const SelfHostWebSearchSettings: React.FC<SelfHostWebSearchSettingsProps>
               rel="noopener noreferrer"
               className="tw-text-accent"
             >
-              Sign up <ArrowUpRight className="tw-inline tw-size-3 tw-align-text-bottom" />
+              {t("Sign up ", "注册")}
+              <ArrowUpRight className="tw-inline tw-size-3 tw-align-text-bottom" />
             </a>
           </span>
         }

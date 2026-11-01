@@ -1,3 +1,4 @@
+import * as obsidian from "obsidian";
 import { fireEvent, render, screen } from "@testing-library/react";
 import React from "react";
 import { AgentNotificationSoundSettings } from "./AgentNotificationSoundSettings";
@@ -9,6 +10,30 @@ const SOUND_OPTIONS = [
 
 describe("AgentNotificationSoundSettings", () => {
   describe("AgentNotificationSoundSettings()", () => {
+    it("shows Chinese controls without translating option identifiers or values", () => {
+      const language = jest.spyOn(obsidian, "getLanguage").mockReturnValue("zh");
+      const onSoundChange = jest.fn();
+      try {
+        render(
+          <AgentNotificationSoundSettings
+            enabled
+            onEnabledChange={() => undefined}
+            onSoundChange={onSoundChange}
+            soundId="piano"
+            soundOptions={SOUND_OPTIONS}
+          />
+        );
+        expect(screen.getByText("通知音效")).not.toBeNull();
+        expect(screen.getByText("选择要播放的提示音。")).not.toBeNull();
+        fireEvent.change(screen.getByDisplayValue("Piano key"), {
+          target: { value: "doorbell" },
+        });
+        expect(onSoundChange).toHaveBeenCalledWith("doorbell");
+      } finally {
+        language.mockRestore();
+      }
+    });
+
     it("shows the sound picker while notifications are enabled (https://github.com/logancyang/obsidian-copilot/issues/2987)", () => {
       render(
         <AgentNotificationSoundSettings

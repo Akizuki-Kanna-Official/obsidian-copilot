@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import { ResetSettingsConfirmModal } from "@/components/modals/ResetSettingsConfirmModal";
 import { Button } from "@/components/ui/button";
 import { MiyoLogo } from "@/miyo/ui/MiyoLogo";
@@ -26,7 +27,11 @@ const LazySkillsSettings = React.lazy(() =>
 
 const SkillsSettingsPanel: React.FC = () => {
   if (!isDesktopRuntime()) {
-    return <DesktopOnlySettingsPanel message="Skills are available on desktop." />;
+    return (
+      <DesktopOnlySettingsPanel
+        message={t("Skills are available on desktop.", "技能功能仅在桌面端可用。")}
+      />
+    );
   }
   return (
     <React.Suspense fallback={null}>
@@ -56,13 +61,13 @@ const components: Record<CopilotSettingsTabId, React.FC> = {
 };
 
 const TAB_LABELS: Record<CopilotSettingsTabId, string> = {
-  basic: "Basic",
-  byok: "BYOK",
+  basic: t("Basic", "基本"),
+  byok: t("BYOK", "自备密钥（BYOK）"),
   miyo: "Miyo",
-  selfhost: "Self-Host",
-  command: "Commands",
-  skills: "Skills",
-  advanced: "Advanced",
+  selfhost: t("Self-Host", "自托管"),
+  command: t("Commands", "命令"),
+  skills: t("Skills", "技能"),
+  advanced: t("Advanced", "高级"),
 };
 
 const tabs = COPILOT_SETTINGS_TAB_IDS.map((id) => ({
@@ -88,7 +93,7 @@ const SettingsContent: React.FC = () => {
               // load failures remain visible from every settings section.
               warningLabel:
                 tab.id === "skills" && skillLoadErrorCount > 0
-                  ? "Some skills failed to load"
+                  ? t("Some skills failed to load", "部分技能加载失败")
                   : undefined,
             }}
             isSelected={selectedTab === tab.id}
@@ -149,7 +154,7 @@ const SettingsMainV2: React.FC<SettingsMainV2Props> = ({ plugin, initialTab = "b
                 className="tw-flex tw-flex-col tw-gap-2 tw-text-base tw-font-semibold sm:tw-flex-row sm:tw-items-center sm:tw-justify-between"
               >
                 <div className="tw-flex tw-items-center tw-gap-2">
-                  <span>Copilot settings</span>
+                  <span>{t("Copilot settings", "Copilot 设置")}</span>
                   <div className="tw-flex tw-items-center tw-gap-1">
                     <span className="tw-text-xs tw-font-normal tw-text-muted">
                       v{plugin.manifest.version}
@@ -163,12 +168,12 @@ const SettingsMainV2: React.FC<SettingsMainV2Props> = ({ plugin, initialTab = "b
                             rel="noopener noreferrer"
                             className="tw-text-xs tw-font-normal tw-text-accent hover:tw-underline"
                           >
-                            (Update to v{latestVersion})
+                            {t(`(Update to v${latestVersion})`, `（更新至 v${latestVersion}）`)}
                           </a>
                         ) : (
                           <span className="tw-text-xs tw-font-normal tw-text-normal">
                             {" "}
-                            (up to date)
+                            {t("(up to date)", "（已是最新版本）")}
                           </span>
                         )}
                       </>
@@ -177,7 +182,7 @@ const SettingsMainV2: React.FC<SettingsMainV2Props> = ({ plugin, initialTab = "b
                 </div>
                 <div className="tw-self-end sm:tw-self-auto">
                   <Button variant="secondary" size="sm" onClick={handleReset}>
-                    Reset settings
+                    {t("Reset settings", "重置设置")}
                   </Button>
                 </div>
               </div>

@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import {
   mapProviderToOpencodeId,
   ModelEnableList,
@@ -89,13 +90,21 @@ export const ConfiguredModelEnableList: React.FC<ConfiguredModelEnableListProps>
   const emptyState =
     descriptor.id === "opencode" ? (
       <span>
-        No models yet. Add a provider on the <span className="tw-font-medium">BYOK</span> tab, or
-        sign in to an OpenCode subscription, to choose models here.
+        {t("No models yet. Add a provider on the ", "尚无模型。请前往")}
+        <span className="tw-font-medium">{t("BYOK", "自备密钥（BYOK）")}</span>
+        {t(
+          " tab, or sign in to an OpenCode subscription, to choose models here.",
+          "页添加服务商，或登录 OpenCode 订阅，然后在此选择模型。"
+        )}
       </span>
     ) : (
       <span>
-        No models yet. Install and sign in to {descriptor.displayName}, or start a chat with it, to
-        see its models.
+        {t("No models yet. Install and sign in to ", "暂无模型。请安装并登录")}
+        {descriptor.displayName}
+        {t(
+          ", or start a chat with it, to see its models.",
+          "，或使用它开始一次对话，即可查看其模型。"
+        )}
       </span>
     );
 
@@ -105,7 +114,10 @@ export const ConfiguredModelEnableList: React.FC<ConfiguredModelEnableListProps>
       onToggle={handleToggle}
       query={query}
       onQueryChange={setQuery}
-      searchPlaceholder={`Search ${descriptor.displayName} models…`}
+      searchPlaceholder={t(
+        `Search ${descriptor.displayName} models…`,
+        `搜索 ${descriptor.displayName} 模型…`
+      )}
       emptyState={emptyState}
       defaultOpenGroupKey={groups[0]?.key}
     />

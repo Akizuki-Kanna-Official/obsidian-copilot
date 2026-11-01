@@ -1,3 +1,4 @@
+import * as obsidian from "obsidian";
 import {
   CopilotFolderChangeNotice,
   type CopilotFolderChangeNoticeProps,
@@ -13,6 +14,19 @@ const DEFAULT_PROPS: CopilotFolderChangeNoticeProps = {
 
 describe("CopilotFolderChangeNotice", () => {
   describe("CopilotFolderChangeNotice()", () => {
+    it("shows the Chinese exclusion warning while preserving both folder paths", () => {
+      const language = jest.spyOn(obsidian, "getLanguage").mockReturnValue("zh");
+      try {
+        render(<CopilotFolderChangeNotice {...DEFAULT_PROPS} containsMarkdown />);
+        expect(screen.getByText("更改 Copilot 文件夹")).not.toBeNull();
+        expect(screen.getByRole("alert").textContent).toContain("包括普通笔记");
+        expect(screen.getByRole("alert").textContent).toContain("90 System/copilot/");
+        expect(screen.getByText("copilot/", { selector: "strong" })).not.toBeNull();
+      } finally {
+        language.mockRestore();
+      }
+    });
+
     it("explains where new and existing Copilot data will remain", () => {
       render(<CopilotFolderChangeNotice {...DEFAULT_PROPS} />);
 

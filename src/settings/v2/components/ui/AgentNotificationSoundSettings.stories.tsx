@@ -28,3 +28,14 @@ export const SoundOn: StoryObj<AgentNotificationSoundSettingsProps> = {};
 export const SoundOff: StoryObj<AgentNotificationSoundSettingsProps> = {
   args: { enabled: false },
 };
+
+export const ChineseSoundLabels: StoryObj<AgentNotificationSoundSettingsProps> = {
+  args: {
+    soundOptions: [
+      { label: "钢琴", value: "piano" },
+      { label: "马林巴琴", value: "marimba" },
+      { label: "铃声", value: "bell" },
+      { label: "门铃", value: "doorbell" },
+    ],
+  },
+};

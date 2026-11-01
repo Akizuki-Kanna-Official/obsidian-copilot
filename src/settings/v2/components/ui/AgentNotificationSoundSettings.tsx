@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import { SettingItem } from "@/components/ui/setting-item";
 import React from "react";
 
@@ -24,16 +25,19 @@ export const AgentNotificationSoundSettings: React.FC<AgentNotificationSoundSett
   <>
     <SettingItem
       type="switch"
-      title="Notification"
-      description="Plays a short sound when an agent finishes a turn."
+      title={t("Notification", "通知音效")}
+      description={t(
+        "Plays a short sound when an agent finishes a turn.",
+        "智能体完成一轮回复时播放短提示音。"
+      )}
       checked={enabled}
       onCheckedChange={onEnabledChange}
     />
     {enabled && (
       <SettingItem
         type="select"
-        title="Sound"
-        description="Choose which sound to play."
+        title={t("Sound", "提示音")}
+        description={t("Choose which sound to play.", "选择要播放的提示音。")}
         value={soundId}
         onChange={onSoundChange}
         options={[...soundOptions]}
