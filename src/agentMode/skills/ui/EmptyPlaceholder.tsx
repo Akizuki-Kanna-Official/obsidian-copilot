@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 import { LayoutGrid } from "lucide-react";
 import React from "react";
@@ -23,14 +24,21 @@ export const EmptyPlaceholder: React.FC<EmptyPlaceholderProps> = ({ folder }) =>
       >
         <LayoutGrid className="tw-size-6 tw-text-faint" aria-hidden="true" />
       </div>
-      <div className="tw-text-smaller tw-font-medium tw-text-muted">No skills yet</div>
+      <div className="tw-text-smaller tw-font-medium tw-text-muted">
+        {t("No skills yet", "暂无技能")}
+      </div>
       <div className="tw-max-w-[420px] tw-text-center tw-text-ui-smaller tw-text-faint">
-        Skills you create or save into your shared folder show up here. Skills under{" "}
-        <code>.claude/skills/</code>, <code>.agents/skills/</code>, or{" "}
-        <code>.opencode/skills/</code> show up here automatically too.
+        {t(
+          "Skills you create or save into your shared folder show up here. Skills under",
+          "在共享文件夹中创建或保存的技能会显示在这里。位于"
+        )}{" "}
+        <code>.claude/skills/</code>, <code>.agents/skills/</code>
+        {t(", or", " 或")} <code>.opencode/skills/</code>
+        {t(" show up here automatically too.", "中的技能也会自动显示在这里。")}
       </div>
       <div className="tw-mt-3.5 tw-font-mono tw-text-smallest tw-text-faint">
-        shared home · <code>&lt;vault&gt;/{folder}/</code>
+        {t("shared home · ", "共享目录 ·")}
+        <code>&lt;vault&gt;/{folder}/</code>
       </div>
     </div>
   );

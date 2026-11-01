@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import { Button } from "@/components/ui/button";
 import { logError } from "@/logger";
 import React from "react";
@@ -43,7 +44,7 @@ export const CommandBlock: React.FC<CommandBlockProps> = ({ command, shell }) =>
       </code>
       <div className="tw-flex tw-shrink-0 tw-items-center tw-gap-1">
         <Button variant="ghost" size="sm" onClick={copy}>
-          {copied ? "Copied" : "Copy"}
+          {copied ? t("Copied", "已复制") : t("Copy", "复制")}
         </Button>
       </div>
     </div>

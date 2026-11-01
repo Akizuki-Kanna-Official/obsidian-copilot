@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import { ConfigSection } from "@/agentMode/backends/shared/ui/ConfigDialogShell";
 import { SignInAction, type SignInActionProps } from "@/agentMode/backends/shared/ui/SignInAction";
 import { CommandBlock } from "@/agentMode/backends/shared/ui/SetupSteps";
@@ -24,15 +25,15 @@ export const AuthenticationSection: React.FC<AuthenticationSectionProps> = ({
   auth,
 }) => (
   <ConfigSection
-    title="Authentication"
+    title={t("Authentication", "身份验证")}
     badge={
       ready && (
         <Badge variant={auth.status?.signedIn ? "success" : "outline"} role="status">
           {auth.status === null
-            ? "Checking…"
+            ? t("Checking…", "正在检查…")
             : auth.status.signedIn
-              ? "Signed in"
-              : "Not signed in"}
+              ? t("Signed in", "已登录")
+              : t("Not signed in", "未登录")}
         </Badge>
       )
     }
@@ -52,23 +53,27 @@ export const AuthenticationSection: React.FC<AuthenticationSectionProps> = ({
         <div className="tw-flex tw-w-full tw-flex-wrap tw-items-center tw-gap-3">
           {auth.status.label && (
             <p className="tw-my-0 tw-min-w-0 tw-break-words tw-text-sm tw-text-muted">
-              Signed in as {auth.status.label}.
+              {t(`Signed in as ${auth.status.label}.`, `已登录为 ${auth.status.label}。`)}
             </p>
           )}
           <Button variant="secondary" onClick={auth.onSignOut} disabled={auth.signingOut}>
-            {auth.signingOut ? "Signing out…" : "Sign out"}
+            {auth.signingOut ? t("Signing out…", "正在退出登录…") : t("Sign out", "退出登录")}
           </Button>
         </div>
         {auth.failed && (
-          <p className="tw-my-0 tw-text-sm tw-text-error">Sign-out didn't complete. Try again.</p>
+          <p className="tw-my-0 tw-text-sm tw-text-error">
+            {t("Sign-out didn't complete. Try again.", "退出登录未完成，请重试。")}
+          </p>
         )}
       </div>
     ) : (
       <>
-        <SignInAction {...auth} signInLabel="Sign in with your browser" />
+        <SignInAction {...auth} signInLabel={t("Sign in with your browser", "通过浏览器登录")} />
         {auth.status?.signedIn === false && auth.terminalCommand && (
           <div className="tw-mt-2 tw-flex tw-flex-col tw-gap-2">
-            <p className="tw-my-0 tw-text-sm tw-font-medium">Sign in using a terminal instead</p>
+            <p className="tw-my-0 tw-text-sm tw-font-medium">
+              {t("Sign in using a terminal instead", "也可以通过终端登录")}
+            </p>
             <CommandBlock command={auth.terminalCommand} />
           </div>
         )}

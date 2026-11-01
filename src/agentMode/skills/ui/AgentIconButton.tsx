@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 import React from "react";
 
@@ -37,7 +38,10 @@ export const AgentIconButton: React.FC<AgentIconButtonProps> = ({
         }
       }}
       aria-pressed={enabled}
-      aria-label={title ?? `${enabled ? "Disable" : "Enable"} ${label}`}
+      aria-label={
+        title ??
+        t(`${enabled ? "Disable" : "Enable"} ${label}`, `${enabled ? "禁用" : "启用"} ${label}`)
+      }
       className={cn(
         "tw-flex tw-items-center tw-justify-center tw-transition-transform",
         disabled ? "tw-cursor-not-allowed tw-opacity-40" : "hover:tw--translate-y-px",

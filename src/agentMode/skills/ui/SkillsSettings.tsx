@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import { availableBuiltinAgents } from "@/agentMode/skills/builtin/reconcileBuiltinSkills";
 import { useBackendInstallStates } from "@/agentMode/session/useBackendInstallStates";
 import { BUILTIN_SKILLS, builtinSkillUnavailableReason } from "@/builtinSkills/builtinSkills";
@@ -99,7 +100,10 @@ export const SkillsSettings: React.FC = () => {
           toVaultRelative(rejected.dirPath, getVaultBase(app)) === `${skillsFolder}/${skill.name}`
       );
     const reason = collision
-      ? "A skill with this name already exists in Your skills. Your file is kept unchanged."
+      ? t(
+          "A skill with this name already exists in Your skills. Your file is kept unchanged.",
+          "“你的技能”中已存在同名技能。原文件不会被修改。"
+        )
       : builtinSkillUnavailableReason(skill.name);
     if (reason) unavailableReasons[skill.name] = reason;
   }
@@ -121,7 +125,10 @@ export const SkillsSettings: React.FC = () => {
         else setRefreshError(undefined);
       } catch (error) {
         setBuiltinError(
-          `Could not update ${name}: ${error instanceof Error ? error.message : String(error)}`
+          t(
+            `Could not update ${name}: ${error instanceof Error ? error.message : String(error)}`,
+            `无法更新 ${name}：${error instanceof Error ? error.message : String(error)}`
+          )
         );
       } finally {
         setBuiltinPending((names) => names.filter((pendingName) => pendingName !== name));
@@ -158,7 +165,10 @@ export const SkillsSettings: React.FC = () => {
           result.reconcileError ??
             result.discoveryError ??
             (result.reconcileErrorCount > 0
-              ? "Some skill links could not be updated. Check folder permissions."
+              ? t(
+                  "Some skill links could not be updated. Check folder permissions.",
+                  "部分技能链接无法更新，请检查文件夹权限。"
+                )
               : undefined)
         );
       }
@@ -249,7 +259,10 @@ export const SkillsSettings: React.FC = () => {
               return "stay";
             }
             new Notice(
-              `Could not update ${req.nameChanged ? req.newName : skill.name}: ${result.message}`
+              t(
+                `Could not update ${req.nameChanged ? req.newName : skill.name}: ${result.message}`,
+                `无法更新 ${req.nameChanged ? req.newName : skill.name}：${result.message}`
+              )
             );
             return "stay";
           }
@@ -271,7 +284,12 @@ export const SkillsSettings: React.FC = () => {
         async () => {
           const result = await manager.deleteSkill(skill);
           if (!result.ok) {
-            new Notice(`Failed to delete ${skill.name}: ${result.message}`);
+            new Notice(
+              t(
+                `Failed to delete ${skill.name}: ${result.message}`,
+                `删除 ${skill.name} 失败：${result.message}`
+              )
+            );
           }
         }
       ).open();
@@ -285,12 +303,12 @@ export const SkillsSettings: React.FC = () => {
     <div ref={containerRef} className="tw-space-y-4">
       <section>
         <div className="tw-mb-4 tw-flex tw-flex-col tw-gap-2">
-          <div className="tw-text-xl tw-font-bold">Skills</div>
+          <div className="tw-text-xl tw-font-bold">{t("Skills", "技能")}</div>
           <div className="tw-text-sm tw-text-muted">
-            Skills are saved instructions your agents can follow - things like &ldquo;review a
-            diff&rdquo; or &ldquo;write a release note&rdquo;. Skills you put under your shared
-            folder, or directly inside an agent&rsquo;s own skills folder, show up here
-            automatically.
+            {t(
+              "Skills are saved instructions your agents can follow - things like “review a diff” or “write a release note”. Skills you put under your shared folder, or directly inside an agent’s own skills folder, show up here automatically.",
+              "技能是智能体可以遵循的已保存指令，例如“审查差异”或“撰写发布说明”。放入共享文件夹或智能体自身技能文件夹中的技能，会自动显示在这里。"
+            )}
           </div>
         </div>
 
@@ -331,21 +349,23 @@ export const SkillsSettings: React.FC = () => {
             <Input
               value={searchValue}
               onChange={(e) => setSearchValue(e.target.value)}
-              placeholder="Search skills…"
+              placeholder={t("Search skills…", "搜索技能…")}
               className="!tw-w-full !tw-pl-8 sm:!tw-w-64"
-              aria-label="Search skills"
+              aria-label={t("Search skills", "搜索技能")}
             />
           </div>
-          <span className="tw-text-xs tw-text-muted">{userSkills.length} loaded</span>
+          <span className="tw-text-xs tw-text-muted">
+            {t(`${userSkills.length} loaded`, `已加载 ${userSkills.length} 个`)}
+          </span>
         </div>
 
-        <div className="tw-mt-4" role="region" aria-label="Your skills">
+        <div className="tw-mt-4" role="region" aria-label={t("Your skills", "你的技能")}>
           <div
             role="heading"
             aria-level={3}
             className="tw-mb-3 tw-text-left tw-text-base tw-font-semibold"
           >
-            Your skills
+            {t("Your skills", "你的技能")}
           </div>
           {userSkills.length === 0 ? (
             // Rejected files prove skills exist; the empty state would claim there are none. https://github.com/Brevilabs/obsidian-copilot-private/issues/166
@@ -358,7 +378,7 @@ export const SkillsSettings: React.FC = () => {
             <div className="tw-flex tw-flex-col tw-gap-1.5">
               {filteredSkills.length === 0 ? (
                 <div className="tw-rounded-sm tw-border tw-border-dashed tw-border-border tw-bg-primary tw-px-3 tw-py-6 tw-text-center tw-text-ui-smaller tw-text-muted">
-                  No skills match &ldquo;{searchValue}&rdquo;.
+                  {t(`No skills match “${searchValue}”.`, `没有找到匹配“${searchValue}”的技能。`)}
                 </div>
               ) : (
                 filteredSkills.map((skill) => (
@@ -406,13 +426,16 @@ const EpermBanner: React.FC<{ onDismiss: () => void }> = ({ onDismiss }) => {
       <AlertTriangle className="tw-mt-0.5 tw-size-4 tw-shrink-0" aria-hidden="true" />
       <div className="tw-flex-1">
         <span className="tw-block tw-font-semibold">
-          Turn on Windows Developer Mode to share skills with your agents.
+          {t(
+            "Turn on Windows Developer Mode to share skills with your agents.",
+            "开启 Windows 开发者模式，以便向智能体共享技能。"
+          )}
         </span>
         <span className="tw-mt-0.5 tw-block tw-text-normal">
-          Copilot shares a skill by adding a shortcut to each agent&rsquo;s skills folder, and
-          Windows allows that only for admins or with Developer Mode (Settings → Privacy &amp;
-          security → For developers). Until then, turning a skill on for an agent is saved, but the
-          agent can&rsquo;t see the skill.
+          {t(
+            "Copilot shares a skill by adding a shortcut to each agent’s skills folder, and Windows allows that only for admins or with Developer Mode (Settings → Privacy & security → For developers). Until then, turning a skill on for an agent is saved, but the agent can’t see the skill.",
+            "Copilot 会在每个智能体的技能文件夹中创建快捷方式来共享技能。在 Windows 上，这需要管理员权限或开发者模式（设置 → 隐私和安全性 → 开发者选项）。在开启之前，为智能体启用技能的设置仍会保存，但智能体无法访问该技能。"
+          )}
         </span>
       </div>
       <button
@@ -420,7 +443,7 @@ const EpermBanner: React.FC<{ onDismiss: () => void }> = ({ onDismiss }) => {
         onClick={onDismiss}
         style={{ appearance: "none", border: 0, background: "transparent", padding: 0 }}
         className="tw-px-1 tw-text-faint hover:tw-text-normal"
-        aria-label="Dismiss"
+        aria-label={t("Dismiss", "关闭")}
       >
         ×
       </button>
@@ -441,10 +464,14 @@ const SyncFolderBanner: React.FC<{ brand: string; onDismiss: () => void }> = ({
       role="status"
     >
       <div className="tw-flex-1">
-        <span className="tw-block tw-font-semibold">This vault is inside {brand}.</span>
+        <span className="tw-block tw-font-semibold">
+          {t(`This vault is inside ${brand}.`, `此仓库位于 ${brand} 同步目录中。`)}
+        </span>
         <span className="tw-mt-0.5 tw-block tw-text-muted">
-          Sync can break the links Copilot uses to share skills with agents. If a skill disappears
-          from an agent after a sync, turn it off and on again here.
+          {t(
+            "Sync can break the links Copilot uses to share skills with agents. If a skill disappears from an agent after a sync, turn it off and on again here.",
+            "同步可能损坏 Copilot 向智能体共享技能所使用的链接。如果同步后某个智能体中的技能消失，请在这里将它关闭再重新启用。"
+          )}
         </span>
       </div>
       <button
@@ -452,7 +479,7 @@ const SyncFolderBanner: React.FC<{ brand: string; onDismiss: () => void }> = ({
         onClick={onDismiss}
         style={{ appearance: "none", border: 0, background: "transparent", padding: 0 }}
         className="tw-px-1 tw-text-faint hover:tw-text-normal"
-        aria-label="Dismiss"
+        aria-label={t("Dismiss", "关闭")}
       >
         ×
       </button>

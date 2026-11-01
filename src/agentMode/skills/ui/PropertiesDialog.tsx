@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
@@ -83,7 +84,7 @@ const PropertiesModalBody: React.FC<PropertiesModalBodyProps> = ({
   return (
     <div className="tw-flex tw-flex-col" style={{ maxHeight: "70vh" }}>
       <div className="tw-mb-3 tw-text-[12.5px] tw-text-muted">
-        Writes to{" "}
+        {t("Writes to", "写入位置")}{" "}
         <code className="tw-font-mono tw-text-[12px]">
           {folder}/{skill.name}/SKILL.md
         </code>
@@ -92,7 +93,7 @@ const PropertiesModalBody: React.FC<PropertiesModalBodyProps> = ({
       <div className="tw-flex-1 tw-overflow-y-auto tw-pr-1">
         <div className="tw-flex tw-flex-col tw-gap-4">
           <Field>
-            <FieldLabel htmlFor="properties-name">Name</FieldLabel>
+            <FieldLabel htmlFor="properties-name">{t("Name", "名称")}</FieldLabel>
             <Input
               id="properties-name"
               type="text"
@@ -105,17 +106,26 @@ const PropertiesModalBody: React.FC<PropertiesModalBodyProps> = ({
             {nameError !== null ? (
               <FieldError>{nameError}</FieldError>
             ) : collisionError ? (
-              <FieldError>A skill named &ldquo;{values.name}&rdquo; already exists.</FieldError>
+              <FieldError>
+                {t(
+                  `A skill named “${values.name}” already exists.`,
+                  `已存在名为“${values.name}”的技能。`
+                )}
+              </FieldError>
             ) : (
               <FieldHelp>
-                Lowercase, hyphenated. This is what users type after{" "}
-                <code className="tw-font-mono">/</code> in chat.
+                {t(
+                  "Lowercase, hyphenated. This is what users type after ",
+                  "使用小写字母和连字符。这是聊天中在 "
+                )}
+                <code className="tw-font-mono">/</code>
+                {t(" in chat.", " 后输入的名称。")}
               </FieldHelp>
             )}
           </Field>
 
           <Field>
-            <FieldLabel htmlFor="properties-description">Description</FieldLabel>
+            <FieldLabel htmlFor="properties-description">{t("Description", "描述")}</FieldLabel>
             <Textarea
               id="properties-description"
               value={values.description}
@@ -138,7 +148,9 @@ const PropertiesModalBody: React.FC<PropertiesModalBodyProps> = ({
           </Field>
 
           <Field>
-            <FieldLabel htmlFor="properties-allowed-tools">Allowed tools</FieldLabel>
+            <FieldLabel htmlFor="properties-allowed-tools">
+              {t("Allowed tools", "允许使用的工具")}
+            </FieldLabel>
             <Input
               id="properties-allowed-tools"
               type="text"
@@ -153,7 +165,8 @@ const PropertiesModalBody: React.FC<PropertiesModalBodyProps> = ({
 
           <Field>
             <FieldLabel htmlFor="properties-model">
-              Model override <ClaudeOnlyChip />
+              {t("Model override", "指定模型")}
+              <ClaudeOnlyChip />
             </FieldLabel>
             <Input
               id="properties-model"
@@ -177,7 +190,7 @@ const PropertiesModalBody: React.FC<PropertiesModalBodyProps> = ({
             />
             <span className="tw-flex tw-flex-col tw-gap-0.5">
               <span className="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-text-normal">
-                Don&apos;t let Claude invoke this on its own
+                {t("Don't let Claude invoke this on its own", "不允许 Claude 自行调用此技能")}
                 <ClaudeOnlyChip />
               </span>
             </span>
@@ -193,7 +206,7 @@ const PropertiesModalBody: React.FC<PropertiesModalBodyProps> = ({
             />
             <span className="tw-flex tw-flex-col tw-gap-0.5">
               <span className="tw-flex tw-items-center tw-gap-2 tw-text-sm tw-text-normal">
-                Hide from slash menu
+                {t("Hide from slash menu", "在斜杠菜单中隐藏")}
                 <ClaudeOnlyChip />
               </span>
             </span>
@@ -203,10 +216,10 @@ const PropertiesModalBody: React.FC<PropertiesModalBodyProps> = ({
 
       <div className="tw-mt-4 tw-flex tw-justify-end tw-gap-2 tw-border-t tw-border-solid tw-border-border tw-pt-3">
         <Button variant="secondary" onClick={onCancel} disabled={saving}>
-          Cancel
+          {t("Cancel", "取消")}
         </Button>
         <Button variant="default" onClick={handleSave} disabled={!canSave}>
-          Save
+          {t("Save", "保存")}
         </Button>
       </div>
     </div>
@@ -228,7 +241,7 @@ export class PropertiesModal extends Modal {
   ) {
     super(app);
     // @ts-expect-error — setTitle exists on Modal but is missing from @types/obsidian.
-    this.setTitle(`Properties · ${skill.name}`);
+    this.setTitle(t(`Properties · ${skill.name}`, `属性 · ${skill.name}`));
   }
 
   onOpen(): void {
@@ -307,7 +320,7 @@ const ClaudeOnlyChip: React.FC = () => (
     <span className="tw-bg-orange tw-inline-flex tw-size-3 tw-items-center tw-justify-center tw-rounded-[3px] tw-text-on-accent">
       <ClaudeMiniGlyph />
     </span>
-    Claude Code only
+    {t("Claude Code only", "仅限 Claude Code")}
   </span>
 );
 
@@ -329,18 +342,25 @@ function computeInitialFormValues(skill: Skill): PropertiesFormValues {
 }
 
 function validateNameField(name: string): string | null {
-  if (name.length === 0) return "Name is required.";
-  if (name.length > NAME_MAX) return `Name must be at most ${NAME_MAX} characters.`;
+  if (name.length === 0) return t("Name is required.", "请输入名称。");
+  if (name.length > NAME_MAX)
+    return t(`Name must be at most ${NAME_MAX} characters.`, `名称不能超过 ${NAME_MAX} 个字符。`);
   if (!NAME_RE.test(name)) {
-    return "Lowercase a–z, 0–9, and hyphens only — no leading, trailing, or consecutive hyphens.";
+    return t(
+      "Lowercase a–z, 0–9, and hyphens only — no leading, trailing, or consecutive hyphens.",
+      "仅可使用小写字母 a–z、数字 0–9 和连字符；连字符不能位于首尾，也不能连续出现。"
+    );
   }
   return null;
 }
 
 function validateDescriptionField(description: string): string | null {
-  if (description.trim().length === 0) return "Description is required.";
+  if (description.trim().length === 0) return t("Description is required.", "请输入描述。");
   if (description.length > DESCRIPTION_MAX) {
-    return `Description must be at most ${DESCRIPTION_MAX} characters.`;
+    return t(
+      `Description must be at most ${DESCRIPTION_MAX} characters.`,
+      `描述不能超过 ${DESCRIPTION_MAX} 个字符。`
+    );
   }
   return null;
 }

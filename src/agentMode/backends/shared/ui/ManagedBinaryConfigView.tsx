@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import { BinaryPathSetting } from "@/agentMode/backends/shared/BinaryPathSetting";
 import {
   ConfigDialogShell,
@@ -64,8 +65,8 @@ export interface ManagedBinaryConfigViewProps extends ManagedBinaryConfigProps {
 }
 
 const SOURCE_OPTIONS: SegmentedControlOption<ManagedBinarySource>[] = [
-  { label: "Managed by Copilot", value: "managed" },
-  { label: "My own installation", value: "custom" },
+  { label: t("Managed by Copilot", "由 Copilot 管理"), value: "managed" },
+  { label: t("My own installation", "使用自行安装的版本"), value: "custom" },
 ];
 
 interface ManagedBinaryInstallProps {
@@ -91,7 +92,7 @@ const ManagedBinaryInstall: React.FC<ManagedBinaryInstallProps> = ({
         {managed.canCancel !== false && (
           <div className="tw-flex tw-justify-end">
             <Button variant="ghost" size="default" onClick={actions.cancelInstall}>
-              Cancel
+              {t("Cancel", "取消")}
             </Button>
           </div>
         )}
@@ -102,11 +103,13 @@ const ManagedBinaryInstall: React.FC<ManagedBinaryInstallProps> = ({
   return (
     <div className="tw-flex tw-flex-col tw-gap-2">
       <dl className="tw-my-0 tw-grid tw-grid-cols-[max-content_1fr] tw-gap-x-4 tw-gap-y-1 tw-text-sm [&>dd]:tw-ml-0">
-        <dt className="tw-text-muted">Platform</dt>
+        <dt className="tw-text-muted">{t("Platform", "平台")}</dt>
         <dd className="tw-font-mono">{managed.platform}</dd>
-        <dt className="tw-text-muted">Version</dt>
-        <dd className="tw-font-mono">v{managed.version} (pinned)</dd>
-        <dt className="tw-text-muted">Location</dt>
+        <dt className="tw-text-muted">{t("Version", "版本")}</dt>
+        <dd className="tw-font-mono">
+          v{managed.version} {t("(pinned)", "（固定版本）")}
+        </dd>
+        <dt className="tw-text-muted">{t("Location", "位置")}</dt>
         <dd className="tw-break-all tw-font-mono">{managed.destination}</dd>
       </dl>
       {run.kind === "error" && (
@@ -121,14 +124,14 @@ const ManagedBinaryInstall: React.FC<ManagedBinaryInstallProps> = ({
           onClick={actions.install}
         >
           {installed
-            ? "Reinstall"
+            ? t("Reinstall", "重新安装")
             : managed.hasDownloads
-              ? "Reinstall & use managed"
-              : "Download & install"}
+              ? t("Reinstall & use managed", "重新安装并使用托管版本")
+              : t("Download & install", "下载并安装")}
         </Button>
         {(managed.hasDownloads ?? installed) && (
           <Button variant="destructive" size="default" onClick={actions.uninstall}>
-            Uninstall
+            {t("Uninstall", "卸载")}
           </Button>
         )}
       </div>
@@ -187,7 +190,7 @@ export const ManagedBinaryConfigView: React.FC<ManagedBinaryConfigViewProps> = (
   >
     <ConfigSection>
       <SegmentedControl
-        aria-label={`${binaryName} installation source`}
+        aria-label={t(`${binaryName} installation source`, `${binaryName} 安装来源`)}
         className={cn("tw-self-start")}
         options={SOURCE_OPTIONS}
         value={source}
@@ -203,9 +206,18 @@ export const ManagedBinaryConfigView: React.FC<ManagedBinaryConfigViewProps> = (
           <p className="tw-my-0 tw-text-normal">
             {activeSource === "custom"
               ? managed.hasDownloads
-                ? "Your own binary is currently in use. Copilot's managed downloads are still on this computer. Reinstall to switch to Managed by Copilot, or uninstall to free up space."
-                : "Your own binary is currently in use. Download and install the managed copy to switch to Managed by Copilot."
-              : "The Copilot-managed binary is currently in use. Apply your own binary path below to switch to it."}
+                ? t(
+                    "Your own binary is currently in use. Copilot's managed downloads are still on this computer. Reinstall to switch to Managed by Copilot, or uninstall to free up space.",
+                    "当前使用你自行安装的程序。Copilot 托管下载的文件仍保留在此电脑上。重新安装可切换至“由 Copilot 管理”，也可卸载以释放空间。"
+                  )
+                : t(
+                    "Your own binary is currently in use. Download and install the managed copy to switch to Managed by Copilot.",
+                    "当前使用你自行安装的程序。下载并安装托管版本即可切换至“由 Copilot 管理”。"
+                  )
+              : t(
+                  "The Copilot-managed binary is currently in use. Apply your own binary path below to switch to it.",
+                  "当前使用 Copilot 托管的程序。在下方应用你自己的程序路径即可切换。"
+                )}
           </p>
         </div>
       ) : (
@@ -220,8 +232,10 @@ export const ManagedBinaryConfigView: React.FC<ManagedBinaryConfigViewProps> = (
         >
           <AlertTriangle aria-hidden className="tw-mt-0.5 tw-size-4 tw-shrink-0 tw-text-warning" />
           <p className="tw-my-0 tw-text-normal">
-            Copilot is tested with the version managed by Copilot. Other versions may not work
-            correctly. We recommend Managed by Copilot.
+            {t(
+              "Copilot is tested with the version managed by Copilot. Other versions may not work correctly. We recommend Managed by Copilot.",
+              "Copilot 已针对托管版本进行测试，其他版本可能无法正常运行。建议选择“由 Copilot 管理”。"
+            )}
           </p>
         </div>
       )}

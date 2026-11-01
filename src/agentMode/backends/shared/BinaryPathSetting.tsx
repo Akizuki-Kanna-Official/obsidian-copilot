@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { logError } from "@/logger";
@@ -53,7 +54,7 @@ export const BinaryPathSetting: React.FC<Props> = ({
   const apply = React.useCallback(async (): Promise<void> => {
     const trimmed = pathInput.trim();
     if (!trimmed) {
-      setError("Path is required.");
+      setError(t("Path is required.", "请输入路径。"));
       return;
     }
     const err = await onSave(trimmed);
@@ -90,7 +91,10 @@ export const BinaryPathSetting: React.FC<Props> = ({
       if (!found) {
         setError(
           notFoundHint ??
-            `${binaryName} not found on PATH. Install it or paste a custom path manually.`
+            t(
+              `${binaryName} not found on PATH. Install it or paste a custom path manually.`,
+              `未在 PATH 中找到 ${binaryName}。请安装它，或手动粘贴自定义路径。`
+            )
         );
         const dirs = searchedDirs ?? (detect ? undefined : detectionSearchDirs);
         setSearched(dirs?.() ?? []);
@@ -104,7 +108,7 @@ export const BinaryPathSetting: React.FC<Props> = ({
           return;
         }
       }
-      new Notice(`Found ${binaryName} at ${found}`);
+      new Notice(t(`Found ${binaryName} at ${found}`, `已找到 ${binaryName}：${found}`));
     } catch (e) {
       logError(`[AgentMode] auto-detect ${binaryName} failed`, e);
       setError(e instanceof Error ? e.message : String(e));
@@ -133,7 +137,7 @@ export const BinaryPathSetting: React.FC<Props> = ({
           onClick={safeAsyncHandler(autoDetect)}
           disabled={busy}
         >
-          Auto-detect
+          {t("Auto-detect", "自动检测")}
         </Button>
         {showClear ? (
           <Button
@@ -142,7 +146,7 @@ export const BinaryPathSetting: React.FC<Props> = ({
             onClick={safeAsyncHandler(clear)}
             disabled={busy}
           >
-            Clear
+            {t("Clear", "清除")}
           </Button>
         ) : showApply ? (
           <Button
@@ -151,7 +155,7 @@ export const BinaryPathSetting: React.FC<Props> = ({
             onClick={safeAsyncHandler(apply)}
             disabled={busy}
           >
-            Apply
+            {t("Apply", "应用")}
           </Button>
         ) : null}
       </div>
@@ -160,7 +164,7 @@ export const BinaryPathSetting: React.FC<Props> = ({
           <span>{error}</span>
           {searched.length > 0 && (
             <div className="tw-text-muted">
-              <span>Searched:</span>
+              <span>{t("Searched:", "已搜索：")}</span>
               <ul className="tw-my-0 tw-pl-4">
                 {searched.map((dir) => (
                   <li key={dir}>{dir}</li>

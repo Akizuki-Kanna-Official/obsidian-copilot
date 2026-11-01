@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import { CLAUDE_INSTALL_COMMAND } from "@/agentMode/backends/claude/cliSetup";
 import { claudeUpdateDetail } from "@/agentMode/backends/claude/claudeUpdateDetail";
 import { BinaryPathSetting } from "@/agentMode/backends/shared/BinaryPathSetting";
@@ -44,22 +45,27 @@ export const ClaudeConfigView: React.FC<ClaudeConfigViewProps> = ({
 }) => (
   <ConfigDialogShell
     authStatus={auth.status}
-    title="Configure Claude"
+    title={t("Configure Claude", "配置 Claude")}
     state={state}
     warning={<ConfigWarningStrip state={state} detail={claudeUpdateDetail(state)} />}
     onClose={onClose}
   >
-    <ConfigSection title="Claude Code installation">
+    <ConfigSection title={t("Claude Code installation", "Claude Code 安装")}>
       <p className="tw-my-0 tw-text-sm tw-text-muted">
-        Copilot uses Claude Code installed on this computer. Auto-detect looks in the usual install
-        locations.
+        {t(
+          "Copilot uses Claude Code installed on this computer. Auto-detect looks in the usual install locations.",
+          "Copilot 使用此电脑上安装的 Claude Code。“自动检测”会搜索常用安装位置。"
+        )}
       </p>
       <BinaryPathSetting
         binaryName="claude"
         placeholder={PATH_PLACEHOLDER}
         initialPath={binaryPath}
         hasPersistedPath={hasBinaryPathOverride}
-        notFoundHint="Claude Code wasn't found. Install it with the command below, then select Auto-detect again."
+        notFoundHint={t(
+          "Claude Code wasn't found. Install it with the command below, then select Auto-detect again.",
+          "未找到 Claude Code。请使用下方命令安装，然后再次点击“自动检测”。"
+        )}
         onSave={onSavePath}
         onClear={onClearPath}
         persistOnAutoDetect
@@ -68,12 +74,15 @@ export const ClaudeConfigView: React.FC<ClaudeConfigViewProps> = ({
       />
     </ConfigSection>
 
-    <ConfigSection title="Install Claude Code">
+    <ConfigSection title={t("Install Claude Code", "安装 Claude Code")}>
       <CommandBlock command={CLAUDE_INSTALL_COMMAND} />
     </ConfigSection>
     <AuthenticationSection
       ready={state.kind === "ready"}
-      unavailableMessage="Set up a supported version of Claude Code above to sign in."
+      unavailableMessage={t(
+        "Set up a supported version of Claude Code above to sign in.",
+        "请先在上方配置受支持的 Claude Code 版本，再登录。"
+      )}
       auth={auth}
     />
   </ConfigDialogShell>

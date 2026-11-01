@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ENV_VAR_NAME_RE } from "@/settings/model";
@@ -91,9 +92,18 @@ export const EnvOverridesSetting: React.FC<Props> = ({
   return (
     <div className="tw-flex tw-flex-col tw-gap-2 tw-py-4">
       <div className="tw-flex tw-flex-col tw-gap-1">
-        <div className="tw-text-sm tw-font-medium tw-leading-none">Environment variables</div>
+        <div className="tw-text-sm tw-font-medium tw-leading-none">
+          {t("Environment variables", "环境变量")}
+        </div>
         <div className="tw-text-xs tw-text-muted">
-          Set values for {backendDisplayName}, like <code>{hintA}</code> or <code>{hintB}</code>.
+          {t(
+            `Set values for ${backendDisplayName}, like `,
+            `为 ${backendDisplayName} 设置变量，例如 `
+          )}
+          <code>{hintA}</code>
+          {t(" or ", " 或 ")}
+          <code>{hintB}</code>
+          {t(".", "。")}
         </div>
       </div>
       <div className="tw-flex tw-w-full tw-flex-col tw-gap-2">
@@ -116,7 +126,7 @@ export const EnvOverridesSetting: React.FC<Props> = ({
                 />
                 <Input
                   type="text"
-                  placeholder="value"
+                  placeholder={t("value", "值")}
                   value={row.value}
                   spellCheck={false}
                   autoCapitalize="off"
@@ -127,7 +137,7 @@ export const EnvOverridesSetting: React.FC<Props> = ({
                 <Button
                   variant="ghost"
                   size="icon"
-                  aria-label="Remove variable"
+                  aria-label={t("Remove variable", "删除变量")}
                   onClick={() => removeRow(row.id)}
                 >
                   <Trash2 className="tw-size-icon-s" />
@@ -135,8 +145,10 @@ export const EnvOverridesSetting: React.FC<Props> = ({
               </div>
               {nameInvalid && (
                 <div className="tw-text-xs tw-text-error">
-                  Name must start with a letter or underscore and contain only letters, digits, and
-                  underscores.
+                  {t(
+                    "Name must start with a letter or underscore and contain only letters, digits, and underscores.",
+                    "名称必须以字母或下划线开头，且只能包含字母、数字和下划线。"
+                  )}
                 </div>
               )}
             </div>
@@ -144,7 +156,7 @@ export const EnvOverridesSetting: React.FC<Props> = ({
         })}
         <Button variant="ghost2" size="sm" className="tw-self-start" onClick={addRow}>
           <Plus className="tw-size-icon-xs" />
-          Add variable
+          {t("Add variable", "添加变量")}
         </Button>
       </div>
     </div>

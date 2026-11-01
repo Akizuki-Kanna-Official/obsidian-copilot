@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import {
   OpencodeConfigView,
   type OpencodeBinarySource,
@@ -79,7 +80,10 @@ export const ManagedInstalling: StoryObj<OpencodeConfigViewProps> = {
       version: OPENCODE_PINNED_VERSION,
       run: {
         kind: "running",
-        label: "Downloading opencode — 24.1 MB / 75.8 MB",
+        label: t(
+          "Downloading opencode — 24.1 MB / 75.8 MB",
+          "正在下载 opencode — 24.1 MB / 75.8 MB"
+        ),
         percent: 30,
       },
     },

@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import type { BackendAuthStatus, InstallState } from "@/agentMode/session/types";
 import { Badge } from "@/components/ui/badge";
 import { AlertTriangle, Check } from "lucide-react";
@@ -16,23 +17,31 @@ export function installBadge(
   authStatus?: BackendAuthStatus | null
 ): InstallBadgeSpec | null {
   if (state.kind === "ready") {
-    return authBadge(authStatus) ?? { label: "Ready", variant: "success", showCheck: true };
+    return (
+      authBadge(authStatus) ?? { label: t("Ready", "就绪"), variant: "success", showCheck: true }
+    );
   }
   if (state.kind === "checking") {
-    return { label: "Checking…", variant: "outline" };
+    return { label: t("Checking…", "正在检查…"), variant: "outline" };
   }
   if (state.kind === "incompatible") {
-    return { label: "Incompatible version", variant: "destructive", title: state.message };
+    return {
+      label: t("Incompatible version", "版本不兼容"),
+      variant: "destructive",
+      title: state.message,
+    };
   }
   if (state.kind === "error") {
-    return { label: "Error", variant: "destructive", title: state.message };
+    return { label: t("Error", "错误"), variant: "destructive", title: state.message };
   }
   return null;
 }
 
 function authBadge(authStatus: BackendAuthStatus | null | undefined): InstallBadgeSpec | null {
-  if (authStatus === null) return { label: "Checking sign-in…", variant: "outline" };
-  if (authStatus?.signedIn === false) return { label: "Sign in required", variant: "outline" };
+  if (authStatus === null)
+    return { label: t("Checking sign-in…", "正在检查登录状态…"), variant: "outline" };
+  if (authStatus?.signedIn === false)
+    return { label: t("Sign in required", "需要登录"), variant: "outline" };
   return null;
 }
 
@@ -42,11 +51,15 @@ interface ReadinessBadgeProps {
 }
 
 const CONFIG_STATUS_BADGES: Record<InstallState["kind"], InstallBadgeSpec> = {
-  ready: { label: "Ready", variant: "success", showCheck: true },
-  absent: { label: "Not set up", variant: "outline" },
-  incompatible: { label: "Update required", variant: "destructive", showAlert: true },
-  checking: { label: "Checking…", variant: "outline" },
-  error: { label: "Error", variant: "destructive" },
+  ready: { label: t("Ready", "就绪"), variant: "success", showCheck: true },
+  absent: { label: t("Not set up", "尚未配置"), variant: "outline" },
+  incompatible: {
+    label: t("Update required", "需要更新"),
+    variant: "destructive",
+    showAlert: true,
+  },
+  checking: { label: t("Checking…", "正在检查…"), variant: "outline" },
+  error: { label: t("Error", "错误"), variant: "destructive" },
 };
 
 const StatusBadge: React.FC<{ spec: InstallBadgeSpec }> = ({ spec }) => (

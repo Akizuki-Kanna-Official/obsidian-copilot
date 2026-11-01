@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import { ConfigStatusBadge } from "@/agentMode/backends/shared/installStatus";
 import type { BackendAuthStatus, InstallState } from "@/agentMode/session/types";
 import { Button } from "@/components/ui/button";
@@ -37,7 +38,7 @@ export const ConfigDialogShell: React.FC<ConfigDialogShellProps> = ({
     <div className="copilot-divider-t tw-flex tw-justify-end tw-gap-2 tw-bg-secondary tw-px-4 tw-py-3">
       {footer ?? (
         <Button variant="default" size="default" onClick={onClose}>
-          Done
+          {t("Done", "完成")}
         </Button>
       )}
     </div>

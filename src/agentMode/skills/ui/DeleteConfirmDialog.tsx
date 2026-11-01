@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { logError } from "@/logger";
@@ -33,13 +34,19 @@ const DeleteConfirmBody: React.FC<{
         />
         <p className="tw-m-0 tw-text-ui-smaller tw-leading-relaxed tw-text-normal">
           {isProject
-            ? `This removes the skill ${paths.length > 1 ? "folders" : "folder"} from your project. Vault sync / git is the only rollback path.`
-            : "This removes the canonical copy and every agent symlink. Vault sync / git is the only rollback path."}
+            ? t(
+                `This removes the skill ${paths.length > 1 ? "folders" : "folder"} from your project. Vault sync / git is the only rollback path.`,
+                `这将从项目中删除技能文件夹。只能通过仓库同步或 Git 恢复。`
+              )
+            : t(
+                "This removes the canonical copy and every agent symlink. Vault sync / git is the only rollback path.",
+                "这将删除共享源文件以及所有智能体的符号链接。只能通过仓库同步或 Git 恢复。"
+              )}
         </p>
       </div>
 
       <div className="tw-flex tw-flex-col tw-gap-2">
-        <div className="tw-text-ui-smaller tw-text-muted">Will remove:</div>
+        <div className="tw-text-ui-smaller tw-text-muted">{t("Will remove:", "将删除：")}</div>
         <ul className="tw-m-0 tw-list-none tw-space-y-1 tw-p-0 tw-font-mono tw-text-ui-smaller tw-text-normal">
           {paths.map(({ path, note }) => (
             <li key={path} className="tw-flex tw-items-baseline tw-gap-2">
@@ -59,10 +66,10 @@ const DeleteConfirmBody: React.FC<{
 
       <div className="tw-flex tw-justify-end tw-gap-2 tw-pt-2">
         <Button variant="secondary" onClick={onCancel}>
-          Cancel
+          {t("Cancel", "取消")}
         </Button>
         <Button variant="destructive" onClick={onConfirm}>
-          Delete skill
+          {t("Delete skill", "删除技能")}
         </Button>
       </div>
     </div>
@@ -81,7 +88,7 @@ export class DeleteConfirmModal extends Modal {
   ) {
     super(app);
     // @ts-ignore
-    this.setTitle(`Delete ${skill.name}?`);
+    this.setTitle(t(`Delete ${skill.name}?`, `删除 ${skill.name}？`));
   }
 
   onOpen() {

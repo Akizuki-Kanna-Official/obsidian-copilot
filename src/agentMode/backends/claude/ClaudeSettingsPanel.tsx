@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import { EnvOverridesSetting } from "@/agentMode/backends/shared/EnvOverridesSetting";
 import { ClaudeAutoModePermissionSetting } from "@/agentMode/backends/claude/ui/ClaudeAutoModePermissionSetting";
 import { SettingItem } from "@/components/ui/setting-item";
@@ -23,8 +24,11 @@ export const ClaudeSettingsPanel: React.FC<Props> = () => {
 
       <SettingItem
         type="switch"
-        title="Show extended thinking"
-        description="Show the model's reasoning as it works. Uses more tokens."
+        title={t("Show extended thinking", "显示深度思考")}
+        description={t(
+          "Show the model's reasoning as it works. Uses more tokens.",
+          "显示模型工作时的推理过程。这会消耗更多 token。"
+        )}
         checked={Boolean(settings.agentMode?.backends?.claude?.enableThinking)}
         onCheckedChange={(checked) => updateClaudeFields({ enableThinking: checked })}
       />

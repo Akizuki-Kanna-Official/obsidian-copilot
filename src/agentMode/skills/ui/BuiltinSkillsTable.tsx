@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import type { BuiltinPreferences } from "@/settings/builtinSkillPreferences";
 import type { AgentBrand, BackendId } from "@/agentMode/session/types";
 import React from "react";
@@ -43,9 +44,9 @@ export function BuiltinSkillsTable({
   onToggleAgent,
 }: BuiltinSkillsTableProps) {
   return (
-    <section aria-label="Built-in skills" className="tw-space-y-3">
+    <section aria-label={t("Built-in skills", "内置技能")} className="tw-space-y-3">
       <div role="heading" aria-level={3} className="tw-text-left tw-text-base tw-font-semibold">
-        Built-in skills
+        {t("Built-in skills", "内置技能")}
       </div>
       {error && (
         <div role="alert" className="tw-text-ui-smaller tw-text-error">
@@ -67,7 +68,9 @@ export function BuiltinSkillsTable({
           />
         ))}
         {skills.length === 0 && (
-          <p className="tw-text-ui-smaller tw-text-muted">No built-in skills match your search.</p>
+          <p className="tw-text-ui-smaller tw-text-muted">
+            {t("No built-in skills match your search.", "没有找到匹配的内置技能。")}
+          </p>
         )}
       </div>
     </section>
@@ -112,11 +115,11 @@ const BuiltinSkillItem = React.memo(function BuiltinSkillItem({
                   variant="secondary"
                   className="tw-hidden tw-shrink-0 @[140px]/skill-title:tw-inline-flex"
                 >
-                  Disabled
+                  {t("Disabled", "已禁用")}
                 </Badge>
                 <span
-                  title="Disabled"
-                  aria-label="Disabled"
+                  title={t("Disabled", "已禁用")}
+                  aria-label={t("Disabled", "已禁用")}
                   className="tw-shrink-0 @[140px]/skill-title:tw-hidden"
                 >
                   <CircleOff aria-hidden="true" className="tw-size-3.5 tw-text-muted" />
@@ -149,8 +152,14 @@ const BuiltinSkillItem = React.memo(function BuiltinSkillItem({
                   disabled={pending || !skillEnabled || !available || !!unavailableReason}
                   title={
                     !available
-                      ? `Set up ${agent.displayName} to enable`
-                      : `${skill.name} for ${agent.displayName}`
+                      ? t(
+                          `Set up ${agent.displayName} to enable`,
+                          `配置 ${agent.displayName} 后即可启用`
+                        )
+                      : t(
+                          `${skill.name} for ${agent.displayName}`,
+                          `${agent.displayName} 的 ${skill.name}`
+                        )
                   }
                   onClick={() => onToggleAgent(skill.name, agent.id, !enabled)}
                 />
@@ -164,8 +173,8 @@ const BuiltinSkillItem = React.memo(function BuiltinSkillItem({
               <Button
                 variant="ghost"
                 size="icon"
-                title="More actions"
-                aria-label={`More actions for ${skill.name}`}
+                title={t("More actions", "更多操作")}
+                aria-label={t(`More actions for ${skill.name}`, `${skill.name} 的更多操作`)}
               >
                 <MoreVertical className="tw-size-4" />
               </Button>
@@ -177,14 +186,14 @@ const BuiltinSkillItem = React.memo(function BuiltinSkillItem({
                 onSelect={() => onToggleSkill(skill.name, !skillEnabled)}
               >
                 <Power className="tw-size-3.5" />
-                {skillEnabled ? "Disable skill" : "Enable skill"}
+                {skillEnabled ? t("Disable skill", "禁用技能") : t("Enable skill", "启用技能")}
               </DropdownMenuItem>
               <DropdownMenuItem
                 className="tw-gap-2.5 tw-text-ui-small"
                 onSelect={() => setPreviewOpen(!previewOpen)}
               >
                 <Eye className="tw-size-3.5" />
-                View SKILL.md (read-only)
+                {t("View SKILL.md (read-only)", "查看 SKILL.md（只读）")}
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -192,7 +201,7 @@ const BuiltinSkillItem = React.memo(function BuiltinSkillItem({
       />
       {previewOpen && (
         <pre
-          aria-label={`${skill.name} content (read-only)`}
+          aria-label={t(`${skill.name} content (read-only)`, `${skill.name} 内容（只读）`)}
           className="tw-max-h-80 tw-overflow-auto tw-whitespace-pre-wrap tw-break-all tw-rounded-md tw-bg-secondary tw-p-3 tw-text-ui-smaller"
         >
           {skill.content}

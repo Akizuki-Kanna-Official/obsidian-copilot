@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import React from "react";
 import type {
   BackendDescriptor,
@@ -67,7 +68,7 @@ export function AgentBackendHeader({
           variant={installState.kind === "ready" ? "secondary" : "default"}
           onClick={onConfigure}
         >
-          Configure
+          {t("Configure", "配置")}
         </Button>
       </div>
     </div>

@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import { claudeSignInCommand } from "@/agentMode/backends/claude/cliSetup";
 import { ClaudeConfigView } from "@/agentMode/backends/claude/ui/ClaudeConfigView";
 import { useBackendAuthState } from "@/agentMode/session/useBackendAuthState";
@@ -38,13 +39,18 @@ const ClaudeConfigContainer: React.FC<{
     if (err) return err;
     setSettings((cur) => ({ agentMode: { ...cur.agentMode, claudeCli: { path } } }));
     await refreshClaudeInstallState(getSettings(), true);
-    new Notice("Claude CLI path saved.");
+    new Notice(t("Claude CLI path saved.", "已保存 Claude CLI 路径。"));
     return null;
   }, []);
 
   const onClearPath = React.useCallback((): void => {
     setSettings((cur) => ({ agentMode: { ...cur.agentMode, claudeCli: undefined } }));
-    new Notice("Claude CLI override cleared. Auto-detection will be used.");
+    new Notice(
+      t(
+        "Claude CLI override cleared. Auto-detection will be used.",
+        "已清除 Claude CLI 自定义路径，将使用自动检测。"
+      )
+    );
   }, []);
 
   return (

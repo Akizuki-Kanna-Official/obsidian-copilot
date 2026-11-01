@@ -1,3 +1,4 @@
+import * as obsidian from "obsidian";
 import type { InstallState } from "@/agentMode/session/types";
 import { render, screen } from "@testing-library/react";
 import React from "react";
@@ -70,6 +71,23 @@ describe("OpencodeConfigView", () => {
       });
 
       expect(screen.getByRole("button", { name: "Update to v2.0.3" })).toBeTruthy();
+    });
+    it("renders Chinese configuration controls without translating binary paths", () => {
+      const language = jest.spyOn(obsidian, "getLanguage").mockReturnValue("zh");
+      try {
+        renderView({
+          source: "custom",
+          activeSource: "custom",
+          customPath: "/opt/homebrew/bin/opencode",
+          state: { kind: "ready", source: "custom" },
+        });
+        expect(screen.getByText("配置 OpenCode")).toBeTruthy();
+        expect(screen.getByRole("button", { name: "自动检测" })).toBeTruthy();
+        expect(screen.getByRole("button", { name: "完成" })).toBeTruthy();
+        expect(screen.getByDisplayValue("/opt/homebrew/bin/opencode")).toBeTruthy();
+      } finally {
+        language.mockRestore();
+      }
     });
   });
 });

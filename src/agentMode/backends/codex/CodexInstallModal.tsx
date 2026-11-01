@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import { useBackendAuthState } from "@/agentMode/session/useBackendAuthState";
 import type { CodexBinaryManager } from "@/agentMode/backends/codex/CodexBinaryManager";
 import { CODEX_PINNED_VERSION, codexSignInCommand } from "@/agentMode/backends/codex/cliSetup";
@@ -84,7 +85,7 @@ export const CodexConfigContainer: React.FC<CodexConfigContainerProps> = ({ mana
   const saveCustomPath = async (path: string): Promise<string | null> => {
     try {
       await manager.setCustomBinaryPath(path);
-      new Notice("Codex adapter path saved.");
+      new Notice(t("Codex adapter path saved.", "已保存 Codex 适配器路径。"));
       return null;
     } catch (error) {
       return error instanceof Error ? error.message : String(error);
@@ -94,10 +95,13 @@ export const CodexConfigContainer: React.FC<CodexConfigContainerProps> = ({ mana
   const clearCustomPath = async (): Promise<void> => {
     try {
       await manager.setCustomBinaryPath(null);
-      new Notice("Codex adapter path cleared.");
+      new Notice(t("Codex adapter path cleared.", "已清除 Codex 适配器路径。"));
     } catch (error) {
       new Notice(
-        `Couldn't clear the custom path: ${error instanceof Error ? error.message : String(error)}`
+        t(
+          `Couldn't clear the custom path: ${error instanceof Error ? error.message : String(error)}`,
+          `无法清除自定义路径：${error instanceof Error ? error.message : String(error)}`
+        )
       );
     }
   };
@@ -110,20 +114,34 @@ export const CodexConfigContainer: React.FC<CodexConfigContainerProps> = ({ mana
         async () => {
           try {
             await manager.uninstall();
-            new Notice(`Codex adapter uninstalled (freed ${size}).`);
+            new Notice(
+              t(
+                `Codex adapter uninstalled (freed ${size}).`,
+                `已卸载 Codex 适配器（释放 ${size}）。`
+              )
+            );
           } catch (error) {
             new Notice(
-              `Couldn't uninstall the Codex adapter: ${error instanceof Error ? error.message : String(error)}`
+              t(
+                `Couldn't uninstall the Codex adapter: ${error instanceof Error ? error.message : String(error)}`,
+                `无法卸载 Codex 适配器：${error instanceof Error ? error.message : String(error)}`
+              )
             );
           }
         },
-        `Remove all Copilot-managed Codex adapter downloads (${size})? Your own binary and Codex login are kept.`,
-        "Uninstall Codex adapter",
-        "Uninstall"
+        t(
+          `Remove all Copilot-managed Codex adapter downloads (${size})? Your own binary and Codex login are kept.`,
+          `删除 Copilot 托管下载的所有 Codex 适配器（${size}）？你自行安装的程序和 Codex 登录信息将被保留。`
+        ),
+        t("Uninstall Codex adapter", "卸载 Codex 适配器"),
+        t("Uninstall", "卸载")
       ).open();
     } catch (error) {
       new Notice(
-        `Couldn't inspect Codex downloads: ${error instanceof Error ? error.message : String(error)}`
+        t(
+          `Couldn't inspect Codex downloads: ${error instanceof Error ? error.message : String(error)}`,
+          `无法检查 Codex 下载文件：${error instanceof Error ? error.message : String(error)}`
+        )
       );
     }
   };

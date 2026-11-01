@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import { logError } from "@/logger";
 import { App, Modal } from "obsidian";
 import type { BackendId, Skill } from "@/agentMode/skills/types";
@@ -65,15 +66,17 @@ export class MigrateSkillConfirmModal extends Modal {
     if (this.args.resolvedCanonicalName !== this.args.skill.name) {
       contentEl.createEl("p", {
         cls: "tw-m-0 tw-text-ui-smaller tw-text-warning",
-        text:
+        text: t(
           `The name "${this.args.skill.name}" is already taken in your shared folder. ` +
-          `The migrated skill will be named "${this.args.resolvedCanonicalName}".`,
+            `The migrated skill will be named "${this.args.resolvedCanonicalName}".`,
+          `共享文件夹中已存在名称“${this.args.skill.name}”。迁移后的技能将命名为“${this.args.resolvedCanonicalName}”。`
+        ),
       });
     }
 
     const willHeader = contentEl.createDiv({
       cls: "tw-text-ui-smaller tw-text-muted",
-      text: "Copilot will:",
+      text: t("Copilot will:", "Copilot 将执行："),
     });
     willHeader.setAttr("data-test-id", "migrate-confirm-will-header");
     const actionList = contentEl.createEl("ul", {
@@ -87,13 +90,31 @@ export class MigrateSkillConfirmModal extends Modal {
       const body = li.createSpan({ cls: "tw-flex-1" });
       body.createSpan({
         cls: "tw-inline-block tw-min-w-[64px] tw-text-muted",
-        text: line.verb,
+        text: t(
+          line.verb,
+          (
+            { Move: "移动", Delete: "删除", Create: "创建", "Not create": "不创建" } as Record<
+              string,
+              string
+            >
+          )[line.verb] ?? line.verb
+        ),
       });
-      body.createSpan({ text: ` ${line.detail}` });
+      body.createSpan({
+        text: ` ${t(line.detail, line.detail === "any shortcuts (no agents enabled)." ? "任何快捷方式（未启用任何智能体）。" : line.detail)}`,
+      });
       if (line.note !== undefined && line.note.length > 0) {
         body.createSpan({
           cls: "tw-ml-1.5 tw-font-sans tw-text-smallest tw-text-faint",
-          text: line.note,
+          text: t(
+            line.note,
+            (
+              {
+                "(identical duplicate)": "（相同副本）",
+                "(shortcut to the new location)": "（指向新位置的快捷方式）",
+              } as Record<string, string>
+            )[line.note] ?? line.note
+          ),
         });
       }
     }
@@ -116,14 +137,16 @@ export class MigrateSkillConfirmModal extends Modal {
     checkbox.addEventListener("change", () => {
       this.suppressFuture = checkbox.checked;
     });
-    checkboxRow.createSpan({ text: "Don't ask again for future migrations" });
+    checkboxRow.createSpan({
+      text: t("Don't ask again for future migrations", "今后迁移时不再询问"),
+    });
 
     const buttonRow = contentEl.createDiv({
       cls: "tw-flex tw-justify-end tw-gap-2 tw-pt-2",
     });
     const cancelBtn = buttonRow.createEl("button", {
       cls: "mod-secondary",
-      text: "Cancel",
+      text: t("Cancel", "取消"),
     });
     cancelBtn.addEventListener("click", () => {
       this.close();
@@ -154,73 +177,92 @@ function buildTitle(args: MigrateSkillConfirmModalArgs): string {
   const name = args.skill.name;
   switch (args.variant) {
     case "project-single":
-      return `Move "${name}" to share with ${args.targetAgentDisplayName ?? "another agent"}?`;
+      return t(
+        `Move "${name}" to share with ${args.targetAgentDisplayName ?? "another agent"}?`,
+        `移动“${name}”以共享给 ${args.targetAgentDisplayName ?? "另一个智能体"}？`
+      );
     case "project-mirrored":
-      return `Consolidate "${name}" and share with ${args.targetAgentDisplayName ?? "another agent"}?`;
+      return t(
+        `Consolidate "${name}" and share with ${args.targetAgentDisplayName ?? "another agent"}?`,
+        `合并“${name}”并共享给 ${args.targetAgentDisplayName ?? "另一个智能体"}？`
+      );
     case "disable-last-agent":
-      return `Move "${name}" to your shared folder before disabling ${
-        args.targetAgentDisplayName ?? "this agent"
-      }?`;
+      return t(
+        `Move "${name}" to your shared folder before disabling ${
+          args.targetAgentDisplayName ?? "this agent"
+        }?`,
+        `禁用 ${args.targetAgentDisplayName ?? "此智能体"} 前，先将“${name}”移至共享文件夹？`
+      );
     case "proactive-consolidate":
-      return `Consolidate "${name}" into your shared folder?`;
+      return t(`Consolidate "${name}" into your shared folder?`, `将“${name}”合并到共享文件夹？`);
   }
 }
 
 function buildBody(args: MigrateSkillConfirmModalArgs): string {
-  const target = args.targetAgentDisplayName ?? "another agent";
+  const target = args.targetAgentDisplayName ?? t("another agent", "另一个智能体");
   switch (args.variant) {
     case "project-single":
-      return (
+      return t(
         `This skill currently lives only in your ${sourceAgentLabel(args)} project folder.\n` +
-        `To enable it for ${target}, Copilot needs to move it to a shared location\n` +
-        `so both agents stay in sync.`
+          `To enable it for ${target}, Copilot needs to move it to a shared location\n` +
+          `so both agents stay in sync.`,
+        `此技能目前仅位于 ${sourceAgentLabel(args)} 的项目文件夹中。\n要为 ${target} 启用此技能，Copilot 需要将它移至共享位置，以便两个智能体保持同步。`
       );
     case "project-mirrored":
-      return `The same skill is currently duplicated in ${pluralFolders(args.sourceDuplicatePaths.length)}:`;
+      return t(
+        `The same skill is currently duplicated in ${pluralFolders(args.sourceDuplicatePaths.length)}:`,
+        `此技能目前在 ${args.sourceDuplicatePaths.length} 个项目文件夹中存在副本：`
+      );
     case "disable-last-agent":
-      return `This skill currently lives only in:`;
+      return t(`This skill currently lives only in:`, `此技能目前仅位于：`);
     case "proactive-consolidate":
-      return `The same skill is currently duplicated in:`;
+      return t(`The same skill is currently duplicated in:`, `此技能目前在以下位置存在副本：`);
   }
 }
 
 function buildOutro(args: MigrateSkillConfirmModalArgs): string | null {
-  const source = args.targetAgentDisplayName ?? "this agent";
+  const source = args.targetAgentDisplayName ?? t("this agent", "此智能体");
   switch (args.variant) {
     case "project-single":
-      return (
+      return t(
         `You can still edit the skill exactly as before — there's just one copy now,\n` +
-        `so changes are visible to both agents immediately.`
+          `so changes are visible to both agents immediately.`,
+        `你仍可像以前一样编辑此技能，只是现在仅保留一份副本。\n两个智能体都能立即看到修改。`
       );
     case "project-mirrored":
-      return `After this, edits to the skill are visible to all ${args.actionLines.filter((l) => l.verb === "Create").length} agents.`;
+      return t(
+        `After this, edits to the skill are visible to all ${args.actionLines.filter((l) => l.verb === "Create").length} agents.`,
+        `之后，对技能的修改将对全部 ${args.actionLines.filter((l) => l.verb === "Create").length} 个智能体可见。`
+      );
     case "disable-last-agent":
-      return (
+      return t(
         `If you disable ${source}, the file has nowhere to live in its project folder.\n` +
-        `Copilot can preserve it by moving the skill to your shared skills folder with\n` +
-        `no agents enabled — you can toggle agents back on any time, or delete it later\n` +
-        `from the Skills tab.`
+          `Copilot can preserve it by moving the skill to your shared skills folder with\n` +
+          `no agents enabled — you can toggle agents back on any time, or delete it later\n` +
+          `from the Skills tab.`,
+        `禁用 ${source} 后，此文件将无法继续保留在其项目文件夹中。\nCopilot 可将技能移至共享文件夹，并暂不为任何智能体启用。你随时可以重新启用，或稍后在“技能”选项卡中删除它。`
       );
     case "proactive-consolidate":
-      return (
+      return t(
         `Editing, renaming, or deleting one copy would silently diverge from the others.\n` +
-        `Copilot can consolidate them into a single shared location, with a shortcut in\n` +
-        `each agent folder so all agents still see the skill.\n\n` +
-        `After this, your edits stay in sync across all agents automatically.`
+          `Copilot can consolidate them into a single shared location, with a shortcut in\n` +
+          `each agent folder so all agents still see the skill.\n\n` +
+          `After this, your edits stay in sync across all agents automatically.`,
+        `单独编辑、重命名或删除一份副本会导致内容不一致。\nCopilot 可将这些副本合并到一个共享位置，并在每个智能体文件夹中创建快捷方式，让所有智能体仍能访问此技能。\n\n之后，修改会自动在所有智能体间保持同步。`
       );
   }
 }
 
 function buildConfirmLabel(args: MigrateSkillConfirmModalArgs): string {
-  const target = args.targetAgentDisplayName ?? "agent";
+  const target = args.targetAgentDisplayName ?? t("agent", "智能体");
   switch (args.variant) {
     case "project-single":
     case "project-mirrored":
-      return `Move and enable ${target}`;
+      return t(`Move and enable ${target}`, `移动并启用 ${target}`);
     case "disable-last-agent":
-      return `Move and disable ${target}`;
+      return t(`Move and disable ${target}`, `移动并禁用 ${target}`);
     case "proactive-consolidate":
-      return "Consolidate";
+      return t("Consolidate", "合并");
   }
 }
 

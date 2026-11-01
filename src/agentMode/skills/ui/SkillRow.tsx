@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import { SkillRowLayout } from "./SkillRowLayout";
 import {
   DropdownMenu,
@@ -57,9 +58,12 @@ export const SkillRow: React.FC<SkillRowProps> = ({
   const lockdownCount = skill.location.kind === "project" ? skill.location.agentDirs.length : 0;
   const mirroredLockdown = lockdownCount >= 2;
   const lockdownTooltip = mirroredLockdown
-    ? `This skill is duplicated in ${lockdownCount} agent folders. ` +
-      `Editing one copy would silently diverge from the others. ` +
-      `Migrate it to your shared folder first to enable edits.`
+    ? t(
+        `This skill is duplicated in ${lockdownCount} agent folders. ` +
+          `Editing one copy would silently diverge from the others. ` +
+          `Migrate it to your shared folder first to enable edits.`,
+        `此技能在 ${lockdownCount} 个智能体文件夹中存在副本。单独编辑一份会导致内容不一致。请先迁移至共享文件夹，再进行编辑。`
+      )
     : null;
 
   const handleToggleAgent = React.useCallback(
@@ -74,7 +78,10 @@ export const SkillRow: React.FC<SkillRowProps> = ({
           const result = await manager.toggleAgent(skill, agent, decision.enabled);
           if (!result.ok && result.code !== "eperm") {
             new Notice(
-              `Could not ${decision.enabled ? "enable" : "disable"} ${agent}: ${result.message}`
+              t(
+                `Could not ${decision.enabled ? "enable" : "disable"} ${agent}: ${result.message}`,
+                `无法${decision.enabled ? "启用" : "禁用"} ${agent}：${result.message}`
+              )
             );
           }
           return;
@@ -82,7 +89,12 @@ export const SkillRow: React.FC<SkillRowProps> = ({
         case "mirrored-remove-one": {
           const result = await manager.removeProjectAgentDir(skill, decision.agent);
           if (!result.ok) {
-            new Notice(`Could not remove ${skill.name} from ${decision.agent}: ${result.message}`);
+            new Notice(
+              t(
+                `Could not remove ${skill.name} from ${decision.agent}: ${result.message}`,
+                `无法从 ${decision.agent} 移除 ${skill.name}：${result.message}`
+              )
+            );
             return;
           }
           const survivors = (
@@ -90,7 +102,10 @@ export const SkillRow: React.FC<SkillRowProps> = ({
           ).filter((a) => a !== decision.agent);
           const survivorLabel = survivors.length === 1 ? survivors[0] : survivors.join(", ");
           new Notice(
-            `Removed ${skill.name} from ${decision.agent} project folder; still active in ${survivorLabel}.`
+            t(
+              `Removed ${skill.name} from ${decision.agent} project folder; still active in ${survivorLabel}.`,
+              `已从 ${decision.agent} 项目文件夹移除 ${skill.name}；它仍在 ${survivorLabel} 中启用。`
+            )
           );
           return;
         }
@@ -167,8 +182,8 @@ export const SkillRow: React.FC<SkillRowProps> = ({
             <Button
               variant="ghost"
               size="icon"
-              title="More actions"
-              aria-label={`More actions for ${skill.name}`}
+              title={t("More actions", "更多操作")}
+              aria-label={t(`More actions for ${skill.name}`, `${skill.name} 的更多操作`)}
             >
               <MoreVertical className="tw-size-4" />
             </Button>
@@ -188,28 +203,28 @@ export const SkillRow: React.FC<SkillRowProps> = ({
               <>
                 <DropdownMenuItem className="tw-gap-2.5 tw-text-ui-small" onSelect={onEditSkillMd}>
                   <Edit3 className="tw-size-3.5" aria-hidden="true" />
-                  Edit SKILL.md
+                  {t("Edit SKILL.md", "编辑 SKILL.md")}
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   className="tw-gap-2.5 tw-text-ui-small"
                   onSelect={onEditProperties}
                 >
                   <Settings className="tw-size-3.5" aria-hidden="true" />
-                  Properties…
+                  {t("Properties…", "属性…")}
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   className="tw-gap-2.5 tw-text-ui-small"
                   onSelect={onRevealInVault}
                 >
                   <FolderSearch className="tw-size-3.5" aria-hidden="true" />
-                  Reveal in vault
+                  {t("Reveal in vault", "在仓库中显示")}
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   className="tw-gap-2.5 tw-text-ui-small tw-text-error focus:tw-bg-modifier-error-rgb/15 focus:tw-text-error"
                   onSelect={onDelete}
                 >
                   <Trash2 className="tw-size-3.5" aria-hidden="true" />
-                  Delete…
+                  {t("Delete…", "删除…")}
                 </DropdownMenuItem>
               </>
             )}
@@ -234,14 +249,14 @@ function buildLocationLabel(
   if (dirs.length === 0) return null;
   if (dirs.length === 1) {
     const rel = agentDirsProjectRel[dirs[0]];
-    return rel !== undefined ? `in ${rel}` : null;
+    return rel !== undefined ? t(`in ${rel}`, `位于 ${rel}`) : null;
   }
   const parents = dirs
     .map((id) => agentDirsProjectRel[id])
     .filter((p): p is string => typeof p === "string")
     .map(parentDotFolder);
   if (parents.length === 0) return null;
-  return `mirrored in ${parents.join(", ")}`;
+  return t(`mirrored in ${parents.join(", ")}`, `副本位于 ${parents.join(", ")}`);
 }
 
 function parentDotFolder(rel: string): string {
@@ -257,10 +272,10 @@ function agentDisplayName(agents: ReadonlyArray<AgentBrand>, id: BackendId): str
 function computeChips(skill: Skill): ChipSpec[] {
   const chips: ChipSpec[] = [];
   if (skill.disableModelInvocation === true) {
-    chips.push({ variant: "warn", label: "manual only" });
+    chips.push({ variant: "warn", label: t("manual only", "仅手动调用") });
   }
   if (skill.userInvocable === false) {
-    chips.push({ variant: "default", label: "hidden from slash menu" });
+    chips.push({ variant: "default", label: t("hidden from slash menu", "已在斜杠菜单中隐藏") });
   }
   if (skill.model !== undefined && skill.model.length > 0) {
     chips.push({ variant: "solid", label: `claude · ${truncateModel(skill.model)}` });
@@ -273,7 +288,9 @@ function truncateModel(model: string): string {
 }
 
 function tooltipFor(agentName: string, enabled: boolean): string {
-  return enabled ? `Enabled for ${agentName}` : `Disabled for ${agentName} · click to enable`;
+  return enabled
+    ? t(`Enabled for ${agentName}`, `已为 ${agentName} 启用`)
+    : t(`Disabled for ${agentName} · click to enable`, `已为 ${agentName} 禁用 · 点击启用`);
 }
 
 const MirroredLockdownMenu: React.FC<{
@@ -289,7 +306,7 @@ const MirroredLockdownMenu: React.FC<{
     <TooltipProvider delayDuration={120}>
       <DropdownMenuItem className="tw-gap-2.5 tw-text-ui-small" onSelect={onMigrate}>
         <Move className="tw-size-3.5" aria-hidden="true" />
-        Migrate to shared folder
+        {t("Migrate to shared folder", "迁移至共享文件夹")}
       </DropdownMenuItem>
       <Tooltip>
         <TooltipTrigger asChild>
@@ -299,7 +316,7 @@ const MirroredLockdownMenu: React.FC<{
             onSelect={(e) => e.preventDefault()}
           >
             <Edit3 className="tw-size-3.5" aria-hidden="true" />
-            Edit SKILL.md
+            {t("Edit SKILL.md", "编辑 SKILL.md")}
           </DropdownMenuItem>
         </TooltipTrigger>
         <TooltipContent side="left">{tooltip}</TooltipContent>
@@ -312,14 +329,14 @@ const MirroredLockdownMenu: React.FC<{
             onSelect={(e) => e.preventDefault()}
           >
             <Settings className="tw-size-3.5" aria-hidden="true" />
-            Properties…
+            {t("Properties…", "属性…")}
           </DropdownMenuItem>
         </TooltipTrigger>
         <TooltipContent side="left">{tooltip}</TooltipContent>
       </Tooltip>
       <DropdownMenuItem className="tw-gap-2.5 tw-text-ui-small" onSelect={onRevealInVault}>
         <FolderSearch className="tw-size-3.5" aria-hidden="true" />
-        Reveal in vault
+        {t("Reveal in vault", "在仓库中显示")}
       </DropdownMenuItem>
       <Tooltip>
         <TooltipTrigger asChild>
@@ -329,7 +346,7 @@ const MirroredLockdownMenu: React.FC<{
             onSelect={(e) => e.preventDefault()}
           >
             <Trash2 className="tw-size-3.5" aria-hidden="true" />
-            Delete…
+            {t("Delete…", "删除…")}
           </DropdownMenuItem>
         </TooltipTrigger>
         <TooltipContent side="left">{tooltip}</TooltipContent>
@@ -369,7 +386,10 @@ function runMigration(args: RunMigrationArgs): Promise<void> {
     resolvedName = manager.resolveCanonicalNameForMigration(args.skill.name);
   } catch (err) {
     new Notice(
-      `Could not migrate ${args.skill.name}: ${err instanceof Error ? err.message : String(err)}`
+      t(
+        `Could not migrate ${args.skill.name}: ${err instanceof Error ? err.message : String(err)}`,
+        `无法迁移 ${args.skill.name}：${err instanceof Error ? err.message : String(err)}`
+      )
     );
     return Promise.resolve();
   }
@@ -391,16 +411,27 @@ function runMigration(args: RunMigrationArgs): Promise<void> {
       args.action
     );
     if (!result.ok && result.reason !== "eperm") {
-      new Notice(`Could not migrate ${args.skill.name}: ${result.reason}`);
+      new Notice(
+        t(
+          `Could not migrate ${args.skill.name}: ${result.reason}`,
+          `无法迁移 ${args.skill.name}：${result.reason}`
+        )
+      );
       return;
     }
     if (args.action === "expandToNewAgent") {
       new Notice(
-        `Moved ${args.skill.name} to ${canonicalFolderRel}/ and enabled ${args.targetAgentDisplayName}.`
+        t(
+          `Moved ${args.skill.name} to ${canonicalFolderRel}/ and enabled ${args.targetAgentDisplayName}.`,
+          `已将 ${args.skill.name} 移至 ${canonicalFolderRel}/ 并启用 ${args.targetAgentDisplayName}。`
+        )
       );
     } else {
       new Notice(
-        `Moved ${args.skill.name} to ${canonicalFolderRel}/ and disabled ${args.targetAgentDisplayName}.`
+        t(
+          `Moved ${args.skill.name} to ${canonicalFolderRel}/ and disabled ${args.targetAgentDisplayName}.`,
+          `已将 ${args.skill.name} 移至 ${canonicalFolderRel}/ 并禁用 ${args.targetAgentDisplayName}。`
+        )
       );
     }
   };
@@ -451,7 +482,10 @@ function runProactiveConsolidate(args: RunProactiveConsolidateArgs): Promise<voi
     resolvedName = manager.resolveCanonicalNameForMigration(args.skill.name);
   } catch (err) {
     new Notice(
-      `Could not merge ${args.skill.name}: ${err instanceof Error ? err.message : String(err)}`
+      t(
+        `Could not merge ${args.skill.name}: ${err instanceof Error ? err.message : String(err)}`,
+        `无法合并 ${args.skill.name}：${err instanceof Error ? err.message : String(err)}`
+      )
     );
     return Promise.resolve();
   }
@@ -471,10 +505,20 @@ function runProactiveConsolidate(args: RunProactiveConsolidateArgs): Promise<voi
   const commit = async (suppressFuture: boolean): Promise<void> => {
     const result = await manager.consolidateMirroredSkill(args.skill, suppressFuture);
     if (!result.ok && result.reason !== "eperm") {
-      new Notice(`Could not merge ${args.skill.name}: ${result.reason}`);
+      new Notice(
+        t(
+          `Could not merge ${args.skill.name}: ${result.reason}`,
+          `无法合并 ${args.skill.name}：${result.reason}`
+        )
+      );
       return;
     }
-    new Notice(`Merged ${args.skill.name} into ${canonicalFolderRel}/.`);
+    new Notice(
+      t(
+        `Merged ${args.skill.name} into ${canonicalFolderRel}/.`,
+        `已将 ${args.skill.name} 合并到 ${canonicalFolderRel}/。`
+      )
+    );
   };
 
   if (manager.getSuppressMigrationConfirm()) {
