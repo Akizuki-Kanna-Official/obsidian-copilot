@@ -1,3 +1,5 @@
+> **非官方简体中文界面本地版**（2026-11-01 18:33，北京时间）：基于官方 4.0.17。请阅读 [中文安装、回滚与许可说明](README.zh-CN.md)。原始项目说明如下。
+
 <p align="center">
   <a href="https://www.obsidiancopilot.com/en/register?utm_source=github&utm_medium=readme&utm_campaign=discord"><img src="./images/copilot-discord-banner.svg" width="880" alt="Shape what Copilot builds next. The most-downloaded AI plugin for Obsidian. Sign up free and join our Discord to bring your ideas and bugs straight to the dev team."></a>
 </p>
