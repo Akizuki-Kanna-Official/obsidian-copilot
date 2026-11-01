@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import { startReleaseUpdateCheck } from "@/services/releaseUpdateNotice";
 import { releaseCursorAssociation } from "@/editor/releaseCursorAssociation";
 import { registerNoteHeaderAction } from "@/editor/registerNoteHeaderAction";
@@ -220,7 +221,12 @@ export default class CopilotPlugin extends Plugin implements CopilotStartup {
       // reads, and this catch keeps Obsidian from logging the failure itself.
       // https://github.com/logancyang/obsidian-copilot/issues/3518
       logFatalError("Copilot failed to start.", error);
-      new Notice("Copilot failed to start. Check the Copilot log for details.");
+      new Notice(
+        t(
+          "Copilot failed to start. Check the Copilot log for details.",
+          "Copilot 启动失败，请查看 Copilot 日志了解详情。"
+        )
+      );
       // Obsidian keeps a plugin enabled when work after onload fails, so release whatever
       // startup registered before the failure. https://github.com/logancyang/obsidian-copilot/issues/3518
       this.unload();
@@ -273,7 +279,12 @@ export default class CopilotPlugin extends Plugin implements CopilotStartup {
           await persistSettings(next, (data) => this.saveData(data), prev);
         } catch (error) {
           logError("Failed to persist settings.", error);
-          new Notice("Copilot failed to save settings. Check the Copilot log, then try again.");
+          new Notice(
+            t(
+              "Copilot failed to save settings. Check the Copilot log, then try again.",
+              "Copilot 保存设置失败，请查看 Copilot 日志后重试。"
+            )
+          );
         }
         if (plusSyncNeeded(prev, next)) {
           syncPlus(next.isPaidUser, next.plusLicenseKey);
@@ -295,8 +306,8 @@ export default class CopilotPlugin extends Plugin implements CopilotStartup {
           this.app,
           () => {},
           React.createElement(CopilotFolderMigration, { migration: folderMigration }),
-          "Copilot folder migration",
-          "OK",
+          t("Copilot folder migration", "Copilot 文件夹迁移"),
+          t("OK", "确定"),
           ""
         ).open();
       });
@@ -331,7 +342,10 @@ export default class CopilotPlugin extends Plugin implements CopilotStartup {
         KeychainService.getInstance().removeRetiredEmbeddingSecrets(),
       notifyFailure: (folder) => {
         new Notice(
-          `Copilot couldn't remove old index files from ${folder}. Remove them manually if you want to reclaim the space.`
+          t(
+            `Copilot couldn't remove old index files from ${folder}. Remove them manually if you want to reclaim the space.`,
+            `Copilot 无法删除 ${folder} 中的旧索引文件。如需释放空间，请手动删除这些文件。`
+          )
         );
       },
     });
@@ -458,7 +472,9 @@ export default class CopilotPlugin extends Plugin implements CopilotStartup {
     const agentReady = this.canUseAgentView();
     this.ribbonIconEl = this.addRibbonIcon(
       agentReady ? COPILOT_AGENT_ICON_ID : "message-square",
-      agentReady ? "Open Copilot Agent Chat" : "Open Copilot Chat",
+      agentReady
+        ? t("Open Copilot Agent Chat", "打开 Copilot 智能体聊天")
+        : t("Open Copilot Chat", "打开 Copilot 对话"),
       () => (this.canUseAgentView() ? this.activateAgentView() : this.activateView())
     );
 
@@ -493,7 +509,12 @@ export default class CopilotPlugin extends Plugin implements CopilotStartup {
     this.app.workspace.onLayoutReady(() => {
       void this.runStartupMigrations(isLegacyUpgrade).catch((error) => {
         logError("Failed to finish startup migrations", error);
-        new Notice("Copilot could not finish startup migration. Reload Obsidian to retry.");
+        new Notice(
+          t(
+            "Copilot could not finish startup migration. Reload Obsidian to retry.",
+            "Copilot 未能完成启动迁移，请重新加载 Obsidian 后重试。"
+          )
+        );
       });
     });
 
@@ -534,11 +555,14 @@ export default class CopilotPlugin extends Plugin implements CopilotStartup {
     }
     return {
       id: "folders",
-      title: "Copilot folders",
+      title: t("Copilot folders", "Copilot 文件夹"),
       status: "action-required",
-      summary: "Copilot now keeps its files under one folder. Existing files were not moved.",
-      details: entries.map(
-        ({ label, oldPath, newPath }) => `${label}: move ${oldPath} to ${newPath}.`
+      summary: t(
+        "Copilot now keeps its files under one folder. Existing files were not moved.",
+        "Copilot 现在将文件统一保存在一个文件夹中，已有文件未被移动。"
+      ),
+      details: entries.map(({ label, oldPath, newPath }) =>
+        t(`${label}: move ${oldPath} to ${newPath}.`, `${label}：将 ${oldPath} 移动到 ${newPath}。`)
       ),
     };
   }
@@ -566,11 +590,17 @@ export default class CopilotPlugin extends Plugin implements CopilotStartup {
       this.projectRegister.initialize(),
       {
         id: "projects",
-        title: "Projects",
+        title: t("Projects", "项目"),
         status: "error",
-        summary: "Projects could not be loaded or migrated. Reload Obsidian to retry.",
+        summary: t(
+          "Projects could not be loaded or migrated. Reload Obsidian to retry.",
+          "无法加载或迁移项目，请重新加载 Obsidian 后重试。"
+        ),
       },
-      "Failed to load projects. Check console for details."
+      t(
+        "Failed to load projects. Check console for details.",
+        "加载项目失败，请查看控制台了解详情。"
+      )
     );
     const commandsTask = task(
       this.customCommandRegister
@@ -578,9 +608,12 @@ export default class CopilotPlugin extends Plugin implements CopilotStartup {
         .then(() => this.runUnlessUnloaded(() => migrateCommands(this.app))),
       {
         id: "custom-commands",
-        title: "Custom commands",
+        title: t("Custom commands", "自定义命令"),
         status: "error",
-        summary: "Custom commands could not be loaded or migrated. Reload Obsidian to retry.",
+        summary: t(
+          "Custom commands could not be loaded or migrated. Reload Obsidian to retry.",
+          "无法加载或迁移自定义命令，请重新加载 Obsidian 后重试。"
+        ),
       }
     );
     const promptsTask = task(
@@ -589,24 +622,38 @@ export default class CopilotPlugin extends Plugin implements CopilotStartup {
         .then(() => this.runUnlessUnloaded(() => migrateSystemPromptsFromSettings(this.app))),
       {
         id: "system-prompt",
-        title: "System prompt",
+        title: t("System prompt", "系统提示词"),
         status: "error",
-        summary: "System prompts could not be loaded or migrated. Reload Obsidian to retry.",
+        summary: t(
+          "System prompts could not be loaded or migrated. Reload Obsidian to retry.",
+          "无法加载或迁移系统提示词，请重新加载 Obsidian 后重试。"
+        ),
       }
     );
     const relocationTask = task(this.collectLegacyUpgradeRelocation(), {
       id: "folders",
-      title: "Copilot folders",
+      title: t("Copilot folders", "Copilot 文件夹"),
       status: "error",
-      summary: "Folder destinations could not be prepared. Reload Obsidian to retry.",
+      summary: t(
+        "Folder destinations could not be prepared. Reload Obsidian to retry.",
+        "无法准备目标文件夹，请重新加载 Obsidian 后重试。"
+      ),
     });
     const license: StartupMigrationItem | null = needsLicenseReentry
       ? {
           id: "copilot-license",
-          title: "Copilot license",
+          title: t("Copilot license", "Copilot 许可证"),
           status: "action-required",
-          summary: "Copilot could not restore the previous paid status after the upgrade.",
-          details: ["Re-enter the license key in Copilot Settings to restore paid features."],
+          summary: t(
+            "Copilot could not restore the previous paid status after the upgrade.",
+            "升级后，Copilot 无法恢复之前的付费状态。"
+          ),
+          details: [
+            t(
+              "Re-enter the license key in Copilot Settings to restore paid features.",
+              "请在 Copilot 设置中重新输入许可证密钥，以恢复付费功能。"
+            ),
+          ],
         }
       : null;
     if (isLegacyUpgrade) {
@@ -622,8 +669,8 @@ export default class CopilotPlugin extends Plugin implements CopilotStartup {
           this.app,
           () => {},
           formatStartupMigrationSummary(items),
-          "Copilot upgrade summary",
-          "Done",
+          t("Copilot upgrade summary", "Copilot 升级摘要"),
+          t("Done", "完成"),
           ""
         ).open();
       },
@@ -1066,7 +1113,12 @@ export default class CopilotPlugin extends Plugin implements CopilotStartup {
       await this.agentSessionManager?.addContextNoteToActiveChat(note);
     } catch (error) {
       logError("Failed to add a note to Agent Chat.", error);
-      new Notice("Could not add the note to Agent Chat. Check the Copilot log.");
+      new Notice(
+        t(
+          "Could not add the note to Agent Chat. Check the Copilot log.",
+          "无法将笔记添加到智能体聊天，请查看 Copilot 日志。"
+        )
+      );
     }
   }
 
@@ -1105,7 +1157,12 @@ export default class CopilotPlugin extends Plugin implements CopilotStartup {
       await manager.createSession();
     } catch (error) {
       logWarn("[CopilotPlugin] Failed to create agent session", error);
-      new Notice("Failed to start a new chat. Check the Copilot log.");
+      new Notice(
+        t(
+          "Failed to start a new chat. Check the Copilot log.",
+          "新建对话失败，请查看 Copilot 日志。"
+        )
+      );
     }
   }
 
@@ -1117,7 +1174,12 @@ export default class CopilotPlugin extends Plugin implements CopilotStartup {
       await this.activateAgentView();
     } catch (error) {
       logWarn("[CopilotPlugin] Failed to create agent session with draft", error);
-      new Notice("Failed to start a new chat. Check the Copilot log.");
+      new Notice(
+        t(
+          "Failed to start a new chat. Check the Copilot log.",
+          "新建对话失败，请查看 Copilot 日志。"
+        )
+      );
     }
   }
 
@@ -1144,11 +1206,11 @@ export default class CopilotPlugin extends Plugin implements CopilotStartup {
 
   private requireAgentView(): AgentSessionManager | null {
     if (!isDesktopRuntime()) {
-      new Notice("Agent Chat is not available on mobile.");
+      new Notice(t("Agent Chat is not available on mobile.", "移动端暂不支持智能体聊天。"));
       return null;
     }
     if (!this.agentSessionManager) {
-      new Notice("Agent Chat is not initialized.");
+      new Notice(t("Agent Chat is not initialized.", "智能体聊天尚未初始化。"));
       return null;
     }
     return this.agentSessionManager;
@@ -1200,7 +1262,7 @@ export default class CopilotPlugin extends Plugin implements CopilotStartup {
   async loadCopilotChatHistory() {
     const chatFiles = await this.getChatHistoryFiles();
     if (chatFiles.length === 0) {
-      new Notice("No chat history found.");
+      new Notice(t("No chat history found.", "未找到对话历史。"));
       return;
     }
     new LoadChatHistoryModal(
@@ -1322,10 +1384,10 @@ export default class CopilotPlugin extends Plugin implements CopilotStartup {
       await navigator.clipboard.writeText(
         buildChatMarkdownLink(extractChatTitle(this.app, file), url)
       );
-      new Notice("Chat link copied.");
+      new Notice(t("Chat link copied.", "已复制对话链接。"));
     } catch (error) {
       logError("Failed to copy chat link", error);
-      new Notice("Could not copy chat link.");
+      new Notice(t("Could not copy chat link.", "无法复制对话链接。"));
     }
   }
 
@@ -1334,13 +1396,13 @@ export default class CopilotPlugin extends Plugin implements CopilotStartup {
     try {
       const chatId = isNativeChatId(id) ? id : (await findChatFileByDeepLinkId(this.app, id))?.path;
       if (!chatId) {
-        new Notice("Chat link not found.");
+        new Notice(t("Chat link not found.", "未找到对话链接。"));
         return;
       }
       await this.loadChatById(chatId);
     } catch (error) {
       logError("Failed to open chat link", error);
-      new Notice("Could not open chat link.");
+      new Notice(t("Could not open chat link.", "无法打开对话链接。"));
     }
   }
 
@@ -1376,7 +1438,10 @@ export default class CopilotPlugin extends Plugin implements CopilotStartup {
   async openChatSourceFile(fileId: string): Promise<void> {
     if (isNativeChatId(fileId)) {
       new Notice(
-        "This chat has no saved note. Turn on Autosave chats as Markdown to save chats as notes in your vault."
+        t(
+          "This chat has no saved note. Turn on Autosave chats as Markdown to save chats as notes in your vault.",
+          "此对话尚未保存为笔记。请开启“自动将对话保存为 Markdown”，将对话保存到仓库中。"
+        )
       );
       return;
     }
@@ -1415,7 +1480,7 @@ export default class CopilotPlugin extends Plugin implements CopilotStartup {
         }, 500);
       });
 
-      new Notice("Chat title updated.");
+      new Notice(t("Chat title updated.", "已更新对话标题。"));
     } else {
       throw new Error("Chat file not found.");
     }
@@ -1425,7 +1490,7 @@ export default class CopilotPlugin extends Plugin implements CopilotStartup {
     const file = this.app.vault.getAbstractFileByPath(fileId);
     if (file instanceof TFile) {
       await trashFile(this.app, file);
-      new Notice("Chat deleted.");
+      new Notice(t("Chat deleted.", "已删除对话。"));
     } else {
       throw new Error("Chat file not found.");
     }

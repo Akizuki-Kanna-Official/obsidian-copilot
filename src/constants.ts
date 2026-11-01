@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import { DEFAULT_BUILTIN_PREFERENCES } from "@/builtinSkills/builtinSkills";
 import { type CopilotSettings } from "@/settings/model";
 import { v4 as uuidv4 } from "uuid";
@@ -370,31 +371,70 @@ export const COMMAND_IDS = {
 } as const;
 
 export const COMMAND_NAMES: Record<CommandId, string> = {
-  [COMMAND_IDS.TRIGGER_QUICK_COMMAND]: "Trigger quick command",
-  [COMMAND_IDS.CLEAR_COPILOT_CACHE]: "Clear Copilot cache",
-  [COMMAND_IDS.COUNT_TOTAL_VAULT_TOKENS]: "Count total tokens in your vault",
-  [COMMAND_IDS.COUNT_WORD_AND_TOKENS_SELECTION]: "Count words and tokens in selection",
-  [COMMAND_IDS.DEBUG_WORD_COMPLETION]: "Word completion: Debug",
-  [COMMAND_IDS.REFRESH_MIYO_INDEX]: "Refresh Miyo index",
-  [COMMAND_IDS.LOAD_COPILOT_CHAT_CONVERSATION]: "Load Copilot Quick Chat history",
-  [COMMAND_IDS.NEW_CHAT]: "New Copilot Quick Chat",
-  [COMMAND_IDS.NEW_AGENT_CHAT]: "New Copilot Agent Chat",
-  [COMMAND_IDS.OPEN_COPILOT_CHAT_WINDOW]: "Open Copilot Quick Chat window",
-  [COMMAND_IDS.OPEN_AGENT_CHAT_WINDOW]: "Open Copilot Agent Chat window",
-  [COMMAND_IDS.OPEN_RELEVANT_NOTES_VIEW]: "Open Relevant Notes",
-  [COMMAND_IDS.TOGGLE_COPILOT_CHAT_WINDOW]: "Toggle Copilot Quick Chat window",
-  [COMMAND_IDS.TOGGLE_AGENT_CHAT_WINDOW]: "Toggle Copilot Agent Chat window",
-  [COMMAND_IDS.ADD_SELECTION_TO_CHAT_CONTEXT]: "Add selection to chat context",
-  [COMMAND_IDS.ADD_WEB_SELECTION_TO_CHAT_CONTEXT]: "Add web selection to chat context",
-  [COMMAND_IDS.ADD_CUSTOM_COMMAND]: "Add new custom command",
-  [COMMAND_IDS.APPLY_CUSTOM_COMMAND]: "Apply custom command",
-  [COMMAND_IDS.OPEN_LOG_FILE]: "Open Copilot log file",
-  [COMMAND_IDS.CLEAR_LOG_FILE]: "Clear Copilot log file",
-  [COMMAND_IDS.DOWNLOAD_YOUTUBE_SCRIPT]: "Download YouTube transcript (Plus)",
-  [COMMAND_IDS.PUBLISH_FILE_TO_OPENARTIFACTS]: "Publish file to OpenArtifacts",
-  [COMMAND_IDS.TRIGGER_QUICK_ASK]: "Quick Ask",
-  [COMMAND_IDS.NEXT_DIFF_CHANGE]: "Go to next change in file diff",
-  [COMMAND_IDS.PREVIOUS_DIFF_CHANGE]: "Go to previous change in file diff",
+  [COMMAND_IDS.TRIGGER_QUICK_COMMAND]: t("Trigger quick command", "触发快捷命令"),
+  [COMMAND_IDS.CLEAR_COPILOT_CACHE]: t("Clear Copilot cache", "清除 Copilot 缓存"),
+  [COMMAND_IDS.COUNT_TOTAL_VAULT_TOKENS]: t(
+    "Count total tokens in your vault",
+    "统计仓库中的 token 总数"
+  ),
+  [COMMAND_IDS.COUNT_WORD_AND_TOKENS_SELECTION]: t(
+    "Count words and tokens in selection",
+    "统计选中文本的词数与 token 数"
+  ),
+  [COMMAND_IDS.DEBUG_WORD_COMPLETION]: t("Word completion: Debug", "单词补全：调试"),
+  [COMMAND_IDS.REFRESH_MIYO_INDEX]: t("Refresh Miyo index", "刷新 Miyo 索引"),
+  [COMMAND_IDS.LOAD_COPILOT_CHAT_CONVERSATION]: t(
+    "Load Copilot Quick Chat history",
+    "加载 Copilot 快捷聊天历史"
+  ),
+  [COMMAND_IDS.NEW_CHAT]: t("New Copilot Quick Chat", "新建 Copilot 快捷聊天"),
+  [COMMAND_IDS.NEW_AGENT_CHAT]: t("New Copilot Agent Chat", "新建 Copilot 智能体聊天"),
+  [COMMAND_IDS.OPEN_COPILOT_CHAT_WINDOW]: t(
+    "Open Copilot Quick Chat window",
+    "打开 Copilot 快捷聊天窗口"
+  ),
+  [COMMAND_IDS.OPEN_AGENT_CHAT_WINDOW]: t(
+    "Open Copilot Agent Chat window",
+    "打开 Copilot 智能体聊天窗口"
+  ),
+  [COMMAND_IDS.OPEN_RELEVANT_NOTES_VIEW]: t("Open Relevant Notes", "打开相关笔记"),
+  [COMMAND_IDS.TOGGLE_COPILOT_CHAT_WINDOW]: t(
+    "Toggle Copilot Quick Chat window",
+    "切换 Copilot 快捷聊天窗口"
+  ),
+  [COMMAND_IDS.TOGGLE_AGENT_CHAT_WINDOW]: t(
+    "Toggle Copilot Agent Chat window",
+    "切换 Copilot 智能体聊天窗口"
+  ),
+  [COMMAND_IDS.ADD_SELECTION_TO_CHAT_CONTEXT]: t(
+    "Add selection to chat context",
+    "将选中文本添加到对话上下文"
+  ),
+  [COMMAND_IDS.ADD_WEB_SELECTION_TO_CHAT_CONTEXT]: t(
+    "Add web selection to chat context",
+    "将网页选中文本添加到对话上下文"
+  ),
+  [COMMAND_IDS.ADD_CUSTOM_COMMAND]: t("Add new custom command", "新建自定义命令"),
+  [COMMAND_IDS.APPLY_CUSTOM_COMMAND]: t("Apply custom command", "应用自定义命令"),
+  [COMMAND_IDS.OPEN_LOG_FILE]: t("Open Copilot log file", "打开 Copilot 日志文件"),
+  [COMMAND_IDS.CLEAR_LOG_FILE]: t("Clear Copilot log file", "清空 Copilot 日志文件"),
+  [COMMAND_IDS.DOWNLOAD_YOUTUBE_SCRIPT]: t(
+    "Download YouTube transcript (Plus)",
+    "下载 YouTube 字幕（Plus）"
+  ),
+  [COMMAND_IDS.PUBLISH_FILE_TO_OPENARTIFACTS]: t(
+    "Publish file to OpenArtifacts",
+    "将文件发布到 OpenArtifacts"
+  ),
+  [COMMAND_IDS.TRIGGER_QUICK_ASK]: t("Quick Ask", "快速提问"),
+  [COMMAND_IDS.NEXT_DIFF_CHANGE]: t(
+    "Go to next change in file diff",
+    "跳转到文件差异中的下一处更改"
+  ),
+  [COMMAND_IDS.PREVIOUS_DIFF_CHANGE]: t(
+    "Go to previous change in file diff",
+    "跳转到文件差异中的上一处更改"
+  ),
 };
 
 export type CommandId = (typeof COMMAND_IDS)[keyof typeof COMMAND_IDS];
