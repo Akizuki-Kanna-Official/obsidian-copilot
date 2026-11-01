@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import { ProjectConfig } from "@/aiParams";
 import { useApp } from "@/context";
 import { ContextManageModal } from "@/components/modals/project/context-manage-modal";
@@ -68,7 +69,7 @@ export function AddProjectModalContent({
         setDraftOwnsLegacyPrompt(seedFromLegacy);
       })
       .catch((error) => {
-        logError("Failed to read project instructions.", error);
+        logError(t("Failed to read project instructions.", "读取项目指令失败。"), error);
       });
     return () => {
       cancelled = true;
@@ -145,7 +146,7 @@ export function AddProjectModalContent({
 
     if (!saveData.name) {
       setTouched((prev) => ({ ...prev, name: true }));
-      new Notice("Please fill in all required fields");
+      new Notice(t("Please fill in all required fields", "请填写所有必填项"));
       return;
     }
 
@@ -184,22 +185,26 @@ export function AddProjectModalContent({
   return (
     <div className="tw-flex tw-h-full tw-flex-col">
       <div className="tw-shrink-0 tw-px-4 tw-pb-2 tw-pt-4">
-        <div className="tw-text-xl tw-font-bold tw-text-normal">Edit project</div>
+        <div className="tw-text-xl tw-font-bold tw-text-normal">
+          {t("Edit project", "编辑项目")}
+        </div>
         <p className="tw-mt-1 tw-text-sm tw-text-muted">
-          Configure your project settings and context sources
+          {t("Configure your project settings and context sources", "配置项目设置和上下文来源")}
         </p>
       </div>
 
       <ScrollArea className="tw-min-h-0 tw-flex-1">
         <div className="tw-flex tw-flex-col tw-gap-6 tw-p-4">
           <div className="tw-rounded-lg tw-border tw-border-border tw-p-4 tw-bg-secondary/50">
-            <h3 className="tw-mb-3 tw-text-sm tw-font-medium tw-text-normal">Basic info</h3>
+            <h3 className="tw-mb-3 tw-text-sm tw-font-medium tw-text-normal">
+              {t("Basic info", "基本信息")}
+            </h3>
             <div className="tw-flex tw-flex-col tw-gap-3">
               <FormField
-                label="Project name"
+                label={t("Project name", "项目名称")}
                 required
                 error={touched.name && !formData.name}
-                errorMessage="Project name is required"
+                errorMessage={t("Project name is required", "项目名称不能为空")}
               >
                 <Input
                   type="text"
@@ -211,8 +216,11 @@ export function AddProjectModalContent({
               </FormField>
 
               <FormField
-                label="Description"
-                description="Briefly describe the purpose and goals of the project"
+                label={t("Description", "描述")}
+                description={t(
+                  "Briefly describe the purpose and goals of the project",
+                  "简要描述项目的用途和目标"
+                )}
               >
                 <Input
                   type="text"
@@ -229,7 +237,9 @@ export function AddProjectModalContent({
           </div>
 
           <div className="tw-rounded-lg tw-border tw-border-border tw-p-4 tw-bg-secondary/50">
-            <h3 className="tw-mb-3 tw-text-sm tw-font-medium tw-text-normal">Context sources</h3>
+            <h3 className="tw-mb-3 tw-text-sm tw-font-medium tw-text-normal">
+              {t("Context sources", "上下文来源")}
+            </h3>
             <ProjectContextSourceEditor
               contextSource={formData.contextSource}
               onChange={handleContextChange}
@@ -246,10 +256,10 @@ export function AddProjectModalContent({
       <div className="tw-shrink-0 tw-border-t tw-border-border tw-px-4 tw-py-3">
         <div className="tw-flex tw-items-center tw-justify-end tw-gap-2">
           <Button variant="ghost" onClick={onCancel} disabled={isSubmitting}>
-            Cancel
+            {t("Cancel", "取消")}
           </Button>
           <Button onClick={safeAsyncHandler(handleSave)} disabled={isSubmitting || !isFormValid()}>
-            {isSubmitting ? "Saving..." : "Save"}
+            {isSubmitting ? "Saving..." : t("Save", "保存")}
           </Button>
         </div>
       </div>

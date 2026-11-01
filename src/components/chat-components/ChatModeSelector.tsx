@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import { ChainType } from "@/chainType";
 import { Button } from "@/components/ui/button";
 import { DropdownMenuContent, DropdownMenuItem } from "@/components/ui/dropdown-menu";
@@ -25,7 +26,7 @@ export function ChatModeSelector({
       <DropdownMenuTrigger asChild>
         <Button variant="ghost2" size="fit" className="tw-ml-1 tw-text-sm tw-text-muted">
           {selectedChain === ChainType.LLM_CHAIN ? (
-            "Chat (free)"
+            t("Chat (free)", "聊天（免费）")
           ) : (
             <div className="tw-flex tw-items-center tw-gap-1">
               <Sparkles className="tw-size-4" />
@@ -37,7 +38,7 @@ export function ChatModeSelector({
       </DropdownMenuTrigger>
       <DropdownMenuContent align="start">
         <DropdownMenuItem onSelect={() => onModeChange(ChainType.LLM_CHAIN)}>
-          Chat (free)
+          {t("Chat (free)", "聊天（免费）")}
         </DropdownMenuItem>
         {isPaidUser ? (
           <DropdownMenuItem onSelect={() => onModeChange(ChainType.COPILOT_PLUS_CHAIN)}>

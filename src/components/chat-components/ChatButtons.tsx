@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import { CopyButton } from "@/components/chat-components/CopyButton";
 import { MessageActionButton } from "@/components/chat-components/MessageActionButton";
 import { USER_SENDER } from "@/constants";
@@ -36,24 +37,38 @@ export const ChatButtons: React.FC<ChatButtonsProps> = ({
       {message.sender === USER_SENDER ? (
         <>
           <CopyButton text={cleanMessageForCopy(message.message)} />
-          {onEdit && <MessageActionButton label="Edit" icon={PenSquare} onClick={onEdit} />}
-          {onDelete && <MessageActionButton label="Delete" icon={Trash2} onClick={onDelete} />}
+          {onEdit && (
+            <MessageActionButton label={t("Edit", "编辑")} icon={PenSquare} onClick={onEdit} />
+          )}
+          {onDelete && (
+            <MessageActionButton label={t("Delete", "删除")} icon={Trash2} onClick={onDelete} />
+          )}
         </>
       ) : (
         <>
           {hasSources && (
-            <MessageActionButton label="Show sources" icon={LibraryBig} onClick={onShowSources} />
+            <MessageActionButton
+              label={t("Show sources", "显示来源")}
+              icon={LibraryBig}
+              onClick={onShowSources}
+            />
           )}
           <MessageActionButton
-            label="Insert / Replace at cursor"
+            label={t("Insert / Replace at cursor", "在光标处插入 / 替换")}
             icon={TextCursorInput}
             onClick={onInsertIntoEditor}
           />
           <CopyButton text={cleanMessageForCopy(message.message)} />
           {onRegenerate && (
-            <MessageActionButton label="Regenerate" icon={RotateCw} onClick={onRegenerate} />
+            <MessageActionButton
+              label={t("Regenerate", "重新生成")}
+              icon={RotateCw}
+              onClick={onRegenerate}
+            />
           )}
-          {onDelete && <MessageActionButton label="Delete" icon={Trash2} onClick={onDelete} />}
+          {onDelete && (
+            <MessageActionButton label={t("Delete", "删除")} icon={Trash2} onClick={onDelete} />
+          )}
         </>
       )}
     </div>

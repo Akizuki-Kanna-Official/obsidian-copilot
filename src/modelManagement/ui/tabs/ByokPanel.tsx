@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import { ConfirmModal } from "@/components/modals/ConfirmModal";
 import { Button } from "@/components/ui/button";
 import { SearchBar } from "@/components/ui/SearchBar";
@@ -64,7 +65,10 @@ export const ByokPanel: React.FC = () => {
         .catch(
           (): VerificationResult => ({
             ok: false,
-            message: "Could not verify this provider. Reopen this tab to retry.",
+            message: t(
+              "Could not verify this provider. Reopen this tab to retry.",
+              "无法验证此服务商。请重新打开此标签页后重试。"
+            ),
             checkedAt: Date.now(),
           })
         )
@@ -157,13 +161,16 @@ export const ByokPanel: React.FC = () => {
           await api.coordinator.removeProvider(providerId);
         } catch (err) {
           logError("[ByokPanel] removeProvider failed", err);
-          new Notice("Failed to remove provider.");
+          new Notice(t("Failed to remove provider.", "移除服务商失败。"));
         }
       },
-      `Remove ${provider.displayName}? This also removes all of its models from every model picker.`,
-      "Remove provider",
-      "Remove",
-      "Cancel"
+      t(
+        `Remove ${provider.displayName}? This also removes all of its models from every model picker.`,
+        `移除 ${provider.displayName}？这也会从所有模型选择器中移除该服务商的全部模型。`
+      ),
+      t("Remove provider", "移除服务商"),
+      t("Remove", "移除"),
+      t("Cancel", "取消")
     );
     modal.open();
   };
@@ -173,14 +180,19 @@ export const ByokPanel: React.FC = () => {
       <ProviderVerificationProgress pending={pendingChecks} />
       <div className="tw-flex tw-items-start tw-justify-between tw-gap-4">
         <div className="tw-flex tw-flex-col tw-gap-1">
-          <div className="tw-text-xl tw-font-bold tw-text-normal">Bring your own key</div>
+          <div className="tw-text-xl tw-font-bold tw-text-normal">
+            {t("Bring your own key", "使用自己的密钥")}
+          </div>
           <div className="tw-max-w-xl tw-text-sm tw-text-muted">
-            Set up your own providers and models to use in Copilot.
+            {t(
+              "Set up your own providers and models to use in Copilot.",
+              "配置您自己的服务商和模型，以在 Copilot 中使用。"
+            )}
           </div>
         </div>
         <Button className="tw-shrink-0" onClick={handleAddProvider}>
           <Plus className="tw-size-4" />
-          Add a provider
+          {t("Add a provider", "添加服务商")}
         </Button>
       </div>
 
@@ -188,20 +200,30 @@ export const ByokPanel: React.FC = () => {
         <div className="tw-flex tw-items-start tw-gap-2 tw-rounded-lg tw-border tw-border-solid tw-px-3 tw-py-2.5 tw-text-xs tw-text-normal tw-bg-interactive-accent/10 tw-border-interactive-accent/30">
           <ShieldCheck className="tw-mt-0.5 tw-size-4 tw-shrink-0 tw-text-accent" />
           <div className="tw-leading-relaxed">
-            <span className="tw-font-semibold">Self-Host Mode is on.</span> Cloud providers stay
-            available but are flagged and listed below your local and self-hosted endpoints — their
-            prompts leave your machine. You decide whether to use them.
+            <span className="tw-font-semibold">
+              {t("Self-Host Mode is on.", "自托管模式已开启。")}
+            </span>{" "}
+            {t(
+              "Cloud providers stay available but are flagged and listed below your local and self-hosted endpoints — their prompts leave your machine. You decide whether to use them.",
+              "云端服务商仍可使用，但会带有标记并列在本地和自托管接口之后，因为提示词会发送到您的电脑之外。是否使用由您决定。"
+            )}
           </div>
         </div>
       )}
 
-      <SearchBar value={query} onChange={setQuery} placeholder="Search providers…" />
+      <SearchBar
+        value={query}
+        onChange={setQuery}
+        placeholder={t("Search providers…", "搜索服务商…")}
+      />
 
       <div className="tw-flex tw-flex-col">
         <ByokGlobalTable
           groups={groups}
           emptyMessage={
-            query.trim() && providers.length > 0 ? "No providers match your search." : undefined
+            query.trim() && providers.length > 0
+              ? t("No providers match your search.", "没有找到匹配的服务商。")
+              : undefined
           }
           onConfigure={(id) =>
             new ConfigureProviderModal(app, {

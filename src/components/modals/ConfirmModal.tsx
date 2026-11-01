@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import { Button } from "@/components/ui/button";
 import { logError } from "@/logger";
 import { createPluginRoot } from "@/utils/react/createPluginRoot";
@@ -46,8 +47,8 @@ export class ConfirmModal extends Modal {
     private onConfirm: () => void | Promise<void>,
     private content: React.ReactNode,
     title: string,
-    private confirmButtonText: string = "Continue",
-    private cancelButtonText: string = "Cancel",
+    private confirmButtonText: string = t("Continue", "继续"),
+    private cancelButtonText: string = t("Cancel", "取消"),
     private onCancel?: () => void | Promise<void>
   ) {
     super(app);

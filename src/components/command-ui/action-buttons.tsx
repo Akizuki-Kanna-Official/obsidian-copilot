@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import * as React from "react";
 import { Platform } from "obsidian";
 import { ArrowBigUp, Command, CornerDownLeft } from "lucide-react";
@@ -54,13 +55,18 @@ export function ActionButtons({
     <div className="tw-flex tw-items-center tw-gap-2">
       {state === "loading" && (
         <Button variant="secondary" size="sm" onClick={onStop}>
-          Stop
+          {t("Stop", "停止")}
         </Button>
       )}
 
       {state !== "loading" && onRunAgain && (
-        <Button size="sm" variant="secondary" onClick={onRunAgain} title="Run the prompt again">
-          Run again
+        <Button
+          size="sm"
+          variant="secondary"
+          onClick={onRunAgain}
+          title={t("Run the prompt again", "再次运行提示词")}
+        >
+          {t("Run again", "重新运行")}
         </Button>
       )}
 
@@ -72,7 +78,7 @@ export function ActionButtons({
             onClick={onInsert}
             title={`Insert below selection (${Platform.isMacOS ? "⌘" : "Ctrl"}+Shift+Enter)`}
           >
-            Insert
+            {t("Insert", "插入")}
             <InsertShortcutHint />
           </Button>
           <Button
@@ -80,7 +86,7 @@ export function ActionButtons({
             onClick={onReplace}
             title={`Replace selection (${Platform.isMacOS ? "⌘" : "Ctrl"}+Enter)`}
           >
-            Replace
+            {t("Replace", "替换")}
             <ReplaceShortcutHint />
           </Button>
         </>

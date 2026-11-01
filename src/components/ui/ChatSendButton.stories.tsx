@@ -12,3 +12,7 @@ export const Empty: StoryObj<ComponentProps<typeof ChatSendButton>> = {};
 export const ImageOnly: StoryObj<ComponentProps<typeof ChatSendButton>> = {
   args: { imageCount: 1 },
 };
+
+export const ChineseDraft: StoryObj<ComponentProps<typeof ChatSendButton>> = {
+  args: { inputMessage: "请帮我整理这篇笔记。", imageCount: 0 },
+};

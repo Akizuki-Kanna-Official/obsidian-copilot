@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import React, { useCallback, useEffect, useState } from "react";
 import { $getRoot, EditorState, LexicalEditor as LexicalEditorType } from "lexical";
 import { LexicalComposer } from "@lexical/react/LexicalComposer";
@@ -25,6 +26,8 @@ import { cn } from "@/lib/utils";
 import { logError } from "@/logger";
 import { SEND_SHORTCUT } from "@/constants";
 
+const DEFAULT_PLACEHOLDER = t("Ask a question...", "输入问题…");
+
 interface QuickAskInputProps {
   value: string;
   onChange: (value: string) => void;
@@ -48,7 +51,7 @@ export const QuickAskInput = React.memo(function QuickAskInput({
   onChange,
   onSubmit,
   sendShortcut = SEND_SHORTCUT.ENTER,
-  placeholder = "Ask a question...",
+  placeholder = DEFAULT_PLACEHOLDER,
   disabled = false,
   className = "",
   onNotesChange,
@@ -123,7 +126,7 @@ export const QuickAskInput = React.memo(function QuickAskInput({
             contentEditable={
               <ContentEditable
                 className="tw-max-h-48 tw-min-h-12 tw-w-full tw-resize-none tw-overflow-y-auto tw-border-none tw-bg-transparent tw-px-1 tw-py-2 tw-pr-8 tw-text-sm tw-text-normal tw-outline-none"
-                aria-label="Quick Ask input"
+                aria-label={t("Quick Ask input", "快速提问输入框")}
               />
             }
             placeholder={

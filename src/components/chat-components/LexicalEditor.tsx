@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import React, { useCallback, useEffect, useId } from "react";
 import { $getRoot, EditorState, LexicalEditor as LexicalEditorType } from "lexical";
 import { LexicalComposer } from "@lexical/react/LexicalComposer";
@@ -41,6 +42,8 @@ import { ChainType } from "@/chainType";
 import { useSettingsValue } from "@/settings/model";
 import { type AgentMentionBrand, EMPTY_AGENT_MENTION_BRANDS } from "./hooks/useAtMentionCategories";
 
+const DEFAULT_PLACEHOLDER = t("Type a message...", "输入消息…");
+
 interface LexicalEditorProps {
   value: string;
   onChange: (value: string) => void;
@@ -76,7 +79,7 @@ const LexicalEditor: React.FC<LexicalEditorProps> = ({
   value,
   onChange,
   onSubmit,
-  placeholder = "Type a message...",
+  placeholder = DEFAULT_PLACEHOLDER,
   onNotesChange,
   onNotesRemoved,
   onURLsChange,
@@ -174,7 +177,7 @@ const LexicalEditor: React.FC<LexicalEditorProps> = ({
         <CloudAgentProvider cloudAgentIds={cloudAgentIds}>
           <div className="tw-relative">
             <span id={editorLabelId} className="tw-sr-only">
-              Chat input
+              {t("Chat input", "聊天输入框")}
             </span>
             <PlainTextPlugin
               contentEditable={

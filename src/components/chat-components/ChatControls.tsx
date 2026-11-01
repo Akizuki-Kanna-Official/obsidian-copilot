@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import { useChainType } from "@/aiParams";
 import { ChainType } from "@/chainType";
 import { ChatModeSelector } from "@/components/chat-components/ChatModeSelector";
@@ -65,11 +66,16 @@ export function ChatControls({
         </div>
         <Tooltip>
           <TooltipTrigger asChild>
-            <Button variant="ghost2" size="icon" title="New chat" onClick={onNewChat}>
+            <Button
+              variant="ghost2"
+              size="icon"
+              title={t("New chat", "新建聊天")}
+              onClick={onNewChat}
+            >
               <MessageCirclePlus className="tw-size-4" />
             </Button>
           </TooltipTrigger>
-          <TooltipContent>New chat</TooltipContent>
+          <TooltipContent>{t("New chat", "新建聊天")}</TooltipContent>
         </Tooltip>
         <CopyChatLinkButton onCopyLink={onCopyChatLink} />
         <ChatSettingsPopover />
@@ -79,13 +85,13 @@ export function ChatControls({
               <Button
                 variant="ghost2"
                 size="icon"
-                title="Save chat as note"
+                title={t("Save chat as note", "将聊天保存为笔记")}
                 onClick={() => void onSaveAsNote()}
               >
                 <Download className="tw-size-4" />
               </Button>
             </TooltipTrigger>
-            <TooltipContent>Save chat as note</TooltipContent>
+            <TooltipContent>{t("Save chat as note", "将聊天保存为笔记")}</TooltipContent>
           </Tooltip>
         )}
         <Tooltip>
@@ -97,17 +103,22 @@ export function ChatControls({
             onOpenSourceFile={onOpenSourceFile}
           >
             <TooltipTrigger asChild>
-              <Button variant="ghost2" size="icon" title="Chat history" onClick={onLoadHistory}>
+              <Button
+                variant="ghost2"
+                size="icon"
+                title={t("Chat history", "聊天记录")}
+                onClick={onLoadHistory}
+              >
                 <History className="tw-size-4" />
               </Button>
             </TooltipTrigger>
           </ChatHistoryPopover>
-          <TooltipContent>Chat history</TooltipContent>
+          <TooltipContent>{t("Chat history", "聊天记录")}</TooltipContent>
         </Tooltip>
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost2" size="icon" title="Advanced settings">
+            <Button variant="ghost2" size="icon" title={t("Advanced settings", "高级设置")}>
               <MoreHorizontal className="tw-size-4" />
             </Button>
           </DropdownMenuTrigger>
@@ -121,7 +132,7 @@ export function ChatControls({
             >
               <div className="tw-flex tw-items-center tw-gap-2">
                 <CheckCircle className="tw-size-4" />
-                Auto-accept edits
+                {t("Auto-accept edits", "自动接受修改")}
               </div>
               <SettingSwitch checked={settings.autoAcceptEdits} />
             </DropdownMenuItem>

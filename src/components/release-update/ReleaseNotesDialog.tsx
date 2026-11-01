@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import { Markdown } from "@/components/Markdown";
 import { FullBleedReactModal } from "@/components/modals/ReactModal";
 import {
@@ -45,7 +46,9 @@ export function ReleaseNotesDialogContent({
         <span className="tw-flex tw-size-9 tw-shrink-0 tw-items-center tw-justify-center tw-rounded-full tw-bg-interactive-accent tw-text-on-accent">
           <ArrowUpCircle aria-hidden="true" className="tw-size-5" />
         </span>
-        <h2 className="tw-m-0 tw-text-ui-medium tw-font-semibold">Copilot update available</h2>
+        <h2 className="tw-m-0 tw-text-ui-medium tw-font-semibold">
+          {t("Copilot update available", "Copilot 有可用更新")}
+        </h2>
       </header>
 
       <div className="tw-min-h-0 tw-flex-1 tw-overflow-y-auto tw-overscroll-contain tw-px-5 tw-py-4">
@@ -61,7 +64,7 @@ export function ReleaseNotesDialogContent({
           ))
         ) : state.status === "error" ? (
           <div
-            aria-label="Couldn’t load release notes"
+            aria-label={t("Couldn’t load release notes", "无法加载更新说明")}
             className="tw-flex tw-h-full tw-items-center tw-justify-center"
             role="alert"
           >
@@ -71,10 +74,14 @@ export function ReleaseNotesDialogContent({
                 className="tw-mt-0.5 tw-size-5 tw-shrink-0 tw-text-warning"
               />
               <div>
-                <div className="tw-font-medium">Couldn’t load release notes</div>
+                <div className="tw-font-medium">
+                  {t("Couldn’t load release notes", "无法加载更新说明")}
+                </div>
                 <p className="tw-mb-0 tw-mt-1 tw-text-ui-smaller tw-text-muted">
-                  Check your connection or view the release on GitHub. You can still update Copilot
-                  from Community Plugins.
+                  {t(
+                    "Check your connection or view the release on GitHub. You can still update Copilot from Community Plugins.",
+                    "请检查网络连接，或在 GitHub 上查看此版本。您仍可通过社区插件更新 Copilot。"
+                  )}
                 </p>
               </div>
             </div>
@@ -85,7 +92,7 @@ export function ReleaseNotesDialogContent({
             role="status"
           >
             <LoaderCircle aria-hidden="true" className="tw-size-4 tw-animate-spin" />
-            Loading release notes…
+            {t("Loading release notes…", "正在加载更新说明…")}
           </div>
         )}
       </div>
@@ -93,13 +100,13 @@ export function ReleaseNotesDialogContent({
       <footer className="copilot-divider-t tw-flex tw-shrink-0 tw-flex-wrap tw-items-center tw-justify-end tw-gap-2 tw-bg-secondary tw-px-5 tw-py-3">
         <Button asChild size="default" variant="secondary">
           <a href={releaseUrl} rel="noreferrer" target="_blank">
-            View on GitHub
+            {t("View on GitHub", "在 GitHub 上查看")}
             <ExternalLink aria-hidden="true" className="tw-size-4" />
           </a>
         </Button>
         <Button asChild size="default">
           <a href={UPDATE_PLUGIN_URL} onClick={onClose} rel="noreferrer" target="_blank">
-            Update in Obsidian
+            {t("Update in Obsidian", "在 Obsidian 中更新")}
             <ExternalLink aria-hidden="true" className="tw-size-4" />
           </a>
         </Button>

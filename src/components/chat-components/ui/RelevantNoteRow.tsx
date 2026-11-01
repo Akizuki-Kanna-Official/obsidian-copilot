@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import { Markdown } from "@/components/Markdown";
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverAnchor, PopoverContent } from "@/components/ui/popover";
@@ -138,7 +139,7 @@ function RelevantNoteHoverCard({
         )}
 
         <div className="tw-flex tw-items-center tw-gap-2">
-          <span className="tw-shrink-0 tw-text-xs tw-text-faint">Similarity</span>
+          <span className="tw-shrink-0 tw-text-xs tw-text-faint">{t("Similarity", "相似度")}</span>
           <RelevanceMeter score={similarity} animated={animated} className="tw-h-1 tw-flex-1" />
           <span className="tw-shrink-0 tw-text-xs tw-font-medium tw-tabular-nums tw-text-normal">
             {(similarity * 100).toFixed(1)}%
@@ -150,13 +151,13 @@ function RelevantNoteHoverCard({
             {note.metadata.hasOutgoingLinks && (
               <span className="tw-flex tw-items-center tw-gap-1">
                 <FileOutput className="tw-size-3.5" />
-                Outgoing links
+                {t("Outgoing links", "出站链接")}
               </span>
             )}
             {note.metadata.hasBacklinks && (
               <span className="tw-flex tw-items-center tw-gap-1">
                 <FileInput className="tw-size-3.5" />
-                Backlinks
+                {t("Backlinks", "反向链接")}
               </span>
             )}
           </div>
@@ -170,7 +171,7 @@ function RelevantNoteHoverCard({
             className="tw-flex-1 tw-gap-1.5"
           >
             <PlusCircle className="tw-size-4" />
-            Add to chat
+            {t("Add to chat", "添加到聊天")}
           </Button>
           <Button
             variant="default"
@@ -178,7 +179,7 @@ function RelevantNoteHoverCard({
             onClick={onNavigateToNote}
             className="tw-flex-1 tw-gap-1.5"
           >
-            Open note
+            {t("Open note", "打开笔记")}
             <ArrowRight className="tw-size-4" />
           </Button>
         </div>
@@ -252,10 +253,16 @@ export function RelevantNoteRow({
 
           <div className="tw-flex tw-shrink-0 tw-items-center tw-gap-1.5 group-hover:tw-hidden">
             {note.metadata.hasOutgoingLinks && (
-              <LinkBadge icon={<FileOutput className="tw-size-3" />} label="Outgoing link" />
+              <LinkBadge
+                icon={<FileOutput className="tw-size-3" />}
+                label={t("Outgoing link", "出站链接")}
+              />
             )}
             {note.metadata.hasBacklinks && (
-              <LinkBadge icon={<FileInput className="tw-size-3" />} label="Backlink" />
+              <LinkBadge
+                icon={<FileInput className="tw-size-3" />}
+                label={t("Backlink", "反向链接")}
+              />
             )}
             <span className="tw-text-xs tw-font-medium tw-tabular-nums tw-text-muted">
               {Math.round(similarity * 100)}%
@@ -266,7 +273,7 @@ export function RelevantNoteRow({
             <Button
               variant="ghost2"
               size="icon"
-              title="Add to chat"
+              title={t("Add to chat", "添加到聊天")}
               className="tw-size-6 tw-p-0"
               onClick={(e) => {
                 e.stopPropagation();
@@ -278,7 +285,7 @@ export function RelevantNoteRow({
             <Button
               variant="ghost2"
               size="icon"
-              title="Open note"
+              title={t("Open note", "打开笔记")}
               className="tw-size-6 tw-p-0"
               onClick={(e) => {
                 e.stopPropagation();

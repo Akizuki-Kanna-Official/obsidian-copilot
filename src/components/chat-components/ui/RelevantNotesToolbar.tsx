@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import { SettingSwitch } from "@/components/ui/setting-switch";
 import { cn } from "@/lib/utils";
 import { FileText } from "lucide-react";
@@ -20,7 +21,7 @@ export function RelevantNotesToolbar({
   return (
     <div className="tw-flex tw-flex-none tw-items-center tw-gap-2 tw-border-0 tw-border-b tw-border-solid tw-border-border tw-px-3 tw-py-2">
       <div className="tw-flex tw-min-w-0 tw-flex-1 tw-items-center tw-gap-1.5 tw-text-xs tw-text-faint">
-        <span className="tw-shrink-0">Relevant to</span>
+        <span className="tw-shrink-0">{t("Relevant to", "相关于")}</span>
         {activeFileName ? (
           <span className="tw-flex tw-min-w-0 tw-items-center tw-gap-1 tw-text-muted">
             <FileText className="tw-size-3.5 tw-shrink-0" />
@@ -32,7 +33,7 @@ export function RelevantNotesToolbar({
       </div>
       {liveUpdate && (
         <div
-          title="Re-rank these notes while you write"
+          title={t("Re-rank these notes while you write", "写作时重新排列这些笔记的相关性")}
           className="tw-flex tw-shrink-0 tw-items-center tw-gap-1.5 tw-text-xs"
         >
           {/* A div with role="switch" cannot be named or activated by a <label>. https://github.com/Brevilabs/obsidian-copilot-private/issues/362 */}
@@ -44,7 +45,7 @@ export function RelevantNotesToolbar({
               liveUpdate.enabled ? "tw-text-normal" : "tw-text-faint"
             )}
           >
-            Live
+            {t("Live", "实时")}
           </span>
           <SettingSwitch
             aria-labelledby={labelId}

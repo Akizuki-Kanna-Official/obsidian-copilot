@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -68,11 +69,13 @@ export function ModelSelector({
         >
           <div className="tw-min-w-0 tw-flex-1 tw-truncate">
             {modelError ? (
-              <span className="tw-truncate tw-text-error">Model failed to load</span>
+              <span className="tw-truncate tw-text-error">
+                {t("Model failed to load", "模型加载失败")}
+              </span>
             ) : currentModel ? (
               <ModelDisplay model={currentModel} iconSize={8} />
             ) : (
-              <span className="tw-truncate">Select model</span>
+              <span className="tw-truncate">{t("Select model", "选择模型")}</span>
             )}
           </div>
           {currentModel?._needsSelfHostWarning && (

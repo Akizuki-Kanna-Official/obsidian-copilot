@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import React, { useEffect, useRef, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
@@ -43,7 +44,7 @@ export function PasswordInput({
           disabled && "tw-cursor-not-allowed tw-opacity-50"
         )}
         role="button"
-        aria-label={showPassword ? "Hide password" : "Show password"}
+        aria-label={showPassword ? t("Hide password", "隐藏密码") : t("Show password", "显示密码")}
       >
         {showPassword ? (
           <EyeOff

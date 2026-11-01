@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import { ConfirmModal } from "@/components/modals/ConfirmModal";
 import { ReactModal } from "@/components/modals/ReactModal";
 import { Badge } from "@/components/ui/badge";
@@ -245,7 +246,7 @@ const ConfigureProviderBody: React.FC<ConfigureProviderBodyProps> = ({
       setVerification({
         ok: false,
         code: "missing_api_key",
-        message: "Enter an API key to verify this provider.",
+        message: t("Enter an API key to verify this provider.", "请输入 API 密钥以验证此服务商。"),
         checkedAt: Date.now(),
       });
       return;
@@ -294,7 +295,12 @@ const ConfigureProviderBody: React.FC<ConfigureProviderBodyProps> = ({
       onClose();
     } catch (err) {
       logError("[ConfigureProviderDialog] setupProvider failed", err);
-      new Notice("Failed to save provider. Check the Copilot log for details.");
+      new Notice(
+        t(
+          "Failed to save provider. Check the Copilot log for details.",
+          "保存服务商失败。请查看 Copilot 日志了解详情。"
+        )
+      );
     } finally {
       setSaving(false);
     }
@@ -329,7 +335,12 @@ const ConfigureProviderBody: React.FC<ConfigureProviderBodyProps> = ({
       onClose();
     } catch (err) {
       logError("[ConfigureProviderDialog] save changes failed", err);
-      new Notice("Failed to save changes. Check the Copilot log for details.");
+      new Notice(
+        t(
+          "Failed to save changes. Check the Copilot log for details.",
+          "保存更改失败。请查看 Copilot 日志了解详情。"
+        )
+      );
     } finally {
       setSaving(false);
     }
@@ -350,13 +361,16 @@ const ConfigureProviderBody: React.FC<ConfigureProviderBodyProps> = ({
           onClose();
         } catch (err) {
           logError("[ConfigureProviderDialog] removeProvider failed", err);
-          new Notice("Failed to remove provider.");
+          new Notice(t("Failed to remove provider.", "移除服务商失败。"));
         }
       },
-      `Remove ${provider.displayName}? This also removes all of its models from every model picker.`,
-      "Remove provider",
-      "Remove",
-      "Cancel"
+      t(
+        `Remove ${provider.displayName}? This also removes all of its models from every model picker.`,
+        `移除 ${provider.displayName}？这也会从所有模型选择器中移除该服务商的全部模型。`
+      ),
+      t("Remove provider", "移除服务商"),
+      t("Remove", "移除"),
+      t("Cancel", "取消")
     );
     modal.open();
   };
@@ -387,29 +401,32 @@ const ConfigureProviderBody: React.FC<ConfigureProviderBodyProps> = ({
     <div className="tw-flex tw-h-full tw-min-h-0 tw-flex-col tw-gap-4 tw-overflow-hidden">
       <div className="tw-flex tw-flex-col tw-gap-1 tw-border-b tw-border-border tw-px-2 tw-pb-3">
         <div className="tw-text-lg tw-font-semibold tw-leading-none tw-tracking-tight">
-          Configure {headerName}
+          {t("Configure", "配置")} {headerName}
         </div>
         <div className="tw-text-sm tw-text-muted">
-          Enter credentials and choose which models to enable.
+          {t(
+            "Enter credentials and choose which models to enable.",
+            "输入凭据并选择要启用的模型。"
+          )}
         </div>
       </div>
 
       <div className="tw-flex tw-min-h-0 tw-flex-1 tw-flex-col tw-gap-4 tw-overflow-y-auto tw-px-2 tw-py-1">
-        <FormField label="Display name">
+        <FormField label={t("Display name", "显示名称")}>
           <Input value={displayName} onChange={(e) => setDisplayName(e.target.value)} />
         </FormField>
 
         <FormField
           label={
             <span className="tw-inline-flex tw-items-center tw-gap-2">
-              API key
+              {t("API key", "API 密钥")}
               <span className="tw-text-ui-smaller tw-font-normal tw-text-muted">
-                {requiresApiKey ? "required" : "optional"}
+                {requiresApiKey ? t("required", "必填") : t("optional", "选填")}
               </span>
               {verification?.ok === true && (
                 <Badge className="tw-gap-1 tw-bg-success tw-text-success">
                   <CheckCircle2 className="tw-size-3" />
-                  Verified
+                  {t("Verified", "已验证")}
                 </Badge>
               )}
             </span>
@@ -423,32 +440,36 @@ const ConfigureProviderBody: React.FC<ConfigureProviderBodyProps> = ({
                 setApiKey(v);
                 setVerification(null);
               }}
-              placeholder={state.mode === "edit" ? "No API key set" : "Paste your API key"}
+              placeholder={
+                state.mode === "edit"
+                  ? t("No API key set", "尚未设置 API 密钥")
+                  : t("Paste your API key", "粘贴您的 API 密钥")
+              }
             />
             <Button variant="secondary" onClick={safeAsyncHandler(handleTest)} disabled={testing}>
-              {testing ? <Loader2 className="tw-size-4 tw-animate-spin" /> : "Test"}
+              {testing ? <Loader2 className="tw-size-4 tw-animate-spin" /> : t("Test", "测试")}
             </Button>
             {state.mode === "edit" && apiKey.length > 0 && (
               <Button variant="destructive" onClick={handleClearKey} data-testid="api-key-clear">
-                Clear
+                {t("Clear", "清除")}
               </Button>
             )}
           </div>
           {testFailed ? (
             <div className="tw-flex tw-items-center tw-gap-1.5 tw-text-xs tw-text-error">
               <XCircle className="tw-size-3.5 tw-shrink-0" />
-              <span>{verification?.message || "Verification failed"}</span>
+              <span>{verification?.message || t("Verification failed", "验证失败")}</span>
             </div>
           ) : (
             missingRequiredKey && (
               <div className="tw-text-xs tw-text-muted">
-                An API key is required for this provider.
+                {t("An API key is required for this provider.", "此服务商需要 API 密钥。")}
               </div>
             )
           )}
         </FormField>
 
-        <FormField label="Base URL">
+        <FormField label={t("Base URL", "接口基础地址")}>
           <Input
             value={baseUrl}
             onChange={(e) => {
@@ -462,7 +483,7 @@ const ConfigureProviderBody: React.FC<ConfigureProviderBodyProps> = ({
         <CorsCompatibilitySetting checked={enableCors} onCheckedChange={setEnableCors} />
 
         <div className="tw-flex tw-flex-col tw-gap-2">
-          <div className="tw-text-sm tw-font-medium tw-text-normal">Models</div>
+          <div className="tw-text-sm tw-font-medium tw-text-normal">{t("Models", "模型")}</div>
           <ModelChecklist
             availableModels={pool.availableModels}
             selected={pool.selectedWireIds}
@@ -482,31 +503,31 @@ const ConfigureProviderBody: React.FC<ConfigureProviderBodyProps> = ({
       {state.mode === "new" ? (
         <div className="tw-flex tw-flex-col-reverse tw-gap-2 tw-px-2 sm:tw-flex-row sm:tw-justify-end">
           <Button variant="secondary" onClick={onClose} disabled={saving}>
-            Cancel
+            {t("Cancel", "取消")}
           </Button>
           <Button
             variant="default"
             onClick={safeAsyncHandler(handleSaveNew)}
             disabled={!canSave || saving}
           >
-            {saving ? <Loader2 className="tw-size-4 tw-animate-spin" /> : "Save"}
+            {saving ? <Loader2 className="tw-size-4 tw-animate-spin" /> : t("Save", "保存")}
           </Button>
         </div>
       ) : (
         <div className="tw-flex tw-flex-col-reverse tw-gap-2 tw-px-2 sm:tw-flex-row sm:tw-justify-between">
           <Button variant="destructive" onClick={handleRemove} disabled={saving}>
-            Remove provider
+            {t("Remove provider", "移除服务商")}
           </Button>
           <div className="tw-flex tw-gap-2">
             <Button variant="secondary" onClick={onClose} disabled={saving}>
-              Cancel
+              {t("Cancel", "取消")}
             </Button>
             <Button
               variant="default"
               onClick={safeAsyncHandler(handleSaveEdit)}
               disabled={!canSave || saving}
             >
-              {saving ? <Loader2 className="tw-size-4 tw-animate-spin" /> : "Save"}
+              {saving ? <Loader2 className="tw-size-4 tw-animate-spin" /> : t("Save", "保存")}
             </Button>
           </div>
         </div>

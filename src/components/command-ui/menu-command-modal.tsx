@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import * as React from "react";
 import { Send } from "lucide-react";
 import { Platform } from "obsidian";
@@ -146,7 +147,7 @@ export function MenuCommandModal({
             if (!isBusy) onFollowUpSubmit();
           }}
           onClear={() => onFollowUpChange("")}
-          placeholder="Enter follow-up instructions..."
+          placeholder={t("Enter follow-up instructions...", "输入后续指令…")}
           className={!showContentArea ? "tw-mt-auto" : undefined}
           hint={isBusy ? "Generating..." : undefined}
           autoFocus
@@ -184,9 +185,15 @@ export function MenuCommandModal({
                   htmlFor="menuCommandIncludeContext"
                   className="tw-cursor-pointer tw-text-xs tw-text-muted"
                 >
-                  Note
+                  {t("Note", "笔记")}
                 </label>
-                <HelpTooltip content="Include the active note's content as context" side="top" />
+                <HelpTooltip
+                  content={t(
+                    "Include the active note's content as context",
+                    "将当前笔记内容作为上下文"
+                  )}
+                  side="top"
+                />
               </div>
             )}
           </div>
@@ -197,10 +204,10 @@ export function MenuCommandModal({
                 size="sm"
                 onClick={onFollowUpSubmit}
                 disabled={!followUpValue.trim() || isBusy}
-                title="Send message"
+                title={t("Send message", "发送消息")}
               >
                 <Send className="tw-mr-1 tw-size-4" />
-                Send
+                {t("Send", "发送")}
               </Button>
             )}
             <ActionButtons

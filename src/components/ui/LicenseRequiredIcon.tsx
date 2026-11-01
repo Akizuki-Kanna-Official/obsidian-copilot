@@ -1,9 +1,10 @@
+import { t } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 import { HelpTooltip } from "@/components/ui/help-tooltip";
 import { Lock } from "lucide-react";
 import React from "react";
 
-const LICENSE_REQUIRED = "Copilot license required";
+const LICENSE_REQUIRED = t("Copilot license required", "需要 Copilot 许可证");
 
 export function LicenseRequiredIcon({ className }: { className?: string }) {
   return (

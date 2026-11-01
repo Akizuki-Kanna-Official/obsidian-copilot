@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import React from "react";
 import { App, Modal } from "obsidian";
 import { Root } from "react-dom/client";
@@ -20,23 +21,28 @@ export function CopilotPlusWelcomeModalContent({
     <div className="tw-flex tw-flex-col tw-gap-4">
       <div>
         <p>
-          Thanks for purchasing! Your license includes Copilot exclusive models, cross-agent skills,
-          access to the{" "}
+          {t(
+            "Thanks for purchasing! Your license includes Copilot exclusive models, cross-agent skills, access to the",
+            "感谢购买！您的许可证包含 Copilot 专属模型、跨智能体技能，以及"
+          )}{" "}
           <a href={createProductUrl(PRODUCT_URLS.OPENARTIFACTS, "welcome_modal")}>OpenArtifacts</a>{" "}
-          doc sharing service, and much more!
+          {t("doc sharing service, and much more!", "文档分享服务等更多功能！")}
         </p>
         <p>
-          Would you like to make <b className="tw-text-accent">{DEFAULT_COPILOT_PLUS_CHAT_MODEL}</b>{" "}
-          the default model for chat and your agents now? You can always change this later in
-          Settings.
+          {t("Would you like to make", "是否现在将")}{" "}
+          <b className="tw-text-accent">{DEFAULT_COPILOT_PLUS_CHAT_MODEL}</b>{" "}
+          {t(
+            "the default model for chat and your agents now? You can always change this later in Settings.",
+            "设为聊天和智能体的默认模型？您随时可以在设置中更改。"
+          )}
         </p>
       </div>
       <div className="tw-flex tw-w-full tw-justify-end tw-gap-2">
         <Button variant="ghost" onClick={onCancel}>
-          Apply later
+          {t("Apply later", "稍后应用")}
         </Button>
         <Button variant="default" onClick={onConfirm}>
-          Apply now
+          {t("Apply now", "立即应用")}
         </Button>
       </div>
     </div>
@@ -49,7 +55,7 @@ export class CopilotPlusWelcomeModal extends Modal {
   constructor(app: App) {
     super(app);
     // @ts-ignore
-    this.setTitle("Welcome to Copilot 🚀");
+    this.setTitle(t("Welcome to Copilot 🚀", "欢迎使用 Copilot 🚀"));
   }
 
   onOpen() {
@@ -58,7 +64,7 @@ export class CopilotPlusWelcomeModal extends Modal {
 
     const handleConfirm = () => {
       void applyLicenseSettings().catch((error) =>
-        logError("Failed to apply the licensed default model", error)
+        logError(t("Failed to apply the licensed default model", "无法应用授权的默认模型"), error)
       );
       this.close();
     };

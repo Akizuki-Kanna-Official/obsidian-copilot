@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import type { ProjectConfig } from "@/aiParams";
 import { AddUrlPopover } from "@/components/project/AddUrlPopover";
 import { ContextChip } from "@/components/project/ContextChip";
@@ -166,14 +167,17 @@ export function ProjectContextSourceEditor({
             >
               {droppable
                 ? isDragging
-                  ? "Drop to add to context"
-                  : "Drag files / folders here"
-                : "No context yet"}
+                  ? t("Drop to add to context", "拖放以添加到上下文")
+                  : t("Drag files / folders here", "将文件 / 文件夹拖到此处")
+                : t("No context yet", "暂无上下文")}
             </div>
             <div className="tw-text-xs tw-text-muted">
               {droppable
-                ? "or use Manage to add inclusion / tag / property / URL"
-                : "Add via + URL or Manage"}
+                ? t(
+                    "or use Manage to add inclusion / tag / property / URL",
+                    "或使用“管理”添加包含规则 / 标签 / 属性 / 网址"
+                  )
+                : t("Add via + URL or Manage", "通过“+ 网址”或“管理”添加")}
             </div>
           </div>
         ) : (
@@ -194,7 +198,7 @@ export function ProjectContextSourceEditor({
                   )}
                   <div className="tw-flex tw-flex-wrap tw-items-center tw-gap-2">
                     <span className="tw-mr-1 tw-text-xs tw-font-medium tw-text-muted">
-                      Excluded:
+                      {t("Excluded:", "已排除：")}
                     </span>
                     {exclusionChips}
                   </div>
@@ -218,9 +222,11 @@ export function ProjectContextSourceEditor({
             <div className="tw-absolute tw-inset-0 tw-rounded-md tw-bg-interactive-accent/10" />
             <Inbox className="tw-relative tw-size-5 tw-text-accent" />
             <div className="tw-relative tw-text-sm tw-font-medium tw-text-accent">
-              Drop to add to context
+              {t("Drop to add to context", "拖放以添加到上下文")}
             </div>
-            <div className="tw-relative tw-text-xs tw-text-muted">Added as an inclusion</div>
+            <div className="tw-relative tw-text-xs tw-text-muted">
+              {t("Added as an inclusion", "已添加为包含项")}
+            </div>
           </div>
         )}
       </div>
@@ -236,11 +242,15 @@ export function ProjectContextSourceEditor({
             >
               <Inbox className="tw-size-3.5 tw-shrink-0" />
               <span className="tw-truncate">
-                {isDragging ? "Drop to add to context" : "Drag files / folders here"}
+                {isDragging
+                  ? t("Drop to add to context", "拖放以添加到上下文")
+                  : t("Drag files / folders here", "将文件 / 文件夹拖到此处")}
               </span>
             </div>
           ) : (
-            <span className="tw-truncate">Add a web / YouTube link</span>
+            <span className="tw-truncate">
+              {t("Add a web / YouTube link", "添加网页 / YouTube 链接")}
+            </span>
           )}
           <AddUrlPopover
             existingUrls={urlItems.map((u) => u.url)}
@@ -252,7 +262,7 @@ export function ProjectContextSourceEditor({
           {solidManageButton ? (
             <Button size="sm" className="tw-gap-1.5" onClick={onManage}>
               <Settings className="tw-size-3.5" />
-              Manage context
+              {t("Manage context", "管理上下文")}
             </Button>
           ) : (
             <Button
@@ -262,7 +272,7 @@ export function ProjectContextSourceEditor({
               onClick={onManage}
             >
               <Settings className="tw-size-3.5" />
-              Manage
+              {t("Manage", "管理")}
             </Button>
           )}
         </div>
@@ -274,8 +284,10 @@ export function ProjectContextSourceEditor({
   return (
     <div className="tw-flex tw-flex-col tw-gap-2">
       <div className="tw-text-sm tw-text-muted">
-        Define patterns to include specific files, folders, tags or properties in the project
-        context. You can also add web pages or YouTube videos.
+        {t(
+          "Define patterns to include specific files, folders, tags or properties in the project context. You can also add web pages or YouTube videos.",
+          "通过规则将特定文件、文件夹、标签或属性纳入项目上下文。您也可以添加网页或 YouTube 视频。"
+        )}
       </div>
       {editorBox}
     </div>

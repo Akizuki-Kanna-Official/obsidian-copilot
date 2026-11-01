@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import React, { useState } from "react";
 import { Plus } from "lucide-react";
 import { TFile } from "obsidian";
@@ -31,13 +32,15 @@ export const AddContextButton: React.FC<AddContextButtonProps> = ({
                 variant="ghost2"
                 size="icon"
                 className="tw-text-muted hover:tw-text-accent"
-                aria-label="Add context"
+                aria-label={t("Add context", "添加上下文")}
               >
                 <Plus className="tw-size-4" />
               </Button>
             </PopoverTrigger>
           </TooltipTrigger>
-          <TooltipContent className="tw-px-1 tw-py-0.5">Add context</TooltipContent>
+          <TooltipContent className="tw-px-1 tw-py-0.5">
+            {t("Add context", "添加上下文")}
+          </TooltipContent>
         </Tooltip>
       </TooltipProvider>
       <PopoverContent

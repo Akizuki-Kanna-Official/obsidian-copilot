@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import {
   clearSelectedTextContexts,
   getSelectedTextContexts,
@@ -275,7 +276,7 @@ const ChatInternal: React.FC<ChatProps & { chatInput: ReturnType<typeof useChatI
       }
     } catch (error) {
       logError("Error sending message:", error);
-      new Notice("Failed to send message. Please try again.");
+      new Notice(t("Failed to send message. Please try again.", "发送消息失败，请重试。"));
     } finally {
       safeSet.setLoading(false);
       safeSet.setLoadingMessage(LOADING_MESSAGES.DEFAULT);
@@ -293,7 +294,12 @@ const ChatInternal: React.FC<ChatProps & { chatInput: ReturnType<typeof useChatI
       await chatUIState.saveChat(currentModelKey);
     } catch (error) {
       logError("Error saving chat as note:", err2String(error));
-      new Notice("Failed to save chat as note. Check the Copilot log for details.");
+      new Notice(
+        t(
+          "Failed to save chat as note. Check the Copilot log for details.",
+          "将聊天保存为笔记失败。请查看 Copilot 日志了解详情。"
+        )
+      );
     }
   }, [app, chatUIState, currentModelKey]);
 
@@ -332,13 +338,13 @@ const ChatInternal: React.FC<ChatProps & { chatInput: ReturnType<typeof useChatI
   const handleRegenerate = useCallback(
     async (messageIndex: number) => {
       if (messageIndex <= 0) {
-        new Notice("Cannot regenerate the first message.");
+        new Notice(t("Cannot regenerate the first message.", "无法重新生成第一条消息。"));
         return;
       }
 
       const messageToRegenerate = chatHistory[messageIndex];
       if (!messageToRegenerate) {
-        new Notice("Message not found.");
+        new Notice(t("Message not found.", "未找到消息。"));
         return;
       }
 
@@ -353,9 +359,11 @@ const ChatInternal: React.FC<ChatProps & { chatInput: ReturnType<typeof useChatI
         );
 
         if (!success) {
-          new Notice("Failed to regenerate message. Please try again.");
+          new Notice(
+            t("Failed to regenerate message. Please try again.", "重新生成消息失败，请重试。")
+          );
         } else if (settings.debug) {
-          logInfo("Message regenerated successfully");
+          logInfo(t("Message regenerated successfully", "消息已重新生成"));
         }
 
         if (settings.autosaveChat) {
@@ -363,7 +371,9 @@ const ChatInternal: React.FC<ChatProps & { chatInput: ReturnType<typeof useChatI
         }
       } catch (error) {
         logError("Error regenerating message:", error);
-        new Notice("Failed to regenerate message. Please try again.");
+        new Notice(
+          t("Failed to regenerate message. Please try again.", "重新生成消息失败，请重试。")
+        );
       } finally {
         safeSet.setLoading(false);
         streamingMessageIdRef.current = null;
@@ -398,7 +408,7 @@ const ChatInternal: React.FC<ChatProps & { chatInput: ReturnType<typeof useChatI
         );
 
         if (!success) {
-          new Notice("Failed to edit message. Please try again.");
+          new Notice(t("Failed to edit message. Please try again.", "编辑消息失败，请重试。"));
           return;
         }
 
@@ -424,7 +434,12 @@ const ChatInternal: React.FC<ChatProps & { chatInput: ReturnType<typeof useChatI
               }
             } catch (error) {
               logError("Error regenerating AI response:", error);
-              new Notice("Failed to regenerate AI response. Please try again.");
+              new Notice(
+                t(
+                  "Failed to regenerate AI response. Please try again.",
+                  "重新生成 AI 回复失败，请重试。"
+                )
+              );
             } finally {
               safeSet.setLoading(false);
               streamingMessageIdRef.current = null;
@@ -437,7 +452,7 @@ const ChatInternal: React.FC<ChatProps & { chatInput: ReturnType<typeof useChatI
         }
       } catch (error) {
         logError("Error editing message:", error);
-        new Notice("Failed to edit message. Please try again.");
+        new Notice(t("Failed to edit message. Please try again.", "编辑消息失败，请重试。"));
       }
     },
     [
@@ -507,18 +522,18 @@ const ChatInternal: React.FC<ChatProps & { chatInput: ReturnType<typeof useChatI
     async (messageIndex: number) => {
       const messageToDelete = chatHistory[messageIndex];
       if (!messageToDelete) {
-        new Notice("Message not found.");
+        new Notice(t("Message not found.", "未找到消息。"));
         return;
       }
 
       try {
         const success = await chatUIState.deleteMessage(messageToDelete.id!);
         if (!success) {
-          new Notice("Failed to delete message. Please try again.");
+          new Notice(t("Failed to delete message. Please try again.", "删除消息失败，请重试。"));
         }
       } catch (error) {
         logError("Error deleting message:", error);
-        new Notice("Failed to delete message. Please try again.");
+        new Notice(t("Failed to delete message. Please try again.", "删除消息失败，请重试。"));
       }
     },
     [chatHistory, chatUIState]
@@ -573,7 +588,7 @@ const ChatInternal: React.FC<ChatProps & { chatInput: ReturnType<typeof useChatI
       setChatHistoryItems(historyItems);
     } catch (error) {
       logError("Error loading chat history:", error);
-      new Notice("Failed to load chat history.");
+      new Notice(t("Failed to load chat history.", "加载聊天记录失败。"));
     }
   }, [plugin]);
 
@@ -584,7 +599,7 @@ const ChatInternal: React.FC<ChatProps & { chatInput: ReturnType<typeof useChatI
         await handleLoadChatHistory();
       } catch (error) {
         logError("Error updating chat title:", error);
-        new Notice("Failed to update chat title.");
+        new Notice(t("Failed to update chat title.", "更新聊天标题失败。"));
         throw error;
       }
     },
@@ -598,7 +613,7 @@ const ChatInternal: React.FC<ChatProps & { chatInput: ReturnType<typeof useChatI
         await handleLoadChatHistory();
       } catch (error) {
         logError("Error deleting chat:", error);
-        new Notice("Failed to delete chat.");
+        new Notice(t("Failed to delete chat.", "删除聊天失败。"));
         throw error;
       }
     },
@@ -612,7 +627,7 @@ const ChatInternal: React.FC<ChatProps & { chatInput: ReturnType<typeof useChatI
         resetSessionSystemPromptSettings();
       } catch (error) {
         logError("Error loading chat:", error);
-        new Notice("Failed to load chat.");
+        new Notice(t("Failed to load chat.", "加载聊天失败。"));
       }
     },
     [plugin]
@@ -624,7 +639,7 @@ const ChatInternal: React.FC<ChatProps & { chatInput: ReturnType<typeof useChatI
         await plugin.openChatSourceFile(id);
       } catch (error) {
         logError("Error opening source file:", error);
-        new Notice("Failed to open source file.");
+        new Notice(t("Failed to open source file.", "打开源文件失败。"));
       }
     },
     [plugin]
@@ -722,7 +737,7 @@ const ChatInternal: React.FC<ChatProps & { chatInput: ReturnType<typeof useChatI
         <div className="tw-relative tw-flex tw-h-full tw-flex-col">
           {isDragActive && (
             <div className="tw-absolute tw-inset-0 tw-z-modal tw-flex tw-items-center tw-justify-center tw-rounded-md tw-border tw-border-dashed tw-bg-primary tw-opacity-80">
-              <span>Drop files here...</span>
+              <span>{t("Drop files here...", "将文件拖到此处…")}</span>
             </div>
           )}
           {renderChatComponents()}

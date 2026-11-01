@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import { ProjectConfig } from "@/aiParams";
 import { FolderSearchModal } from "@/components/modals/FolderSearchModal";
 import { ProjectFileSelectModal } from "@/components/modals/ProjectFileSelectModal";
@@ -229,7 +230,12 @@ function ItemCard({ item, onDelete }: ItemCardProps) {
       </div>
       <div className="tw-flex tw-min-w-0 tw-flex-1 tw-flex-col">
         <TruncatedText className="tw-flex-1 tw-text-sm tw-font-medium">
-          {item.isIgnored && <span className="tw-text-sm tw-text-error"> (Ignored files)</span>}
+          {item.isIgnored && (
+            <span className="tw-text-sm tw-text-error">
+              {" "}
+              {t("(Ignored files)", "（已忽略文件）")}
+            </span>
+          )}
           {item.name}
         </TruncatedText>
         {item.id && (
@@ -752,7 +758,7 @@ function ContextManage({
           ? [
               {
                 id: "files:all",
-                name: "Files",
+                name: t("Files", "文件"),
                 type: "files",
                 count: groupList.notes.length,
               },
@@ -764,7 +770,7 @@ function ContextManage({
           ? [
               {
                 id: "ignoreFiles:all",
-                name: "Ignore files",
+                name: t("Ignore files", "忽略文件"),
                 type: "ignoreFiles",
                 count: ignoreItems.files.size,
               },
@@ -774,7 +780,9 @@ function ContextManage({
       const webCount = contextUrls.urlItems.filter((u) => u.type === "web").length;
       const youtubeCount = contextUrls.urlItems.filter((u) => u.type === "youtube").length;
       const linkItems = [
-        ...(webCount > 0 ? [{ id: "web:all", name: "Web", type: "web", count: webCount }] : []),
+        ...(webCount > 0
+          ? [{ id: "web:all", name: t("Web", "网页"), type: "web", count: webCount }]
+          : []),
         ...(youtubeCount > 0
           ? [{ id: "youtube:all", name: "YouTube", type: "youtube", count: youtubeCount }]
           : []),
@@ -965,7 +973,7 @@ function ContextManage({
         },
 
         extension: () => {
-          new Notice("Adding extension is temporarily not supported.");
+          new Notice(t("Adding extension is temporarily not supported.", "暂不支持添加扩展名。"));
           return;
         },
 
@@ -1046,27 +1054,27 @@ function ContextManage({
 
   const getDisplayTitle = () => {
     if (searchTerm) return `Search Results for: "${searchTerm}"`;
-    if (activeSection === "links") return "Links";
-    if (activeSection === "web") return "Web";
+    if (activeSection === "links") return t("Links", "链接");
+    if (activeSection === "web") return t("Web", "网页");
     if (activeSection === "youtube") return "YouTube";
     if (activeSection === "tags" && activeItem) {
       return `Tag: ${activeItem}`;
     }
-    if (activeSection === "tags") return "Tags";
+    if (activeSection === "tags") return t("Tags", "标签");
     if (activeSection === "properties" && activeItem) {
       return `Property: ${getBadgeLabel({ pattern: activeItem, type: "property" })}`;
     }
-    if (activeSection === "properties") return "Properties";
+    if (activeSection === "properties") return t("Properties", "属性");
     if (activeSection === "folders" && activeItem) {
       return `Folder: ${activeItem}`;
     }
-    if (activeSection === "folders") return "Folders";
-    if (activeSection === "files") return "Files";
+    if (activeSection === "folders") return t("Folders", "文件夹");
+    if (activeSection === "files") return t("Files", "文件");
     if (activeSection === "extensions" && activeItem) {
       return `Extension: ${activeItem}`;
     }
-    if (activeSection === "ignoreFiles") return "Ignore files";
-    return "All Categories";
+    if (activeSection === "ignoreFiles") return t("Ignore files", "忽略文件");
+    return t("All Categories", "所有分类");
   };
 
   const showingCategoryItems =
@@ -1145,7 +1153,7 @@ function ContextManage({
         <ResizablePanel defaultSize={isMobile ? "35%" : "30%"} minSize="20%" maxSize="40%">
           <div className="tw-flex tw-h-full tw-flex-col">
             <div className="tw-border-b tw-p-4">
-              <h2 className="tw-text-lg tw-font-semibold">File context</h2>
+              <h2 className="tw-text-lg tw-font-semibold">{t("File context", "文件上下文")}</h2>
             </div>
 
             <ScrollArea className="tw-max-h-[500px] tw-flex-1">
@@ -1162,7 +1170,7 @@ function ContextManage({
                 <Separator />
 
                 <SectionList
-                  title="Tags"
+                  title={t("Tags", "标签")}
                   IconComponent={TagIcon}
                   iconColorClassName="tw-text-context-manager-orange"
                   items={makeSectionItem(groupList.tags, (name) => name.slice(1))}
@@ -1180,7 +1188,7 @@ function ContextManage({
                 <Separator />
 
                 <SectionList
-                  title="Properties"
+                  title={t("Properties", "属性")}
                   IconComponent={SlidersHorizontal}
                   iconColorClassName="tw-text-context-manager-purple"
                   items={makeSectionItem(groupList.properties, (pattern) =>
@@ -1192,14 +1200,17 @@ function ContextManage({
                   onItemClick={groupHandlers.click.property}
                   onAddClick={groupHandlers.add.property}
                   onDeleteItem={(e, item) => groupHandlers.delete.property(e, item)}
-                  tooltip="Include notes by a frontmatter property, e.g. Topics: Physics"
+                  tooltip={t(
+                    "Include notes by a frontmatter property, e.g. Topics: Physics",
+                    "按 frontmatter 属性包含笔记，例如 Topics: Physics"
+                  )}
                   onSectionClick={() => setActiveState("properties", null)}
                 />
 
                 <Separator />
 
                 <SectionList
-                  title="Folders"
+                  title={t("Folders", "文件夹")}
                   IconComponent={FolderIcon}
                   iconColorClassName="tw-text-context-manager-yellow"
                   items={makeSectionItem(groupList.folders)}
@@ -1217,7 +1228,7 @@ function ContextManage({
                 <div>
                   <SectionHeader
                     IconComponent={FileText}
-                    title="Files"
+                    title={t("Files", "文件")}
                     iconColorClassName="tw-text-context-manager-blue"
                     onAddClick={groupHandlers.add.file}
                   />
@@ -1228,7 +1239,8 @@ function ContextManage({
                     )}
                     onClick={groupHandlers.click.files}
                   >
-                    Files ({groupList.notes.length})
+                    {t("Files (", "文件（")}
+                    {groupList.notes.length})
                   </div>
                 </div>
 
@@ -1237,7 +1249,7 @@ function ContextManage({
                 <div>
                   <SectionHeader
                     IconComponent={XIcon}
-                    title="Ignore files"
+                    title={t("Ignore files", "忽略文件")}
                     iconColorClassName="tw-text-context-manager-red"
                     onAddClick={groupHandlers.add.ignoreFile}
                   />
@@ -1248,7 +1260,8 @@ function ContextManage({
                     )}
                     onClick={groupHandlers.click.ignoreFiles}
                   >
-                    Files ({ignoreItems.files.size})
+                    {t("Files (", "文件（")}
+                    {ignoreItems.files.size})
                   </div>
                 </div>
               </div>
@@ -1262,7 +1275,10 @@ function ContextManage({
           <div className="tw-flex tw-h-full tw-flex-col">
             <div className="tw-border-b tw-p-4">
               <SearchBar
-                placeholder="Custom search: title, #tag1, .jpg"
+                placeholder={t(
+                  "Custom search: title, #tag1, .jpg",
+                  "自定义搜索：标题、#标签1、.jpg"
+                )}
                 value={searchTerm}
                 onChange={(v) => {
                   setSearchTerm(v);
@@ -1287,8 +1303,11 @@ function ContextManage({
               ) : getDisplayItems.length === 0 ? (
                 <div className="tw-mt-10 tw-text-center tw-text-muted">
                   {activeSection
-                    ? "No items found."
-                    : "No categories found. Add tags, folders, or files using the sidebar."}
+                    ? t("No items found.", "未找到项目。")
+                    : t(
+                        "No categories found. Add tags, folders, or files using the sidebar.",
+                        "未找到分类。请在侧栏添加标签、文件夹或文件。"
+                      )}
                 </div>
               ) : (
                 <div className="tw-space-y-2" style={{ display: "block" }}>
@@ -1337,9 +1356,9 @@ function ContextManage({
       </ResizablePanelGroup>
       <div className="tw-flex tw-justify-end tw-gap-2 tw-border-t tw-p-1">
         <Button variant="ghost" onClick={onCancel}>
-          Cancel
+          {t("Cancel", "取消")}
         </Button>
-        <Button onClick={handleSave}>Save</Button>
+        <Button onClick={handleSave}>{t("Save", "保存")}</Button>
       </div>
     </div>
   );

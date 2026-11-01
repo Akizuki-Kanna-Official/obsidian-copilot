@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import * as React from "react";
 import { X } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -14,8 +15,8 @@ export function CloseButton({ onClose, className }: CloseButtonProps) {
       className={cn("tw-absolute tw-right-2 tw-top-1 tw-rounded tw-p-1 tw-text-normal", className)}
       variant="ghost2"
       onClick={onClose}
-      title="Close"
-      aria-label="Close"
+      title={t("Close", "关闭")}
+      aria-label={t("Close", "关闭")}
     >
       <X className="tw-size-4" />
     </Button>

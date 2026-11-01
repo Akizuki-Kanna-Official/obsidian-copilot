@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import React, { useEffect, useRef } from "react";
 import { MarkdownRenderer } from "obsidian";
 import { Copy, ClipboardPaste, Replace } from "lucide-react";
@@ -121,7 +122,7 @@ export const QuickAskMessageComponent = React.memo(function QuickAskMessageCompo
             size="icon"
             className="tw-size-5 hover:tw-bg-modifier-hover"
             onClick={() => onCopy(message.id)}
-            title="Copy to clipboard"
+            title={t("Copy to clipboard", "复制到剪贴板")}
           >
             <Copy className="tw-size-3" />
           </Button>
@@ -130,7 +131,7 @@ export const QuickAskMessageComponent = React.memo(function QuickAskMessageCompo
             size="icon"
             className="tw-size-5 hover:tw-bg-modifier-hover"
             onClick={() => onInsert(message.id)}
-            title="Insert at cursor"
+            title={t("Insert at cursor", "在光标处插入")}
           >
             <ClipboardPaste className="tw-size-3" />
           </Button>
@@ -143,10 +144,10 @@ export const QuickAskMessageComponent = React.memo(function QuickAskMessageCompo
               disabled={!isReplaceValid}
               title={
                 isDisabledDueToStreaming
-                  ? "Stop generating to replace"
+                  ? t("Stop generating to replace", "停止生成后可替换")
                   : !isReplaceValid
                     ? getErrorMessage(replaceInvalidReason)
-                    : "Replace selection"
+                    : t("Replace selection", "替换选中内容")
               }
             >
               <Replace className="tw-size-3" />

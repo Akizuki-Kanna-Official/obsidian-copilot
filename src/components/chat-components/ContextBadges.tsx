@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import React from "react";
 import {
   ExternalLink,
@@ -111,7 +112,7 @@ export function ContextActiveNoteBadge({
       <TruncatedText className="tw-max-w-40" tooltipContent={tooltipContent} alwaysShowTooltip>
         {currentActiveFile.basename}
       </TruncatedText>
-      <span className="tw-text-xs tw-text-faint">Current</span>
+      <span className="tw-text-xs tw-text-faint">{t("Current", "当前")}</span>
       {isPdf && <span className="tw-text-xs tw-text-faint">pdf</span>}
       {isCanvas && <span className="tw-text-xs tw-text-faint">canvas</span>}
     </ContextBadgeWrapper>
@@ -145,7 +146,7 @@ export function ContextActiveWebTabBadge({
       <TruncatedText className="tw-max-w-40" tooltipContent={tooltipContent} alwaysShowTooltip>
         {displayText}
       </TruncatedText>
-      <span className="tw-text-xs tw-text-faint">Current</span>
+      <span className="tw-text-xs tw-text-faint">{t("Current", "当前")}</span>
     </ContextBadgeWrapper>
   );
 }
@@ -185,7 +186,12 @@ export function ContextWebTabBadge({ webTab, onRemove, onClick }: ContextWebTabB
   const isLoaded = webTab.isLoaded !== false;
   const domain = getDomainFromUrl(webTab.url);
   const displayText = webTab.title || domain || webTab.url || "Untitled";
-  const tooltipText = isLoaded ? webTab.url : "Tab not loaded - switch to this tab to load content";
+  const tooltipText = isLoaded
+    ? webTab.url
+    : t(
+        "Tab not loaded - switch to this tab to load content",
+        "标签页尚未加载，请切换到该标签页以加载内容"
+      );
 
   return (
     <ContextBadgeWrapper
@@ -201,7 +207,9 @@ export function ContextWebTabBadge({ webTab, onRemove, onClick }: ContextWebTabB
       >
         {displayText}
       </TruncatedText>
-      {!isLoaded && <span className="tw-text-xs tw-text-muted">(not loaded)</span>}
+      {!isLoaded && (
+        <span className="tw-text-xs tw-text-muted">{t("(not loaded)", "（未加载）")}</span>
+      )}
     </ContextBadgeWrapper>
   );
 }

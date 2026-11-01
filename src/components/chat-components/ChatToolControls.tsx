@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import React from "react";
 import { Database, Globe, Pen, Sparkles, Brain, Wrench, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -100,7 +101,7 @@ const ChatToolControls: React.FC<ChatToolControlsProps> = ({
               </Button>
             </TooltipTrigger>
             <TooltipContent className="tw-px-1 tw-py-0.5">
-              Toggle autonomous agent mode
+              {t("Toggle autonomous agent mode", "切换自主智能体模式")}
             </TooltipContent>
           </Tooltip>
         )}
@@ -121,7 +122,9 @@ const ChatToolControls: React.FC<ChatToolControlsProps> = ({
                   <Database className="tw-size-4" />
                 </Button>
               </TooltipTrigger>
-              <TooltipContent className="tw-px-1 tw-py-0.5">Toggle vault search</TooltipContent>
+              <TooltipContent className="tw-px-1 tw-py-0.5">
+                {t("Toggle vault search", "切换仓库搜索")}
+              </TooltipContent>
             </Tooltip>
             <Tooltip>
               <TooltipTrigger asChild>
@@ -137,7 +140,9 @@ const ChatToolControls: React.FC<ChatToolControlsProps> = ({
                   <Globe className="tw-size-4" />
                 </Button>
               </TooltipTrigger>
-              <TooltipContent className="tw-px-1 tw-py-0.5">Toggle web search</TooltipContent>
+              <TooltipContent className="tw-px-1 tw-py-0.5">
+                {t("Toggle web search", "切换网页搜索")}
+              </TooltipContent>
             </Tooltip>
             <Tooltip>
               <TooltipTrigger asChild>
@@ -157,7 +162,7 @@ const ChatToolControls: React.FC<ChatToolControlsProps> = ({
                 </Button>
               </TooltipTrigger>
               <TooltipContent className="tw-px-1 tw-py-0.5">
-                Toggle composer (note editing)
+                {t("Toggle composer (note editing)", "切换笔记编辑模式")}
               </TooltipContent>
             </Tooltip>
           </>
@@ -179,7 +184,7 @@ const ChatToolControls: React.FC<ChatToolControlsProps> = ({
               >
                 <div className="tw-flex tw-items-center tw-gap-2">
                   <Brain className="tw-size-4" />
-                  <span>Autonomous Agent</span>
+                  <span>{t("Autonomous Agent", "自主智能体")}</span>
                 </div>
                 {autonomousAgentToggle && <Check className="tw-size-4" />}
               </DropdownMenuItem>
@@ -193,7 +198,7 @@ const ChatToolControls: React.FC<ChatToolControlsProps> = ({
                 >
                   <div className="tw-flex tw-items-center tw-gap-2">
                     <Database className="tw-size-4" />
-                    <span>Vault Search</span>
+                    <span>{t("Vault Search", "仓库搜索")}</span>
                   </div>
                   {vaultToggle && <Check className="tw-size-4" />}
                 </DropdownMenuItem>
@@ -203,7 +208,7 @@ const ChatToolControls: React.FC<ChatToolControlsProps> = ({
                 >
                   <div className="tw-flex tw-items-center tw-gap-2">
                     <Globe className="tw-size-4" />
-                    <span>Web Search</span>
+                    <span>{t("Web Search", "网页搜索")}</span>
                   </div>
                   {webToggle && <Check className="tw-size-4" />}
                 </DropdownMenuItem>
@@ -216,7 +221,7 @@ const ChatToolControls: React.FC<ChatToolControlsProps> = ({
                       <Sparkles className="tw-size-2" />
                       <Pen className="tw-size-3" />
                     </span>
-                    <span>Composer</span>
+                    <span>{t("Composer", "笔记编辑")}</span>
                   </div>
                   {composerToggle && <Check className="tw-size-4" />}
                 </DropdownMenuItem>
@@ -231,7 +236,7 @@ const ChatToolControls: React.FC<ChatToolControlsProps> = ({
                 >
                   <div className="tw-flex tw-items-center tw-gap-2">
                     <Database className="tw-size-4" />
-                    <span>Vault Search</span>
+                    <span>{t("Vault Search", "仓库搜索")}</span>
                   </div>
                 </DropdownMenuItem>
                 <DropdownMenuItem
@@ -240,7 +245,7 @@ const ChatToolControls: React.FC<ChatToolControlsProps> = ({
                 >
                   <div className="tw-flex tw-items-center tw-gap-2">
                     <Globe className="tw-size-4" />
-                    <span>Web Search</span>
+                    <span>{t("Web Search", "网页搜索")}</span>
                   </div>
                 </DropdownMenuItem>
                 <DropdownMenuItem
@@ -252,7 +257,7 @@ const ChatToolControls: React.FC<ChatToolControlsProps> = ({
                       <Sparkles className="tw-size-2" />
                       <Pen className="tw-size-3" />
                     </span>
-                    <span>Composer</span>
+                    <span>{t("Composer", "笔记编辑")}</span>
                   </div>
                 </DropdownMenuItem>
               </>

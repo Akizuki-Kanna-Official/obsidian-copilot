@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useApp } from "@/context";
 import { Button } from "@/components/ui/button";
@@ -95,16 +96,16 @@ export function ChatSettingsPopover() {
             </Button>
           </PopoverTrigger>
         </TooltipTrigger>
-        <TooltipContent>Chat settings</TooltipContent>
+        <TooltipContent>{t("Chat settings", "聊天设置")}</TooltipContent>
       </Tooltip>
       <PopoverContent className="tw-w-80 tw-rounded-md tw-p-0" align="end">
         <div className="tw-flex tw-max-h-[500px] tw-flex-col">
           <div className="tw-shrink-0 tw-border-b tw-px-4">
             <div className="tw-flex tw-items-center tw-justify-between">
-              <h3 className="tw-font-semibold">Chat settings</h3>
+              <h3 className="tw-font-semibold">{t("Chat settings", "聊天设置")}</h3>
               <Button variant="ghost" size="sm" onClick={handleReset} className="tw-h-8 tw-text-xs">
                 <RotateCcw className="tw-mr-1 tw-size-3" />
-                Reset
+                {t("Reset", "重置")}
               </Button>
             </div>
           </div>
@@ -116,7 +117,7 @@ export function ChatSettingsPopover() {
               <div className="tw-space-y-2">
                 <div className="tw-flex tw-flex-col tw-gap-2">
                   <Label htmlFor="system-prompt" className="tw-text-sm sm:tw-min-w-fit">
-                    System prompt
+                    {t("System prompt", "系统提示词")}
                   </Label>
                   <div className="tw-flex tw-min-w-0 tw-items-center tw-gap-2 sm:tw-flex-1">
                     <QuickChatPromptSelect
@@ -136,7 +137,7 @@ export function ChatSettingsPopover() {
                       size="icon"
                       onClick={handleOpenSourceFile}
                       className="tw-size-5 tw-shrink-0 tw-p-0"
-                      title="Open the source file"
+                      title={t("Open the source file", "打开源文件")}
                       disabled={!displayValue}
                     >
                       <ArrowUpRight className="tw-size-5" />
@@ -149,7 +150,7 @@ export function ChatSettingsPopover() {
                 <div className="tw-space-y-1.5">
                   <div className="tw-flex tw-items-center tw-justify-between">
                     <Label htmlFor="disable-builtin" className="tw-text-sm tw-font-medium">
-                      Disable built-in system prompt
+                      {t("Disable built-in system prompt", "禁用内置系统提示词")}
                     </Label>
                     <SettingSwitch
                       checked={disableBuiltin}
@@ -158,9 +159,15 @@ export function ChatSettingsPopover() {
                     />
                   </div>
                   <div className="tw-pr-12 tw-text-xs tw-leading-relaxed tw-text-muted">
-                    Disables the built-in system prompt and only uses your custom system prompt.{" "}
+                    {t(
+                      "Disables the built-in system prompt and only uses your custom system prompt.",
+                      "禁用内置系统提示词，仅使用您的自定义系统提示词。"
+                    )}{" "}
                     <span className="tw-text-xs tw-text-error">
-                      Warning: this may break expected functionality.
+                      {t(
+                        "Warning: this may break expected functionality.",
+                        "警告：这可能导致部分功能无法正常使用。"
+                      )}
                     </span>
                   </div>
                 </div>
@@ -175,15 +182,23 @@ export function ChatSettingsPopover() {
                       <div className="tw-flex-1 tw-space-y-2">
                         <div className="tw-space-y-1">
                           <div className="tw-text-xs tw-font-semibold tw-text-error">
-                            Copilot Plus features will become unavailable
+                            {t(
+                              "Copilot Plus features will become unavailable",
+                              "Copilot Plus 功能将不可用"
+                            )}
                           </div>
                           <div className="tw-flex tw-flex-col  tw-items-center tw-gap-2 tw-text-xs tw-leading-relaxed tw-text-muted">
                             <div>
-                              When enabled, advanced features such as vault search, web search, and
-                              agent mode will become unavailable.{" "}
+                              {t(
+                                "When enabled, advanced features such as vault search, web search, and agent mode will become unavailable.",
+                                "启用后，仓库搜索、网页搜索和智能体模式等高级功能将不可用。"
+                              )}{" "}
                             </div>
                             <div className="tw-italic">
-                              Only your custom system prompt (configured in Settings) will be used.
+                              {t(
+                                "Only your custom system prompt (configured in Settings) will be used.",
+                                "将仅使用您在设置中配置的自定义系统提示词。"
+                              )}
                             </div>
                           </div>
                         </div>
@@ -196,7 +211,7 @@ export function ChatSettingsPopover() {
                               onClick={confirmDisableBuiltin}
                               className="tw-h-7 tw-text-xs"
                             >
-                              Disable built-in
+                              {t("Disable built-in", "禁用内置提示词")}
                             </Button>
                             <Button
                               size="sm"
@@ -204,7 +219,7 @@ export function ChatSettingsPopover() {
                               onClick={cancelDisableBuiltin}
                               className="tw-h-7 tw-bg-transparent tw-text-xs"
                             >
-                              Cancel
+                              {t("Cancel", "取消")}
                             </Button>
                           </div>
                         )}
@@ -221,8 +236,13 @@ export function ChatSettingsPopover() {
           <div className="tw-shrink-0 tw-rounded-md tw-bg-primary tw-px-4 tw-py-1">
             <div className="tw-flex tw-flex-row tw-flex-wrap">
               <span className="tw-text-xs tw-text-normal">
-                <span className=" tw-italic">System prompt and Disable built-in system prompt</span>{" "}
-                <strong>apply to this chat session only</strong>.
+                <span className=" tw-italic">
+                  {t(
+                    "System prompt and Disable built-in system prompt",
+                    "系统提示词与禁用内置系统提示词"
+                  )}
+                </span>{" "}
+                <strong>{t("apply to this chat session only", "仅应用于当前聊天会话")}</strong>.
               </span>
             </div>
           </div>

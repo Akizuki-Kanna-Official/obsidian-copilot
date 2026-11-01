@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import { AgentActivityCard } from "@/components/chat-components/AgentActivityCard";
 import { formatDuration } from "@/lib/duration";
 import { ReasoningStatus } from "@/LLMProviders/chainRunner/utils/AgentReasoningState";
@@ -40,13 +41,13 @@ export const AgentReasoningBlock: React.FC<AgentReasoningBlockProps> = ({
           <span>
             {isActive ? (
               <>
-                Reasoning
+                {t("Reasoning", "思考过程")}
                 <span className="copilot-shimmer-text" aria-hidden="true">
                   ...
                 </span>
               </>
             ) : (
-              "Thought for"
+              t("Thought for", "思考用时")
             )}
           </span>
           {!isActive ? (

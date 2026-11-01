@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import { Button } from "@/components/ui/button";
 import { createPluginRoot } from "@/utils/react/createPluginRoot";
 import { SegmentedControl, type SegmentedControlOption } from "@/components/ui/segmented-control";
@@ -81,12 +82,15 @@ const WORKING_LABELS: Record<OpenArtifactsAction, string> = {
 };
 
 const LINK_ACCESS_OPTIONS: SegmentedControlOption<OpenArtifactsLinkAccess>[] = [
-  { label: "Anyone with the link", value: "anyone" },
-  { label: "Only those invited", value: "invited" },
+  { label: t("Anyone with the link", "任何获得链接的人"), value: "anyone" },
+  { label: t("Only those invited", "仅受邀者"), value: "invited" },
 ];
 
 // https://github.com/Brevilabs/obsidian-copilot-private/issues/707
-const COPY_NOTICE = "People who opened it while it was public may have kept a copy.";
+const COPY_NOTICE = t(
+  "People who opened it while it was public may have kept a copy.",
+  "公开期间访问过此页面的人可能已保留副本。"
+);
 
 // Keyed on the code alone so a port, or a gallery story, can raise it without the client class.
 // https://github.com/Brevilabs/obsidian-copilot-private/issues/707
@@ -97,7 +101,10 @@ function isPrivateUnavailable(error: unknown): error is Error {
 function errorText(error: unknown): string {
   return error instanceof OpenArtifactsClientError
     ? error.message
-    : "Copilot could not complete this OpenArtifacts action.";
+    : t(
+        "Copilot could not complete this OpenArtifacts action.",
+        "Copilot 无法完成此 OpenArtifacts 操作。"
+      );
 }
 
 interface OpenArtifactsReceiptViewProps {
@@ -114,7 +121,7 @@ function OpenArtifactsReceiptView({ receipt, access, actions }: OpenArtifactsRec
       await event.currentTarget.win.navigator.clipboard.writeText(receipt.url);
       setCopyMessage("Copied");
     } catch {
-      setCopyMessage("Could not copy the link");
+      setCopyMessage(t("Could not copy the link", "无法复制链接"));
     }
   };
 
@@ -144,13 +151,13 @@ function OpenArtifactsReceiptView({ receipt, access, actions }: OpenArtifactsRec
         </a>
       </code>
       <div className="tw-text-small tw-text-muted">
-        Document {receipt.docId} · Version {receipt.version}
+        {t("Document", "文档")} {receipt.docId} {t("· Version", "· 版本")} {receipt.version}
       </div>
       {receipt.guidance && (
         <p className="tw-m-0 tw-text-small tw-text-muted">
           {receipt.guidance.message}{" "}
           <a href={receipt.guidance.url} target="_blank" rel="noopener noreferrer">
-            Link account
+            {t("Link account", "关联账户")}
           </a>
         </p>
       )}
@@ -158,9 +165,9 @@ function OpenArtifactsReceiptView({ receipt, access, actions }: OpenArtifactsRec
         {copyMessage && <span className="tw-text-small tw-text-muted">{copyMessage}</span>}
         {actions}
         <Button variant="secondary" onClick={safeAsyncHandler(copyUrl)}>
-          Copy
+          {t("Copy", "复制")}
         </Button>
-        <Button onClick={safeAsyncHandler(openUrl)}>Open</Button>
+        <Button onClick={safeAsyncHandler(openUrl)}>{t("Open", "打开")}</Button>
       </div>
     </div>
   );
@@ -226,7 +233,7 @@ function AccessPanel({
       await event.currentTarget.win.navigator.clipboard.writeText(state?.url ?? docUrl ?? "");
       setCopyMessage("Copied");
     } catch {
-      setCopyMessage("Could not copy the link");
+      setCopyMessage(t("Could not copy the link", "无法复制链接"));
     }
   };
 
@@ -251,7 +258,7 @@ function AccessPanel({
             <>
               {" "}
               <a href={error.upgradeUrl} target="_blank" rel="noopener noreferrer">
-                Upgrade
+                {t("Upgrade", "升级")}
               </a>
             </>
           )}
@@ -261,9 +268,9 @@ function AccessPanel({
       {state && !unavailable && (
         <>
           <div className="tw-flex tw-flex-col tw-gap-1">
-            <div className="tw-text-small tw-text-muted">Link access</div>
+            <div className="tw-text-small tw-text-muted">{t("Link access", "链接访问权限")}</div>
             <SegmentedControl
-              aria-label="Link access"
+              aria-label={t("Link access", "链接访问权限")}
               className="tw-self-start"
               options={LINK_ACCESS_OPTIONS}
               value={state.linkAccess}
@@ -278,10 +285,10 @@ function AccessPanel({
         <div className="tw-flex tw-items-center tw-justify-end tw-gap-2">
           {copyMessage && <span className="tw-text-small tw-text-muted">{copyMessage}</span>}
           <Button variant="secondary" onClick={safeAsyncHandler(copyLink)}>
-            Copy link
+            {t("Copy link", "复制链接")}
           </Button>
           <Button variant="secondary" onClick={safeAsyncHandler(openPage)}>
-            Open
+            {t("Open", "打开")}
           </Button>
         </div>
       )}
@@ -336,14 +343,14 @@ export function OpenArtifactsModalContent({
   if (result?.kind === "success") {
     const closeButton = (
       <Button variant="secondary" onClick={onClose}>
-        Close
+        {t("Close", "关闭")}
       </Button>
     );
     return (
       <div className="tw-flex tw-flex-col tw-gap-4">
         <div className="tw-font-semibold tw-text-normal">
           {result.action === "delete"
-            ? "Removed from OpenArtifacts"
+            ? t("Removed from OpenArtifacts", "已从 OpenArtifacts 移除")
             : `${actionLabel(result.action)} complete`}
         </div>
         {result.receipt ? (
@@ -367,19 +374,19 @@ export function OpenArtifactsModalContent({
       <div className="tw-flex tw-flex-col tw-gap-4" role="alert">
         <div className="tw-font-semibold tw-text-normal">
           {result.accessNotice
-            ? "OpenArtifacts access required"
+            ? t("OpenArtifacts access required", "需要 OpenArtifacts 访问权限")
             : `${actionLabel(result.action)} failed`}
         </div>
         <p className="tw-m-0 tw-text-muted">{result.message}</p>
         <div className="tw-flex tw-justify-end tw-gap-2">
           <Button variant="secondary" onClick={onClose}>
-            Close
+            {t("Close", "关闭")}
           </Button>
           {/* The upgrade is the screen's one way forward, so it is the primary action. https://github.com/Brevilabs/obsidian-copilot-private/issues/746 */}
           {result.upgradeUrl && (
             <Button asChild>
               <a href={result.upgradeUrl} target="_blank" rel="noopener noreferrer">
-                Upgrade to Copilot Plus
+                {t("Upgrade to Copilot Plus", "升级到 Copilot Plus")}
               </a>
             </Button>
           )}
@@ -397,11 +404,11 @@ export function OpenArtifactsModalContent({
     const actions = (
       <>
         <Button variant="secondary" onClick={onClose}>
-          Close
+          {t("Close", "关闭")}
         </Button>
         {result.retrySave && (
           <Button onClick={() => void retrySave()} disabled={working}>
-            {working ? "Saving…" : "Retry save"}
+            {working ? "Saving…" : t("Retry save", "重新保存")}
           </Button>
         )}
       </>
@@ -412,8 +419,8 @@ export function OpenArtifactsModalContent({
           {result.action === "publish"
             ? "Published, but not saved to the note"
             : result.action === "update"
-              ? "Page updated; note identity not verified"
-              : "Page withdrawn; note unchanged"}
+              ? t("Page updated; note identity not verified", "页面已更新；笔记身份未验证")
+              : t("Page withdrawn; note unchanged", "页面已撤回；笔记未更改")}
         </div>
         <p className="tw-m-0 tw-text-muted">{result.message}</p>
         {result.receipt ? (
@@ -430,14 +437,29 @@ export function OpenArtifactsModalContent({
     : `Manage “${fileName}”`;
   const description =
     confirmationAction === "delete"
-      ? "Yes withdraws the link and deletes OpenArtifacts’s stored copy. Previously fetched or cached copies cannot be recalled."
+      ? t(
+          "Yes withdraws the link and deletes OpenArtifacts’s stored copy. Previously fetched or cached copies cannot be recalled.",
+          "确认后将撤回链接并删除 OpenArtifacts 存储的副本。此前已获取或缓存的副本无法收回。"
+        )
       : confirmationAction === "update"
-        ? "Yes replaces the current page with this note’s latest content."
+        ? t(
+            "Yes replaces the current page with this note’s latest content.",
+            "确认后将使用此笔记的最新内容替换当前页面。"
+          )
         : confirmationAction === "publish"
           ? linkAccess === "invited"
-            ? "Yes publishes this note privately. Only people you invite can open it."
-            : "Yes makes this note available to anyone with the public link."
-          : "Choose whether to replace the current page or withdraw it.";
+            ? t(
+                "Yes publishes this note privately. Only people you invite can open it.",
+                "确认后将以私密方式发布此笔记，仅受邀者可访问。"
+              )
+            : t(
+                "Yes makes this note available to anyone with the public link.",
+                "确认后，任何获得公开链接的人都可访问此笔记。"
+              )
+          : t(
+              "Choose whether to replace the current page or withdraw it.",
+              "请选择替换当前页面或将其撤回。"
+            );
 
   return (
     <div className="tw-flex tw-flex-col tw-gap-4">
@@ -448,7 +470,7 @@ export function OpenArtifactsModalContent({
 
       {confirmationAction === "publish" && (
         <SegmentedControl
-          aria-label="Link access"
+          aria-label={t("Link access", "链接访问权限")}
           className="tw-self-start"
           options={LINK_ACCESS_OPTIONS}
           value={linkAccess}
@@ -462,12 +484,12 @@ export function OpenArtifactsModalContent({
 
       <div
         className="tw-flex tw-flex-wrap tw-justify-end tw-gap-2"
-        aria-label="OpenArtifacts actions"
+        aria-label={t("OpenArtifacts actions", "OpenArtifacts 操作")}
       >
         {confirmationAction ? (
           <>
             <Button variant="secondary" onClick={onClose} disabled={working}>
-              No, cancel
+              {t("No, cancel", "不，取消")}
             </Button>
             <Button
               variant={confirmationAction === "delete" ? "destructive" : "default"}
@@ -480,11 +502,11 @@ export function OpenArtifactsModalContent({
         ) : (
           <>
             <Button variant="secondary" onClick={onClose}>
-              Cancel
+              {t("Cancel", "取消")}
             </Button>
-            <Button onClick={() => setConfirmationAction("update")}>Update</Button>
+            <Button onClick={() => setConfirmationAction("update")}>{t("Update", "更新")}</Button>
             <Button variant="destructive" onClick={() => setConfirmationAction("delete")}>
-              Delete
+              {t("Delete", "删除")}
             </Button>
           </>
         )}
@@ -502,7 +524,7 @@ export class OpenArtifactsModal extends Modal {
   ) {
     super(app);
     this.modalEl.classList.add("copilot-openartifacts-modal");
-    this.titleEl.setText("Share with OpenArtifacts");
+    this.titleEl.setText(t("Share with OpenArtifacts", "通过 OpenArtifacts 分享"));
   }
 
   onOpen(): void {

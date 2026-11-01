@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import { ProviderVerificationStatus } from "@/modelManagement/ui/components/ProviderVerificationStatus";
 import type { VerificationResult } from "@/modelManagement/types/runtime";
 import { Button } from "@/components/ui/button";
@@ -55,7 +56,11 @@ export const ByokGlobalTable: React.FC<ByokGlobalTableProps> = ({
         )}
         data-testid="byok-table-empty"
       >
-        {emptyMessage ?? "No providers yet — click + Add a provider to start."}
+        {emptyMessage ??
+          t(
+            "No providers yet — click + Add a provider to start.",
+            "尚无服务商，请点击“+ 添加服务商”开始配置。"
+          )}
       </div>
     );
   }
@@ -101,25 +106,31 @@ const ProviderCard: React.FC<ProviderCardProps> = ({
           await api.coordinator.removeConfiguredModel(configuredModelId);
         } catch (err) {
           logError("[ByokGlobalTable] removeConfiguredModel failed", err);
-          new Notice("Failed to remove model.");
+          new Notice(t("Failed to remove model.", "移除模型失败。"));
         }
       },
-      `Remove ${modelName} from ${provider.displayName}?`,
-      "Remove model",
-      "Remove",
-      "Cancel"
+      t(
+        `Remove ${modelName} from ${provider.displayName}?`,
+        `从 ${provider.displayName} 中移除 ${modelName}？`
+      ),
+      t("Remove model", "移除模型"),
+      t("Remove", "移除"),
+      t("Cancel", "取消")
     );
     modal.open();
   };
 
   const getSubLine = (): string => {
     if (!providerRequiresApiKey(provider)) {
-      return "Local models on your machine";
+      return t("Local models on your machine", "您电脑上的本地模型");
     }
     if (models.length === 0) {
-      return "No models added";
+      return t("No models added", "尚未添加模型");
     }
-    return `${models.length} ${models.length === 1 ? "model" : "models"}`;
+    return t(
+      `${models.length} ${models.length === 1 ? "model" : "models"}`,
+      `${models.length} 个模型`
+    );
   };
 
   return (
@@ -175,7 +186,10 @@ const ProviderCard: React.FC<ProviderCardProps> = ({
                   variant="ghost"
                   size="icon"
                   onClick={(e) => e.stopPropagation()}
-                  aria-label={`More actions for ${provider.displayName}`}
+                  aria-label={t(
+                    `More actions for ${provider.displayName}`,
+                    `${provider.displayName} 的更多操作`
+                  )}
                   className="tw-shrink-0"
                 >
                   <MoreVertical className="tw-size-4" />
@@ -189,7 +203,7 @@ const ProviderCard: React.FC<ProviderCardProps> = ({
                   }}
                 >
                   <Settings2 className="tw-mr-2 tw-size-4" />
-                  Edit key
+                  {t("Edit key", "编辑密钥")}
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={(e) => {
@@ -199,7 +213,7 @@ const ProviderCard: React.FC<ProviderCardProps> = ({
                   className="tw-text-error"
                 >
                   <Trash2 className="tw-mr-2 tw-size-4" />
-                  Remove
+                  {t("Remove", "移除")}
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -252,7 +266,7 @@ const ModelRow: React.FC<{ model: ConfiguredModel; onRemove: () => void }> = ({
           e.stopPropagation();
           onRemove();
         }}
-        aria-label={`Remove ${model.info.displayName}`}
+        aria-label={t(`Remove ${model.info.displayName}`, `移除 ${model.info.displayName}`)}
         tabIndex={0}
       >
         <XIcon className="tw-size-4" />

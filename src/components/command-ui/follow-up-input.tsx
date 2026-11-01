@@ -1,8 +1,11 @@
+import { t } from "@/lib/i18n";
 import * as React from "react";
 import { cn } from "@/lib/utils";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { X } from "lucide-react";
+
+const DEFAULT_PLACEHOLDER = t("Enter follow-up instructions...", "输入后续指令…");
 
 interface FollowUpInputProps {
   value: string;
@@ -20,7 +23,7 @@ export function FollowUpInput({
   onChange,
   onSubmit,
   onClear,
-  placeholder = "Enter follow-up instructions...",
+  placeholder = DEFAULT_PLACEHOLDER,
   className,
   hint,
   autoFocus = false,
@@ -62,7 +65,7 @@ export function FollowUpInput({
           size="fit"
           onClick={onClear}
           className="tw-absolute tw-right-6 tw-top-4 tw-text-muted"
-          aria-label="Clear input"
+          aria-label={t("Clear input", "清空输入")}
         >
           <X className="tw-size-4" />
         </Button>

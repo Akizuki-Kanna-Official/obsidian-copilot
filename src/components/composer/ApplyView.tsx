@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import { APPLY_VIEW_TYPE } from "@/constants";
 import { cn } from "@/lib/utils";
 import { logError } from "@/logger";
@@ -184,7 +185,7 @@ export class ApplyView extends ItemView {
   }
 
   getDisplayText(): string {
-    return "Preview Changes";
+    return t("Preview Changes", "预览更改");
   }
 
   async setState(state: ApplyViewState) {
@@ -289,7 +290,9 @@ const SplitBlock = memo(({ block }: SplitBlockProps) => {
   return (
     <div className="tw-flex tw-flex-col tw-gap-2">
       <div className="tw-rounded-md tw-border tw-border-solid tw-border-border tw-bg-primary tw-p-2">
-        <div className="tw-mb-1 tw-text-xs tw-font-medium tw-text-muted">Original</div>
+        <div className="tw-mb-1 tw-text-xs tw-font-medium tw-text-muted">
+          {t("Original", "原始内容")}
+        </div>
         <div className="tw-whitespace-pre-wrap tw-font-mono tw-text-sm">
           {rows.map((row, idx) =>
             row.original !== null ? (
@@ -303,7 +306,9 @@ const SplitBlock = memo(({ block }: SplitBlockProps) => {
       </div>
 
       <div className="tw-rounded-md tw-border tw-border-solid tw-border-border tw-bg-primary tw-p-2">
-        <div className="tw-mb-1 tw-text-xs tw-font-medium tw-text-muted">Modified</div>
+        <div className="tw-mb-1 tw-text-xs tw-font-medium tw-text-muted">
+          {t("Modified", "修改后")}
+        </div>
         <div className="tw-whitespace-pre-wrap tw-font-mono tw-text-sm">
           {rows.map((row, idx) =>
             row.modified !== null ? (
@@ -347,9 +352,11 @@ const ApplyViewRoot: React.FC<ApplyViewRootProps> = ({ app, state, close }) => {
     logError("Invalid state:", state);
     return (
       <div className="tw-flex tw-h-full tw-flex-col tw-items-center tw-justify-center">
-        <div className="tw-text-error">Error: Invalid state - missing changes</div>
+        <div className="tw-text-error">
+          {t("Error: Invalid state - missing changes", "错误：状态无效，缺少更改内容")}
+        </div>
         <Button onClick={() => close("failed")} className="tw-mt-4">
-          Close
+          {t("Close", "关闭")}
         </Button>
       </div>
     );
@@ -423,7 +430,7 @@ const ApplyViewRoot: React.FC<ApplyViewRootProps> = ({ app, state, close }) => {
 
     await app.vault.modify(file, newContent);
     if (showSuccessNotice) {
-      new Notice("Changes applied successfully");
+      new Notice(t("Changes applied successfully", "更改已应用"));
     }
     return true;
   };
@@ -501,11 +508,11 @@ const ApplyViewRoot: React.FC<ApplyViewRootProps> = ({ app, state, close }) => {
       <div className="tw-fixed tw-bottom-4 tw-left-1/2 tw-z-[9999] tw-flex tw-gap-2 tw-rounded-md tw-border tw-border-solid tw-border-border tw-bg-secondary tw-p-2 tw-shadow-lg">
         <Button variant="destructive" size="sm" onClick={safeAsyncHandler(handleReject)}>
           <XIcon className="tw-size-4" />
-          Reject
+          {t("Reject", "拒绝")}
         </Button>
         <Button variant="success" size="sm" onClick={safeAsyncHandler(handleAccept)}>
           <Check className="tw-size-4" />
-          Accept
+          {t("Accept", "接受")}
         </Button>
       </div>
       <div className="tw-flex tw-items-center tw-justify-between tw-border-b tw-border-solid tw-border-border tw-p-2">
@@ -517,7 +524,7 @@ const ApplyViewRoot: React.FC<ApplyViewRootProps> = ({ app, state, close }) => {
               viewMode === "split" ? "tw-font-medium tw-text-normal" : "tw-text-muted"
             )}
           >
-            Split
+            {t("Split", "分栏")}
           </span>
           <SettingSwitch
             checked={viewMode === "side-by-side"}
@@ -529,7 +536,7 @@ const ApplyViewRoot: React.FC<ApplyViewRootProps> = ({ app, state, close }) => {
               viewMode === "side-by-side" ? "tw-font-medium tw-text-normal" : "tw-text-muted"
             )}
           >
-            Side-by-side
+            {t("Side-by-side", "并排显示")}
           </span>
         </div>
       </div>
@@ -589,11 +596,11 @@ const ApplyViewRoot: React.FC<ApplyViewRootProps> = ({ app, state, close }) => {
                   <div className="tw-flex tw-items-center tw-gap-2">
                     <Button variant="destructive" size="sm" onClick={() => rejectBlock(blockIndex)}>
                       <XIcon className="tw-size-4" />
-                      Reject
+                      {t("Reject", "拒绝")}
                     </Button>
                     <Button variant="success" size="sm" onClick={() => acceptBlock(blockIndex)}>
                       <Check className="tw-size-4" />
-                      Accept
+                      {t("Accept", "接受")}
                     </Button>
                   </div>
                 </div>
@@ -608,12 +615,12 @@ const ApplyViewRoot: React.FC<ApplyViewRootProps> = ({ app, state, close }) => {
                         {blockStatus === "accepted" ? (
                           <div className="tw-flex tw-items-center tw-gap-1 tw-text-success">
                             <Check className="tw-size-4" />
-                            <div>Accepted</div>
+                            <div>{t("Accepted", "已接受")}</div>
                           </div>
                         ) : (
                           <div className="tw-flex tw-items-center tw-gap-1 tw-text-error">
                             <XIcon className="tw-size-4" />
-                            <div>Rejected</div>
+                            <div>{t("Rejected", "已拒绝")}</div>
                           </div>
                         )}
                       </div>
@@ -641,7 +648,7 @@ const ApplyViewRoot: React.FC<ApplyViewRootProps> = ({ app, state, close }) => {
                           });
                         }}
                       >
-                        Revert
+                        {t("Revert", "还原")}
                       </Button>
                     </div>
                   </div>

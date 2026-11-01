@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import React, { useState, useCallback, useEffect, useMemo, useRef } from "react";
 import { Notice } from "obsidian";
 import { Send, Square, X, MessageSquareX } from "lucide-react";
@@ -91,7 +92,7 @@ export function QuickAskPanel({
     if (!inputText.trim() || isStreaming) return;
     // Keep the draft until a model is selected. https://github.com/Brevilabs/obsidian-copilot-private/issues/616
     if (!hasModel) {
-      new Notice("Select a model to continue.");
+      new Notice(t("Select a model to continue.", "请选择模型以继续。"));
       return;
     }
     const text = inputText;
@@ -150,9 +151,9 @@ export function QuickAskPanel({
         const cleaned = cleanMessageForCopy(message.content);
         try {
           await navigator.clipboard.writeText(cleaned);
-          new Notice("Copied to clipboard");
+          new Notice(t("Copied to clipboard", "已复制到剪贴板"));
         } catch {
-          new Notice("Failed to copy to clipboard");
+          new Notice(t("Failed to copy to clipboard", "复制到剪贴板失败"));
         }
       }
     },
@@ -179,7 +180,9 @@ export function QuickAskPanel({
         new Notice("Inserted");
         onClose();
       } catch {
-        new Notice("Failed to insert. Editor may have changed.");
+        new Notice(
+          t("Failed to insert. Editor may have changed.", "插入失败，编辑器内容可能已更改。")
+        );
       }
     },
     [messages, view, onClose]
@@ -194,7 +197,7 @@ export function QuickAskPanel({
       const result = replaceGuard.replace(cleaned);
 
       if (!result.ok) {
-        new Notice(result.message ?? "Cannot replace.");
+        new Notice(result.message ?? t("Cannot replace.", "无法替换。"));
         return;
       }
 
@@ -245,7 +248,7 @@ export function QuickAskPanel({
           className="tw-absolute tw-right-2 tw-top-1 tw-rounded tw-p-1 tw-text-normal"
           variant="ghost2"
           onClick={onClose}
-          title="Close"
+          title={t("Close", "关闭")}
         >
           <X className="tw-size-4" />
         </Button>
@@ -313,9 +316,15 @@ export function QuickAskPanel({
               htmlFor="quickAskIncludeContext"
               className="tw-cursor-pointer tw-text-xs tw-text-muted"
             >
-              Note
+              {t("Note", "笔记")}
             </label>
-            <HelpTooltip content="Include the active note's content as context" side="top" />
+            <HelpTooltip
+              content={t(
+                "Include the active note's content as context",
+                "将当前笔记内容作为上下文"
+              )}
+              side="top"
+            />
           </div>
         </div>
 
@@ -326,14 +335,19 @@ export function QuickAskPanel({
               size="icon"
               className="hover:tw-bg-modifier-hover"
               onClick={clear}
-              title="Clear conversation"
+              title={t("Clear conversation", "清空对话")}
             >
               <MessageSquareX className="tw-size-4" />
             </Button>
           )}
 
           {isStreaming ? (
-            <Button variant="destructive" size="icon" onClick={stop} title="Stop generating">
+            <Button
+              variant="destructive"
+              size="icon"
+              onClick={stop}
+              title={t("Stop generating", "停止生成")}
+            >
               <Square className="tw-size-4" />
             </Button>
           ) : (
@@ -342,7 +356,7 @@ export function QuickAskPanel({
               size="icon"
               onClick={safeAsyncHandler(handleSubmit)}
               disabled={!inputText.trim()}
-              title="Send message"
+              title={t("Send message", "发送消息")}
             >
               <Send className="tw-size-4" />
             </Button>

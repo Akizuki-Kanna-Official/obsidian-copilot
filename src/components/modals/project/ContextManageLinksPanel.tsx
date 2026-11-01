@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import { AddUrlPopover } from "@/components/project/AddUrlPopover";
 import { UrlTypeIcon } from "@/components/project/UrlTypeIcon";
 import { TruncatedText } from "@/components/TruncatedText";
@@ -38,7 +39,9 @@ export function LinksSidebarSection({
         onClick={() => onSelect("links")}
       >
         <Link className="tw-mr-2 tw-size-4 tw-text-context-manager-cyan" />
-        <h3 className="tw-text-sm tw-font-semibold tw-text-context-manager-cyan">Links</h3>
+        <h3 className="tw-text-sm tw-font-semibold tw-text-context-manager-cyan">
+          {t("Links", "链接")}
+        </h3>
         <AddUrlPopover
           existingUrls={existingUrls}
           onAdd={onAddUrls}
@@ -48,7 +51,7 @@ export function LinksSidebarSection({
               variant="ghost"
               size="fit"
               className="tw-ml-auto tw-text-muted hover:tw-bg-secondary"
-              title="Add link"
+              title={t("Add link", "添加链接")}
               onClick={(e) => e.stopPropagation()}
             >
               <PlusCircle className="tw-size-4 tw-text-context-manager-cyan" />
@@ -58,7 +61,7 @@ export function LinksSidebarSection({
       </div>
       <LinkSubItem
         Icon={Globe}
-        label="Web"
+        label={t("Web", "网页")}
         count={webCount}
         active={activeSection === "web"}
         onClick={() => onSelect("web")}
@@ -117,14 +120,17 @@ export function LinksContentPanel({ urlItems, filter, onRemove }: LinksContentPa
   return (
     <div className="tw-flex tw-flex-col tw-gap-2">
       {showWeb && webItems.length > 0 && (
-        <UrlGroup label="Web" type="web" items={webItems} onRemove={onRemove} />
+        <UrlGroup label={t("Web", "网页")} type="web" items={webItems} onRemove={onRemove} />
       )}
       {showYoutube && youtubeItems.length > 0 && (
         <UrlGroup label="YouTube" type="youtube" items={youtubeItems} onRemove={onRemove} />
       )}
       {((showWeb && webItems.length > 0) || (showYoutube && youtubeItems.length > 0)) === false && (
         <div className="tw-py-6 tw-text-center tw-text-sm tw-text-muted">
-          No links yet. Use the + next to Links in the sidebar to add one.
+          {t(
+            "No links yet. Use the + next to Links in the sidebar to add one.",
+            "尚无链接。点击侧栏“链接”旁的 + 添加。"
+          )}
         </div>
       )}
     </div>

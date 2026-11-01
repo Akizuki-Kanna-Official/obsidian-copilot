@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import { resolveEffort } from "@/lib/model-effort";
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ChevronDown } from "lucide-react";
@@ -173,13 +174,13 @@ export function ModelEffortPicker({ override, className }: ModelEffortPickerProp
           size="fit"
           disabled={disabled}
           className={cn("tw-min-w-0 tw-justify-start tw-text-muted", className)}
-          title="Model · effort"
+          title={t("Model · effort", "模型 · 推理强度")}
         >
           <div className="tw-flex tw-min-w-0 tw-items-center tw-gap-1">
             {currentModel ? (
               <ModelDisplay model={currentModel} iconSize={8} />
             ) : (
-              <span className="tw-truncate">Select model</span>
+              <span className="tw-truncate">{t("Select model", "选择模型")}</span>
             )}
             {currentEffortLabel && (
               <>
@@ -203,7 +204,11 @@ export function ModelEffortPicker({ override, className }: ModelEffortPickerProp
         sideOffset={4}
         onKeyDown={handleKeyDown}
       >
-        <div className="tw-max-h-72 tw-overflow-y-auto tw-py-1" role="listbox" aria-label="Model">
+        <div
+          className="tw-max-h-72 tw-overflow-y-auto tw-py-1"
+          role="listbox"
+          aria-label={t("Model", "模型")}
+        >
           {models.map((entry) => {
             const Row = entry._needsLicense ? "a" : "div";
             const key = getModelKeyFromModel(entry);
@@ -319,7 +324,7 @@ function EffortFooter({ options, value, onChange }: EffortFooterProps) {
   return (
     <div className="tw-flex tw-h-6 tw-items-center tw-justify-between tw-gap-3">
       <span className="tw-font-mono tw-text-[10px] tw-uppercase tw-tracking-wider tw-text-muted">
-        Effort
+        {t("Effort", "推理强度")}
       </span>
       <div className="tw-flex tw-items-center tw-gap-3">
         {hasOptions ? (
@@ -365,7 +370,7 @@ function EffortStepper({ options, value, onChange }: EffortStepperProps) {
         const clamped = Math.max(0, Math.min(options.length - 1, next));
         onChange(options[clamped]?.value ?? null);
       }}
-      aria-label="Effort"
+      aria-label={t("Effort", "推理强度")}
       className="tw-relative tw-flex tw-h-6 tw-w-[140px] tw-touch-none tw-select-none tw-items-center"
     >
       <SliderPrimitive.Track className="tw-relative tw-mx-1.5 tw-h-0.5 tw-w-full tw-grow tw-rounded-full tw-bg-[var(--background-modifier-border)]">
@@ -391,7 +396,7 @@ function EffortStepper({ options, value, onChange }: EffortStepperProps) {
         })}
       </div>
       <SliderPrimitive.Thumb
-        aria-label="Effort"
+        aria-label={t("Effort", "推理强度")}
         className="tw-flex tw-size-6 tw-items-center tw-justify-center tw-rounded-full tw-border-[1.5px] tw-border-solid tw-border-border tw-bg-primary tw-shadow-sm tw-transition-colors focus-visible:tw-outline-none focus-visible:tw-ring-2 focus-visible:tw-ring-ring focus-visible:tw-ring-offset-1 disabled:tw-pointer-events-none disabled:tw-opacity-50"
       >
         <span aria-hidden className="tw-size-2 tw-rounded-full tw-bg-interactive-accent" />

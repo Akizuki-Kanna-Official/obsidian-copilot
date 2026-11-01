@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { UrlInputRow } from "@/components/project/UrlInputRow";
@@ -79,11 +80,11 @@ export function AddUrlPopover({ existingUrls, onAdd, container, trigger }: AddUr
       <PopoverContent align="start" container={container} className="tw-w-80 tw-p-0">
         <div className="tw-flex tw-items-center tw-gap-2 tw-border-x-0 tw-border-b tw-border-t-0 tw-border-solid tw-border-border tw-px-3.5 tw-pb-2.5 tw-pt-3 tw-text-sm tw-font-semibold tw-text-normal">
           <Link className="tw-size-3.5" />
-          Add URLs
+          {t("Add URLs", "添加网址")}
           <Button
             variant="ghost2"
             size="icon"
-            aria-label="Close"
+            aria-label={t("Close", "关闭")}
             onClick={resetAndClose}
             className="tw-ml-auto"
           >
@@ -92,13 +93,17 @@ export function AddUrlPopover({ existingUrls, onAdd, container, trigger }: AddUr
         </div>
 
         <div className="tw-flex tw-flex-col tw-gap-2 tw-px-3.5 tw-py-3">
-          <UrlInputRow autoFocus onSubmit={stageFromText} placeholder="Enter a URL…" />
+          <UrlInputRow
+            autoFocus
+            onSubmit={stageFromText}
+            placeholder={t("Enter a URL…", "输入网址…")}
+          />
 
           <div className="tw-flex tw-h-28 tw-flex-col tw-gap-1.5 tw-overflow-y-auto">
             {pending.length === 0 ? (
               <div className="tw-flex tw-flex-1 tw-flex-col tw-items-center tw-justify-center tw-gap-1 tw-text-center tw-text-xs tw-text-faint">
                 <Link className="tw-mb-1 tw-size-5" />
-                No URLs queued yet — type or paste above
+                {t("No URLs queued yet — type or paste above", "尚未添加网址，请在上方输入或粘贴")}
               </div>
             ) : (
               pending.map(({ item, duplicate }) => (
@@ -121,13 +126,13 @@ export function AddUrlPopover({ existingUrls, onAdd, container, trigger }: AddUr
                   </span>
                   {duplicate && (
                     <span className="tw-shrink-0 tw-rounded tw-border tw-border-solid tw-border-error tw-px-1 tw-font-mono tw-text-ui-smaller tw-text-error">
-                      Exists
+                      {t("Exists", "已存在")}
                     </span>
                   )}
                   <Button
                     variant="ghost2"
                     size="icon"
-                    aria-label="Remove"
+                    aria-label={t("Remove", "移除")}
                     className="tw-shrink-0"
                     onClick={() => setPending((prev) => prev.filter((p) => p.item.id !== item.id))}
                   >
@@ -141,15 +146,16 @@ export function AddUrlPopover({ existingUrls, onAdd, container, trigger }: AddUr
 
         <div className="tw-flex tw-items-center tw-gap-2 tw-border-x-0 tw-border-b-0 tw-border-t tw-border-solid tw-border-border tw-px-3.5 tw-py-2.5">
           <span className="tw-text-xs tw-text-faint">
-            {validCount} to add
+            {validCount} {t("to add", "添加")}
             {dupCount > 0 && ` · ${dupCount} exist`}
           </span>
           <div className="tw-ml-auto tw-flex tw-gap-2">
             <Button variant="ghost" size="sm" onClick={resetAndClose}>
-              Cancel
+              {t("Cancel", "取消")}
             </Button>
             <Button size="sm" disabled={validCount === 0} onClick={commit}>
-              Add{validCount > 0 ? ` ${validCount}` : ""}
+              {t("Add", "添加")}
+              {validCount > 0 ? ` ${validCount}` : ""}
             </Button>
           </div>
         </div>

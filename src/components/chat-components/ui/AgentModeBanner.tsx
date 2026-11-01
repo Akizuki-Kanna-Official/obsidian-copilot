@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import { CopilotBrandIcon } from "@/components/ui/CopilotBrandIcon";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -24,18 +25,18 @@ export function AgentModeBanner({ onOpenAgent }: AgentModeBannerProps) {
         "hover:tw-bg-interactive-hover hover:tw-text-normal",
         "tw-whitespace-normal"
       )}
-      title="Open Copilot Agent Chat"
+      title={t("Open Copilot Agent Chat", "打开 Copilot 智能体聊天")}
       onClick={onOpenAgent}
     >
       <span className="tw-flex tw-w-full tw-flex-col tw-gap-2">
         <span className="tw-flex tw-items-center tw-gap-2">
           <CopilotBrandIcon className="tw-size-6 tw-shrink-0 tw-text-accent" />
           <span className="tw-text-ui-larger tw-font-semibold tw-leading-tight">
-            Open Copilot Agent Chat
+            {t("Open Copilot Agent Chat", "打开 Copilot 智能体聊天")}
           </span>
         </span>
         <span className="tw-text-ui-smaller tw-leading-normal tw-text-muted">
-          Find and edit notes with an agent.
+          {t("Find and edit notes with an agent.", "使用智能体查找和编辑笔记。")}
         </span>
       </span>
     </Button>

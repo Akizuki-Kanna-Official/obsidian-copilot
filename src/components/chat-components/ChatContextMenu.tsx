@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import { TFile, TFolder } from "obsidian";
 import React, { useRef, useState } from "react";
 import { isDesktopRuntime } from "@/utils/desktopRuntime";
@@ -122,7 +123,9 @@ export const ChatContextMenu: React.FC<ChatContextMenuProps> = ({
               >
                 <span className="tw-text-base tw-font-medium tw-leading-none">@</span>
                 {!hasContext && (
-                  <span className="tw-pr-1 tw-text-sm tw-leading-4">Add context</span>
+                  <span className="tw-pr-1 tw-text-sm tw-leading-4">
+                    {t("Add context", "添加上下文")}
+                  </span>
                 )}
               </Button>
             </PopoverTrigger>

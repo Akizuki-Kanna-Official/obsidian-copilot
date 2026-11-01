@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import React from "react";
 import {
   DOMConversionMap,
@@ -97,7 +98,10 @@ function ActiveNotePillComponent(): JSX.Element {
             closeBracket="}"
             tooltipContent={
               <div className="tw-text-left">
-                Will use the active note at the time the message is sent
+                {t(
+                  "Will use the active note at the time the message is sent",
+                  "将使用发送消息时的当前笔记"
+                )}
               </div>
             }
           />
@@ -119,7 +123,7 @@ function ActiveNotePillComponent(): JSX.Element {
           closeBracket="]]"
           tooltipContent={<div className="tw-text-left">{notePath}</div>}
         />
-        <span className="tw-text-xs tw-text-faint">Current</span>
+        <span className="tw-text-xs tw-text-faint">{t("Current", "当前")}</span>
         {isPdf && <span className="tw-text-xs tw-text-faint">pdf</span>}
       </div>
     </PillBadge>

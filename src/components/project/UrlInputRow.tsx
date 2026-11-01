@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import { logWarn } from "@/logger";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -7,6 +8,8 @@ import { Clipboard, Plus } from "lucide-react";
 import * as React from "react";
 import { useState } from "react";
 
+const DEFAULT_PLACEHOLDER = t("Enter a URL…", "输入网址…");
+
 interface UrlInputRowProps {
   onSubmit: (text: string) => void;
   placeholder?: string;
@@ -15,7 +18,7 @@ interface UrlInputRowProps {
 
 export function UrlInputRow({
   onSubmit,
-  placeholder = "Enter a URL…",
+  placeholder = DEFAULT_PLACEHOLDER,
   autoFocus,
 }: UrlInputRowProps) {
   const [value, setValue] = useState("");
@@ -35,7 +38,7 @@ export function UrlInputRow({
       const text = await navigator.clipboard.readText();
       if (text) submitText(text);
     } catch (error) {
-      logWarn("Could not read the clipboard", error);
+      logWarn(t("Could not read the clipboard", "无法读取剪贴板"), error);
     }
   };
 
@@ -72,11 +75,13 @@ export function UrlInputRow({
           !hasValue &&
             "!tw-border !tw-border-solid !tw-border-border !tw-bg-primary !tw-text-muted !tw-shadow-none hover:!tw-bg-interactive-hover hover:!tw-text-normal"
         )}
-        title={hasValue ? "Add to list" : "Paste from clipboard"}
+        title={
+          hasValue ? t("Add to list", "添加到列表") : t("Paste from clipboard", "从剪贴板粘贴")
+        }
         onClick={() => void handleAction()}
       >
         {hasValue ? <Plus className="tw-size-3.5" /> : <Clipboard className="tw-size-3.5" />}
-        {hasValue ? "Add" : "Paste"}
+        {hasValue ? t("Add", "添加") : "Paste"}
       </Button>
     </div>
   );

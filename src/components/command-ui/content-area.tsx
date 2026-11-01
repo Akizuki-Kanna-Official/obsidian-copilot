@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import * as React from "react";
 import { cn } from "@/lib/utils";
 import { Textarea } from "@/components/ui/textarea";
@@ -44,7 +45,7 @@ export function ContentArea({
       size="icon"
       className="tw-absolute tw-bottom-2 tw-right-2 tw-z-[1] tw-size-6 tw-opacity-60 hover:tw-opacity-100"
       onClick={onCopy}
-      title="Copy to clipboard"
+      title={t("Copy to clipboard", "复制到剪贴板")}
     >
       <Copy className="tw-size-3" />
     </Button>
@@ -98,7 +99,7 @@ export function ContentArea({
               size="icon"
               className="tw-absolute tw-right-2 tw-top-2 tw-size-6 tw-opacity-60 hover:tw-opacity-100"
               onClick={() => setIsEditMode(true)}
-              title="Edit content"
+              title={t("Edit content", "编辑内容")}
             >
               <PencilLine className="tw-size-3" />
             </Button>
@@ -119,7 +120,7 @@ export function ContentArea({
             ref={textareaRef}
             value={displayValue}
             onChange={(e) => onChange?.(e.target.value)}
-            placeholder="Ready to generate..."
+            placeholder={t("Ready to generate...", "准备生成…")}
             disabled={isDisabled}
             className={cn(
               "tw-min-w-fit tw-overflow-auto tw-border-solid",
@@ -133,7 +134,7 @@ export function ContentArea({
               size="icon"
               className="tw-absolute tw-right-2 tw-top-2 tw-z-[1] tw-size-6 tw-opacity-60 hover:tw-opacity-100"
               onClick={() => setIsEditMode(false)}
-              title="Preview rendered content"
+              title={t("Preview rendered content", "预览渲染内容")}
             >
               <BookOpen className="tw-size-3" />
             </Button>
@@ -150,7 +151,7 @@ export function ContentArea({
         ref={textareaRef}
         value={displayValue}
         onChange={(e) => onChange?.(e.target.value)}
-        placeholder="Ready to generate..."
+        placeholder={t("Ready to generate...", "准备生成…")}
         disabled={isDisabled}
         className={cn(
           "tw-min-h-[120px] tw-resize-y",

@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import { ReactModal } from "@/components/modals/ReactModal";
 import { SearchBar } from "@/components/ui/SearchBar";
 import { cn } from "@/lib/utils";
@@ -10,9 +11,9 @@ import React, { useMemo, useState } from "react";
 const RECOMMENDED_IDS: readonly string[] = ["anthropic", "openai", "google"];
 
 const RECOMMENDED_DESCRIPTIONS: Record<string, string> = {
-  anthropic: "Claude family",
-  openai: "GPT family",
-  google: "Gemini family",
+  anthropic: t("Claude family", "Claude 系列"),
+  openai: t("GPT family", "GPT 系列"),
+  google: t("Gemini family", "Gemini 系列"),
 };
 
 const PROVIDER_TYPE_HINTS: Record<ProviderType, string> = {
@@ -28,7 +29,7 @@ function catalogToDefinition(catalog: CatalogProvider): ProviderDefinition {
     providerType: catalog.providerType,
     defaultBaseUrl: catalog.defaultBaseUrl,
     requiresApiKey: true,
-    modelInputHint: PROVIDER_TYPE_HINTS[catalog.providerType] ?? "Add a model id",
+    modelInputHint: PROVIDER_TYPE_HINTS[catalog.providerType] ?? t("Add a model id", "添加模型 ID"),
     catalogProviderId: catalog.id,
   };
 }
@@ -70,15 +71,21 @@ export const AddProviderContent: React.FC<AddProviderContentProps> = ({
 
   return (
     <div className="tw-flex tw-h-full tw-min-h-0 tw-flex-col tw-gap-4 tw-overflow-hidden tw-px-2">
-      <div className="tw-text-sm tw-text-muted">Pick a provider to configure.</div>
+      <div className="tw-text-sm tw-text-muted">
+        {t("Pick a provider to configure.", "选择要配置的服务商。")}
+      </div>
 
-      <SearchBar value={query} onChange={setQuery} placeholder="Search providers…" />
+      <SearchBar
+        value={query}
+        onChange={setQuery}
+        placeholder={t("Search providers…", "搜索服务商…")}
+      />
 
       <div className="tw-flex tw-min-h-0 tw-flex-1 tw-flex-col tw-gap-4 tw-overflow-y-auto">
         {recommended.length > 0 && (
           <section data-testid="add-provider-recommended">
             <div className="tw-mb-2 tw-text-ui-smaller tw-font-medium tw-uppercase tw-tracking-wide tw-text-muted">
-              Recommended
+              {t("Recommended", "推荐")}
             </div>
             <div className="tw-flex tw-flex-col tw-gap-0.5">
               {recommended.map((p) => (
@@ -96,7 +103,7 @@ export const AddProviderContent: React.FC<AddProviderContentProps> = ({
         {local.length > 0 && (
           <section data-testid="add-provider-local">
             <div className="tw-mb-2 tw-text-ui-smaller tw-font-medium tw-uppercase tw-tracking-wide tw-text-muted">
-              Self-host
+              {t("Self-host", "自托管")}
             </div>
             <div className="tw-flex tw-flex-col tw-gap-0.5">
               {local.map((t) => (
@@ -109,7 +116,7 @@ export const AddProviderContent: React.FC<AddProviderContentProps> = ({
         {more.length > 0 && (
           <section data-testid="add-provider-more">
             <div className="tw-mb-2 tw-text-ui-smaller tw-font-medium tw-uppercase tw-tracking-wide tw-text-muted">
-              More providers
+              {t("More providers", "更多服务商")}
             </div>
             <div className="tw-flex tw-flex-col tw-gap-0.5">
               {more.map((p) => (
@@ -125,7 +132,7 @@ export const AddProviderContent: React.FC<AddProviderContentProps> = ({
 
         {noMatches && (
           <div className="tw-rounded-md tw-border tw-border-dashed tw-border-border tw-px-4 tw-py-6 tw-text-center tw-text-sm tw-text-muted">
-            No providers match your search.
+            {t("No providers match your search.", "没有找到匹配的服务商。")}
           </div>
         )}
       </div>
@@ -182,12 +189,12 @@ interface TemplateRowProps {
 const TemplateRow: React.FC<TemplateRowProps> = ({ template, onClick }) => {
   const descriptor = template.defaultBaseUrl
     ? template.defaultBaseUrl.replace(/^https?:\/\//, "")
-    : "custom endpoint";
+    : t("custom endpoint", "自定义接口地址");
   return (
     <KeyboardButton
       onClick={onClick}
       testId={`add-provider-template-${template.id}`}
-      ariaLabel={`Add ${template.displayName} provider`}
+      ariaLabel={t(`Add ${template.displayName} provider`, `添加 ${template.displayName} 服务商`)}
       className={ROW_CLASS}
     >
       <span className="tw-flex tw-min-w-0 tw-flex-1 tw-items-baseline tw-gap-1.5 tw-truncate">
@@ -209,7 +216,7 @@ const ProviderRow: React.FC<ProviderRowProps> = ({ provider, onClick, descriptio
   <KeyboardButton
     onClick={onClick}
     testId={`add-provider-card-${provider.id}`}
-    ariaLabel={`Add ${provider.displayName} provider`}
+    ariaLabel={t(`Add ${provider.displayName} provider`, `添加 ${provider.displayName} 服务商`)}
     className={ROW_CLASS}
   >
     <span className="tw-flex tw-min-w-0 tw-flex-1 tw-items-baseline tw-gap-1.5 tw-truncate">
@@ -226,7 +233,7 @@ const CustomProviderCta: React.FC<{ onClick: () => void }> = ({ onClick }) => (
   <KeyboardButton
     onClick={onClick}
     testId="add-provider-custom-cta"
-    ariaLabel="Add a custom provider"
+    ariaLabel={t("Add a custom provider", "添加自定义服务商")}
     className={cn(
       "tw-mt-2 tw-flex tw-w-full tw-items-center tw-justify-center tw-gap-1.5 tw-rounded-md tw-px-4 tw-py-5",
       "tw-border tw-border-solid tw-bg-interactive-accent/10 tw-border-interactive-accent/40",
@@ -234,7 +241,7 @@ const CustomProviderCta: React.FC<{ onClick: () => void }> = ({ onClick }) => (
     )}
   >
     <Plus className="tw-size-4" />
-    Add a custom provider
+    {t("Add a custom provider", "添加自定义服务商")}
   </KeyboardButton>
 );
 
@@ -250,7 +257,7 @@ export class AddProviderModal extends ReactModal {
     app: App,
     private readonly opts: AddProviderModalOptions
   ) {
-    super(app, "Add a provider");
+    super(app, t("Add a provider", "添加服务商"));
   }
 
   onOpen(): void {

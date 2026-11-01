@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import type { ReleaseVideo } from "@/components/release-update/releaseNotes";
 import { Button } from "@/components/ui/button";
 import { ArrowUpCircle, XIcon } from "lucide-react";
@@ -24,7 +25,7 @@ export function AgentHomeReleaseUpdatePrompt({
       role="status"
     >
       <Button
-        aria-label="Dismiss release update"
+        aria-label={t("Dismiss release update", "关闭更新提醒")}
         className="tw-absolute tw-right-2 tw-top-2"
         onClick={onDismiss}
         size="icon"
@@ -38,9 +39,14 @@ export function AgentHomeReleaseUpdatePrompt({
           <ArrowUpCircle aria-hidden="true" className="tw-size-4" />
         </span>
         <div className="tw-min-w-0">
-          <div className="tw-text-ui-medium tw-font-semibold">Copilot {version} is ready</div>
+          <div className="tw-text-ui-medium tw-font-semibold">
+            Copilot {version} {t("is ready", "已可更新")}
+          </div>
           <p className="tw-mb-0 tw-mt-1 tw-text-ui-smaller tw-text-muted">
-            Review what changed before updating Copilot in this vault.
+            {t(
+              "Review what changed before updating Copilot in this vault.",
+              "更新此仓库中的 Copilot 前，请先查看更新内容。"
+            )}
           </p>
         </div>
       </div>
@@ -60,7 +66,7 @@ export function AgentHomeReleaseUpdatePrompt({
         </a>
       )}
       <Button className="tw-mt-3 tw-w-full" onClick={onOpen} size="sm" type="button">
-        See what’s new
+        {t("See what’s new", "查看更新内容")}
       </Button>
     </section>
   );

@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import { BrevilabsClient } from "@/LLMProviders/brevilabsClient";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -42,7 +43,7 @@ function YoutubeTranscriptModalContent({ onClose }: { onClose: () => void }) {
       return { isValid: true, videoId: validation.videoId };
     } else {
       if (updateState) {
-        setError(validation.error || "Invalid URL");
+        setError(validation.error || t("Invalid URL", "无效的网址"));
         setIsValidUrl(false);
       }
       return { isValid: false };
@@ -68,7 +69,10 @@ function YoutubeTranscriptModalContent({ onClose }: { onClose: () => void }) {
 
       if (!response.response.transcript) {
         throw new Error(
-          "Transcript not available. Only English videos with auto transcript enabled are supported."
+          t(
+            "Transcript not available. Only English videos with auto transcript enabled are supported.",
+            "无法获取字幕。目前仅支持开启自动字幕的英语视频。"
+          )
         );
       }
 
@@ -85,7 +89,7 @@ function YoutubeTranscriptModalContent({ onClose }: { onClose: () => void }) {
       const errorMessage =
         error instanceof Error
           ? error.message
-          : "An error occurred while downloading the transcript";
+          : t("An error occurred while downloading the transcript", "下载字幕时发生错误");
       setError(errorMessage);
     } finally {
       setIsLoading(false);
@@ -98,10 +102,10 @@ function YoutubeTranscriptModalContent({ onClose }: { onClose: () => void }) {
     try {
       const textToCopy = `# YouTube Video Transcript\n\nSource: ${transcriptData.url}\n\n${transcriptData.transcript}`;
       await navigator.clipboard.writeText(textToCopy);
-      new Notice("Transcript copied to clipboard!");
+      new Notice(t("Transcript copied to clipboard!", "字幕已复制到剪贴板！"));
     } catch (error) {
       logError("Failed to copy to clipboard:", error);
-      new Notice("Failed to copy to clipboard");
+      new Notice(t("Failed to copy to clipboard", "复制到剪贴板失败"));
     }
   };
 
@@ -114,7 +118,7 @@ function YoutubeTranscriptModalContent({ onClose }: { onClose: () => void }) {
       onClose();
     } catch (error) {
       logError("Failed to insert to note:", error);
-      new Notice("Failed to insert to note");
+      new Notice(t("Failed to insert to note", "插入笔记失败"));
     }
   };
 
@@ -153,16 +157,16 @@ function YoutubeTranscriptModalContent({ onClose }: { onClose: () => void }) {
 
         <div className="tw-flex tw-justify-end tw-gap-2">
           <Button variant="ghost" onClick={handleDownloadAnother}>
-            Download another
+            {t("Download another", "下载其他视频")}
           </Button>
           <Button variant="default" onClick={() => void handleCopyToClipboard()}>
-            Copy to clipboard
+            {t("Copy to clipboard", "复制到剪贴板")}
           </Button>
           <Button variant="default" onClick={() => void handleInsertToNote()}>
-            Insert at cursor
+            {t("Insert at cursor", "在光标处插入")}
           </Button>
           <Button variant="secondary" onClick={onClose}>
-            Close
+            {t("Close", "关闭")}
           </Button>
         </div>
       </div>
@@ -172,7 +176,9 @@ function YoutubeTranscriptModalContent({ onClose }: { onClose: () => void }) {
   return (
     <div className="tw-flex tw-flex-col tw-gap-4">
       <div className="tw-flex tw-flex-col tw-gap-2">
-        <div className="tw-text-sm tw-text-muted">Enter a valid YouTube video URL</div>
+        <div className="tw-text-sm tw-text-muted">
+          {t("Enter a valid YouTube video URL", "请输入有效的 YouTube 视频网址")}
+        </div>
         <Input
           placeholder="https://www.youtube.com/watch?v=..."
           value={url}
@@ -185,14 +191,14 @@ function YoutubeTranscriptModalContent({ onClose }: { onClose: () => void }) {
 
       <div className="tw-flex tw-justify-end tw-gap-2">
         <Button variant="secondary" onClick={onClose} disabled={isLoading}>
-          Cancel
+          {t("Cancel", "取消")}
         </Button>
         <Button
           variant="default"
           onClick={() => void handleDownload()}
           disabled={isLoading || !isValidUrl}
         >
-          {isLoading ? "Downloading..." : "Download Transcript"}
+          {isLoading ? "Downloading..." : t("Download Transcript", "下载字幕")}
         </Button>
       </div>
     </div>
@@ -205,7 +211,7 @@ export class YoutubeTranscriptModal extends Modal {
   constructor(app: App) {
     super(app);
     // @ts-ignore
-    this.setTitle("Download YouTube transcript");
+    this.setTitle(t("Download YouTube transcript", "下载 YouTube 字幕"));
   }
 
   onOpen() {

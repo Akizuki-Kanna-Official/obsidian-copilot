@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import { ChatSendButton } from "@/components/ui/ChatSendButton";
 import { useChainType } from "@/aiParams";
 import { Button } from "@/components/ui/button";
@@ -57,8 +58,10 @@ const NO_MODELS: ModelSelectorEntry[] = [];
 
 const NOOP = () => {};
 
-const DEFAULT_PLACEHOLDER =
-  "Your AI assistant for Obsidian • @ to add context • / for custom prompts";
+const DEFAULT_PLACEHOLDER = t(
+  "Your AI assistant for Obsidian • @ to add context • / for custom prompts",
+  "您的 Obsidian AI 助手 · @ 添加上下文 · / 使用自定义提示词"
+);
 
 export interface ChatInputProps {
   placeholder?: string;
@@ -685,7 +688,7 @@ const ChatInput = React.forwardRef<ChatInputHandle, ChatInputProps>(function Cha
                     type="button"
                     className="remove-image-button"
                     onClick={() => setSelectedImages((prev) => prev.filter((_, i) => i !== index))}
-                    title="Remove image"
+                    title={t("Remove image", "移除图片")}
                   >
                     <X className="tw-size-4" />
                   </button>
@@ -775,7 +778,7 @@ const ChatInput = React.forwardRef<ChatInputHandle, ChatInputProps>(function Cha
             <Button
               size="icon"
               className={cn(ACCENT_CIRCLE_BUTTON_CLASS)}
-              aria-label="Stop generating"
+              aria-label={t("Stop generating", "停止生成")}
               onClick={() => onStopGenerating()}
             >
               <Square className="tw-size-3 tw-fill-current" />
@@ -789,7 +792,7 @@ const ChatInput = React.forwardRef<ChatInputHandle, ChatInputProps>(function Cha
                   className="tw-text-muted"
                   onClick={onEditCancel}
                 >
-                  <span>Cancel</span>
+                  <span>{t("Cancel", "取消")}</span>
                 </Button>
               )}
               {editMode ? (
@@ -800,7 +803,7 @@ const ChatInput = React.forwardRef<ChatInputHandle, ChatInputProps>(function Cha
                   onClick={() => onSendMessage()}
                 >
                   <CornerDownLeft className="!tw-size-3" />
-                  <span>Save</span>
+                  <span>{t("Save", "保存")}</span>
                 </Button>
               ) : (
                 <ChatSendButton

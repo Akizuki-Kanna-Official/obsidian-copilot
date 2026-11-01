@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import React, { useRef, useEffect } from "react";
 import { ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -99,7 +100,7 @@ export function TypeaheadMenuContent({
             ...(width && { width }),
           }}
         >
-          <div className="tw-mb-1 tw-text-xs tw-text-muted">Preview</div>
+          <div className="tw-mb-1 tw-text-xs tw-text-muted">{t("Preview", "预览")}</div>
           {options[selectedIndex].subtitle && (
             <div className="tw-mb-2 tw-text-xs tw-text-muted">
               {options[selectedIndex].subtitle}
@@ -201,7 +202,7 @@ export function TypeaheadMenuContent({
               value={searchQuery}
               onChange={handleSearchChange}
               onKeyDown={handleSearchKeyDown}
-              placeholder="Search..."
+              placeholder={t("Search...", "搜索…")}
               autoFocus
               className="tw-w-full tw-rounded-md !tw-border-none !tw-bg-transparent tw-px-1 tw-py-0 tw-text-sm tw-text-normal placeholder:tw-text-muted focus:!tw-shadow-none"
             />

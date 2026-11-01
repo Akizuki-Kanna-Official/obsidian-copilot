@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import { createProductUrl, PRODUCT_URLS } from "@/lib/productLinks";
 import { useIsPreviewEnabled } from "@/plusUtils";
 import { Sparkle } from "lucide-react";
@@ -14,7 +15,7 @@ export function PreviewHint(): React.ReactElement {
       target="_blank"
     >
       <Sparkle aria-hidden="true" className="tw-size-3.5" />
-      Preview for Believers and Supporters
+      {t("Preview for Believers and Supporters", "Believer 和 Supporter 用户专享预览")}
     </a>
   );
 }

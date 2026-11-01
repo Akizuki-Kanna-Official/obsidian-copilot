@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import React from "react";
 import {
   DOMConversionMap,
@@ -99,7 +100,11 @@ function ActiveWebTabPillComponent(): JSX.Element {
             content="activeWebTab"
             openBracket="{"
             closeBracket="}"
-            tooltipContent={<div className="tw-text-left">Web Viewer not supported on mobile</div>}
+            tooltipContent={
+              <div className="tw-text-left">
+                {t("Web Viewer not supported on mobile", "移动端不支持网页查看器")}
+              </div>
+            }
           />
         </div>
       </PillBadge>
@@ -117,7 +122,10 @@ function ActiveWebTabPillComponent(): JSX.Element {
             closeBracket="}"
             tooltipContent={
               <div className="tw-text-left">
-                Will use the active web tab at the time the message is sent
+                {t(
+                  "Will use the active web tab at the time the message is sent",
+                  "将使用发送消息时的当前网页标签"
+                )}
               </div>
             }
           />
@@ -133,7 +141,7 @@ function ActiveWebTabPillComponent(): JSX.Element {
         <span className="tw-max-w-40 tw-truncate" title={activeWebTabForMentions.url}>
           {activeWebTabForMentions.title ?? "Untitled"}
         </span>
-        <span className="tw-text-xs tw-text-faint">Current</span>
+        <span className="tw-text-xs tw-text-faint">{t("Current", "当前")}</span>
       </div>
     </PillBadge>
   );

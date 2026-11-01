@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import {
   ArrowUpRight,
@@ -284,7 +285,9 @@ export function ChatHistoryPopover({
             <div className="tw-p-2">
               {groupedHistory.length === 0 ? (
                 <div className="tw-py-8 tw-text-center tw-text-muted">
-                  {searchQuery ? "No matching chat history found." : "No chat history"}
+                  {searchQuery
+                    ? t("No matching chat history found.", "未找到匹配的聊天记录。")
+                    : t("No chat history", "暂无聊天记录")}
                 </div>
               ) : (
                 <>
@@ -332,7 +335,8 @@ export function ChatHistoryPopover({
 
                   {displayCount < sortedHistory.length ? (
                     <div className="tw-py-2 tw-text-center tw-text-xs tw-text-muted">
-                      Showing {displayCount} of {sortedHistory.length} — scroll for more
+                      {t("Showing", "显示")} {displayCount} {t("of", "/")} {sortedHistory.length}{" "}
+                      {t("— scroll for more", "— 滚动查看更多")}
                     </div>
                   ) : null}
                 </>
@@ -461,7 +465,7 @@ function ChatHistoryItem({
         {isRunning && (
           <LoaderCircle
             className="tw-size-3.5 tw-shrink-0 tw-animate-spin tw-text-accent group-focus-within:tw-hidden group-hover:tw-hidden"
-            aria-label="Responding"
+            aria-label={t("Responding", "正在回复")}
           />
         )}
 
@@ -481,7 +485,7 @@ function ChatHistoryItem({
                   onDelete(chat.id);
                 }}
                 className="tw-size-5 tw-p-0 tw-text-error hover:tw-text-error"
-                title="Confirm delete"
+                title={t("Confirm delete", "确认删除")}
               >
                 <Check className="tw-size-3" />
               </Button>
@@ -493,7 +497,7 @@ function ChatHistoryItem({
                   onCancelDelete();
                 }}
                 className="tw-size-5 tw-p-0"
-                title="Cancel deletion"
+                title={t("Cancel deletion", "取消删除")}
               >
                 <X className="tw-size-3" />
               </Button>
@@ -505,8 +509,8 @@ function ChatHistoryItem({
                   size="sm"
                   variant="ghost"
                   className="tw-size-5 tw-p-0"
-                  aria-label="Close chat"
-                  title="Close chat"
+                  aria-label={t("Close chat", "关闭聊天")}
+                  title={t("Close chat", "关闭聊天")}
                   onClick={(event) => {
                     event.stopPropagation();
                     safeAsyncHandler(onCloseSession)(chat.id);
@@ -525,7 +529,7 @@ function ChatHistoryItem({
                   }
                 }}
                 className="tw-size-5 tw-p-0"
-                title="Open the source file"
+                title={t("Open the source file", "打开源文件")}
               >
                 <ArrowUpRight className="tw-size-4" />
               </Button>
@@ -549,7 +553,7 @@ function ChatHistoryItem({
                   onDelete(chat.id);
                 }}
                 className="tw-size-5 tw-p-0 tw-text-error hover:tw-text-error"
-                title="Delete file"
+                title={t("Delete file", "删除文件")}
               >
                 <Trash2 className="tw-size-3" />
               </Button>

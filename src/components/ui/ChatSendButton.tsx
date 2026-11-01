@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import { Button } from "@/components/ui/button";
 import { ArrowUp } from "lucide-react";
 import React from "react";
@@ -13,7 +14,7 @@ export function ChatSendButton({ inputMessage, imageCount, onSend }: ChatSendBut
     <Button
       size="icon"
       className="tw-rounded-full tw-bg-interactive-accent tw-text-on-accent hover:tw-bg-interactive-accent-hover"
-      aria-label="Send"
+      aria-label={t("Send", "发送")}
       onClick={onSend}
       disabled={!inputMessage.trim() && imageCount === 0}
     >

@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import React, { useMemo } from "react";
 import { TFile, TFolder } from "obsidian";
 import { isDesktopRuntime } from "@/utils/desktopRuntime";
@@ -38,8 +39,8 @@ export interface CategoryOption extends TypeaheadOption {
 
 const AGENTS_CATEGORY: CategoryOption = {
   key: "agents",
-  title: "Agents",
-  subtitle: "Ask another agent this turn",
+  title: t("Agents", "智能体"),
+  subtitle: t("Ask another agent this turn", "本轮向其他智能体提问"),
   category: "agents",
   icon: <Bot className="tw-size-4" />,
 };
@@ -47,15 +48,15 @@ const AGENTS_CATEGORY: CategoryOption = {
 const CATEGORY_OPTIONS: CategoryOption[] = [
   {
     key: "notes",
-    title: "Notes",
-    subtitle: "Reference notes in your vault",
+    title: t("Notes", "笔记"),
+    subtitle: t("Reference notes in your vault", "引用仓库中的笔记"),
     category: "notes",
     icon: <FileText className="tw-size-4" />,
   },
   {
     key: "webTabs",
-    title: "Web tabs",
-    subtitle: "Reference open browser tabs",
+    title: t("Web tabs", "网页标签"),
+    subtitle: t("Reference open browser tabs", "引用已打开的浏览器标签页"),
     category: "webTabs",
     icon: <Globe className="tw-size-4" />,
   },
@@ -68,15 +69,15 @@ const CATEGORY_OPTIONS: CategoryOption[] = [
   },
   {
     key: "folders",
-    title: "Folders",
-    subtitle: "Reference vault folders",
+    title: t("Folders", "文件夹"),
+    subtitle: t("Reference vault folders", "引用仓库文件夹"),
     category: "folders",
     icon: <Folder className="tw-size-4" />,
   },
   {
     key: "images",
-    title: "Images",
-    subtitle: "Attach image files",
+    title: t("Images", "图片"),
+    subtitle: t("Attach image files", "添加图片附件"),
     category: "images",
     icon: <Image className="tw-size-4" />,
     isAction: true,

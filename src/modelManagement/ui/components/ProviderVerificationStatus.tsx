@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import type { VerificationResult } from "@/modelManagement/types/runtime";
@@ -13,14 +14,14 @@ export function ProviderVerificationStatus({ result }: ProviderVerificationStatu
   // Only a fresh successful probe earns a success badge. Connection failures
   // remain inconclusive rather than accusing a valid key of being invalid.
   const label = !result
-    ? "Checking…"
+    ? t("Checking…", "正在检查…")
     : result.ok
-      ? "Verified"
+      ? t("Verified", "已验证")
       : result.code === "missing_api_key"
-        ? "No key"
+        ? t("No key", "无密钥")
         : result.code === "invalid_api_key"
-          ? "Invalid key"
-          : "Check failed";
+          ? t("Invalid key", "密钥无效")
+          : t("Check failed", "检查失败");
   return (
     <Badge
       variant={result && !result.ok ? "destructive" : "secondary"}
@@ -44,7 +45,7 @@ export function ProviderVerificationProgress({ pending }: ProviderVerificationPr
       className="tw-pointer-events-none tw-absolute tw-right-0 tw-top-0 tw-flex -tw-translate-y-1/2 tw-items-center tw-gap-1.5 tw-rounded-full tw-bg-primary tw-px-2 tw-py-1 tw-text-xs tw-text-muted tw-shadow-sm"
     >
       <Loader2 className="tw-size-3 tw-animate-spin" aria-hidden="true" />
-      Verifying providers…
+      {t("Verifying providers…", "正在验证服务商…")}
     </div>
   );
 }

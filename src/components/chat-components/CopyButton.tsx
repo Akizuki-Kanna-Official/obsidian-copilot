@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import { MessageActionButton } from "@/components/chat-components/MessageActionButton";
 import { useCopyToClipboard } from "@/hooks/useCopyToClipboard";
 import { Check, Copy } from "lucide-react";
@@ -10,6 +11,10 @@ interface CopyButtonProps {
 export const CopyButton: React.FC<CopyButtonProps> = ({ text }) => {
   const { isCopied, copy } = useCopyToClipboard();
   return (
-    <MessageActionButton label="Copy" icon={isCopied ? Check : Copy} onClick={() => copy(text)} />
+    <MessageActionButton
+      label={t("Copy", "复制")}
+      icon={isCopied ? Check : Copy}
+      onClick={() => copy(text)}
+    />
   );
 };

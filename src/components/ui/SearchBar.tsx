@@ -1,8 +1,11 @@
+import { t } from "@/lib/i18n";
 import React from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { XCircle, Search } from "lucide-react";
+
+const DEFAULT_PLACEHOLDER = t("Search...", "搜索…");
 
 interface SearchBarProps {
   value: string;
@@ -14,7 +17,7 @@ interface SearchBarProps {
 export const SearchBar: React.FC<SearchBarProps> = ({
   value,
   onChange,
-  placeholder = "Search...",
+  placeholder = DEFAULT_PLACEHOLDER,
   inputClassName,
 }) => {
   return (
@@ -31,7 +34,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
           variant={"secondary"}
           onClick={() => onChange("")}
           className="tw-absolute tw-right-8 tw-top-1/2 tw-size-4 -tw-translate-y-1/2 tw-transform tw-rounded-full tw-p-0 tw-transition-colors"
-          aria-label="Clear search"
+          aria-label={t("Clear search", "清空搜索")}
         >
           <XCircle className="tw-size-4 tw-text-muted/60 hover:tw-text-accent-hover" />
         </Button>

@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import { Button } from "@/components/ui/button";
 import { ArrowDown } from "lucide-react";
 import React from "react";
@@ -36,8 +37,8 @@ export function ChatTranscriptViewport({
           type="button"
           variant="secondary"
           size="icon"
-          aria-label="Scroll to end"
-          title="Scroll to end"
+          aria-label={t("Scroll to end", "滚动到底部")}
+          title={t("Scroll to end", "滚动到底部")}
           onClick={scrollToEnd}
           className="tw-absolute tw-inset-x-0 tw-bottom-3 tw-z-[1] tw-mx-auto tw-size-8 tw-rounded-full tw-border tw-border-solid tw-border-border tw-bg-primary hover:tw-bg-interactive-hover"
         >

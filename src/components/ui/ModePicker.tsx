@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import React from "react";
 import { Check, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -24,16 +25,25 @@ interface ModePickerProps {
 
 const MODE_DISPLAY: Record<CopilotMode, { label: string; description: string }> = {
   auto: {
-    label: "Auto",
-    description: "Uses the agent's Auto permissions for tools and edits.",
+    label: t("Auto", "自动"),
+    description: t(
+      "Uses the agent's Auto permissions for tools and edits.",
+      "使用智能体的自动权限执行工具和编辑操作。"
+    ),
   },
   plan: {
-    label: "Plan",
-    description: "Drafts a plan and waits for your approval before editing.",
+    label: t("Plan", "规划"),
+    description: t(
+      "Drafts a plan and waits for your approval before editing.",
+      "先起草计划，待您批准后再编辑。"
+    ),
   },
   default: {
-    label: "Safe",
-    description: "Allows edits under the agent's approval rules.",
+    label: t("Safe", "安全"),
+    description: t(
+      "Allows edits under the agent's approval rules.",
+      "按智能体的审批规则允许编辑。"
+    ),
   },
 };
 
@@ -43,7 +53,7 @@ function getModeLabel(value: CopilotMode): string {
 
 export function ModePicker({ override, className }: ModePickerProps) {
   const { options, value, onChange, disabled } = override;
-  const triggerLabel = value ? getModeLabel(value) : "Mode";
+  const triggerLabel = value ? getModeLabel(value) : t("Mode", "模式");
 
   return (
     <DropdownMenu>
@@ -60,7 +70,7 @@ export function ModePicker({ override, className }: ModePickerProps) {
               "tw-text-red/70 hover:tw-text-red/100 focus-visible:tw-text-red/100",
             className
           )}
-          title="Mode"
+          title={t("Mode", "模式")}
         >
           <span className="tw-truncate">{triggerLabel}</span>
           {!disabled && <ChevronDown className="tw-mt-0.5 tw-size-4 tw-shrink-0" />}

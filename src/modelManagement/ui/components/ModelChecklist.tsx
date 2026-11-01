@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -66,7 +67,7 @@ export const ModelChecklist: React.FC<ModelChecklistProps> = ({
 
   return (
     <div className="tw-flex tw-flex-col tw-gap-2">
-      <FormField label="Model ID">
+      <FormField label={t("Model ID", "模型 ID")}>
         <div className="tw-flex tw-gap-2">
           <Input
             className="tw-flex-1"
@@ -78,21 +79,25 @@ export const ModelChecklist: React.FC<ModelChecklistProps> = ({
                 handleManualAdd();
               }
             }}
-            placeholder={modelInputHint ?? "Enter a model ID"}
+            placeholder={modelInputHint ?? t("Enter a model ID", "输入模型 ID")}
             data-testid="model-checklist-manual-input"
           />
           <Button variant="secondary" onClick={handleManualAdd} disabled={!manualId.trim()}>
-            Add
+            {t("Add", "添加")}
           </Button>
         </div>
       </FormField>
 
-      <SearchBar value={query} onChange={onQueryChange} placeholder="Search available models…" />
+      <SearchBar
+        value={query}
+        onChange={onQueryChange}
+        placeholder={t("Search available models…", "搜索可用模型…")}
+      />
 
       {fetching && (
         <div className="tw-flex tw-items-center tw-gap-2 tw-text-xs tw-text-muted">
           <Loader2 className="tw-size-3.5 tw-shrink-0 tw-animate-spin" />
-          <span>Loading models…</span>
+          <span>{t("Loading models…", "正在加载模型…")}</span>
         </div>
       )}
 
@@ -141,7 +146,7 @@ export const ModelChecklist: React.FC<ModelChecklistProps> = ({
                   <span className="tw-truncate tw-text-normal">{model.displayName}</span>
                   {model.isEmbedding && (
                     <Badge variant="secondary" className="tw-shrink-0 tw-text-ui-smaller">
-                      Embedding
+                      {t("Embedding", "嵌入模型")}
                     </Badge>
                   )}
                   {hasCapabilityIcons(capabilities) && (
@@ -182,10 +187,13 @@ export const ModelChecklist: React.FC<ModelChecklistProps> = ({
           data-testid="model-checklist-empty"
         >
           {fetching
-            ? "Loading models…"
+            ? t("Loading models…", "正在加载模型…")
             : query.trim()
-              ? "No models match the current filters."
-              : "No models discovered — enter a model ID above or test your credentials."}
+              ? t("No models match the current filters.", "没有模型符合当前筛选条件。")
+              : t(
+                  "No models discovered — enter a model ID above or test your credentials.",
+                  "未发现模型，请在上方输入模型 ID 或测试凭据。"
+                )}
         </div>
       )}
     </div>
