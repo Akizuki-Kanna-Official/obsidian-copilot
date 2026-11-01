@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -81,7 +82,7 @@ export const AgentStatusCard: React.FC<AgentStatusCardProps> = ({
       <Progress
         value={progress.percent}
         aria-valuenow={progress.percent}
-        aria-label="Installation progress"
+        aria-label={t("Installation progress", "安装进度")}
       />
     )}
     {action &&

@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import { ProjectConfig } from "@/aiParams";
 import { Button } from "@/components/ui/button";
 import { FormField } from "@/components/ui/form-field";
@@ -41,7 +42,7 @@ export function AgentProjectCreateForm({
       type="text"
       value={name}
       onChange={(e) => setName(e.target.value)}
-      placeholder="Project name"
+      placeholder={t("Project name", "项目名称")}
       autoFocus
       onKeyDown={(e) => {
         if (e.key === "Enter") {
@@ -64,17 +65,17 @@ export function AgentProjectCreateForm({
       {title ? (
         nameInput
       ) : (
-        <FormField label="Name" required>
+        <FormField label={t("Name", "名称")} required>
           {nameInput}
         </FormField>
       )}
 
       <div className="tw-flex tw-justify-end tw-gap-2">
         <Button variant="secondary" onClick={onCancel} disabled={isSaving}>
-          Cancel
+          {t("Cancel", "取消")}
         </Button>
         <Button variant="default" onClick={() => void handleSave()} disabled={!canSave}>
-          {isSaving ? "Saving..." : "Create"}
+          {isSaving ? t("Saving...", "正在保存…") : t("Create", "创建")}
         </Button>
       </div>
     </div>

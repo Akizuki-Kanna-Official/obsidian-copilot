@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import { AgentTurnDurationIndicator } from "@/agentMode/ui/AgentTurnDurationIndicator";
 import { CopyButton } from "@/components/chat-components/CopyButton";
 import { MessageActionButton } from "@/components/chat-components/MessageActionButton";
@@ -35,7 +36,7 @@ export const AgentMessageActions: React.FC<AgentMessageActionsProps> = ({
         })}
       >
         <MessageActionButton
-          label="Insert / Replace at cursor"
+          label={t("Insert / Replace at cursor", "在光标处插入 / 替换")}
           icon={TextCursorInput}
           onClick={() => void insertAtCursor(app, text)}
         />

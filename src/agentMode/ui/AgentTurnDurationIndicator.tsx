@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import { CopilotSpinner } from "@/components/chat-components/CopilotSpinner";
 import { cn } from "@/lib/utils";
 import React, { useEffect, useRef, useState } from "react";
@@ -66,13 +67,13 @@ export const AgentTurnDurationIndicator: React.FC<AgentTurnDurationIndicatorProp
         </span>
         <span>
           <span className={isRunning ? "copilot-shimmer-text tw-font-medium" : "tw-font-medium"}>
-            {props.label ?? "Worked for"}
+            {props.label ?? t("Worked for", "已工作")}
           </span>{" "}
           <span className="tw-tabular-nums">{formatWorkedDuration(durationMs)}</span>
         </span>
         {isRunning ? (
           <span className="tw-sr-only" role="status" aria-live="polite">
-            {props.label ?? "Agent is working"}
+            {props.label ?? t("Agent is working", "智能体正在工作")}
           </span>
         ) : null}
       </div>

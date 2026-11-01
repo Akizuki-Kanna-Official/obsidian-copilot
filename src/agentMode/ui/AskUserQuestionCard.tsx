@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import type {
@@ -117,7 +118,9 @@ export const AskUserQuestionCard: React.FC<AskUserQuestionCardProps> = ({ reques
     <div className="tw-w-full tw-rounded-md tw-border tw-border-solid tw-border-border tw-bg-secondary">
       <div className="copilot-divider-b tw-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2">
         <MessageCircleQuestion className="tw-size-4 tw-shrink-0 tw-text-accent" />
-        <div className="tw-truncate tw-text-sm tw-font-medium">Question from agent</div>
+        <div className="tw-truncate tw-text-sm tw-font-medium">
+          {t("Question from agent", "智能体的提问")}
+        </div>
       </div>
 
       <div className="tw-flex tw-flex-col tw-gap-2 tw-px-3 tw-py-2">
@@ -141,7 +144,7 @@ export const AskUserQuestionCard: React.FC<AskUserQuestionCardProps> = ({ reques
                       : "tw-text-muted !tw-shadow-none hover:tw-text-normal"
                   )}
                 >
-                  {q.header || `Question ${idx + 1}`}
+                  {q.header || t(`Question ${idx + 1}`, `问题 ${idx + 1}`)}
                 </button>
               );
             })}
@@ -165,7 +168,7 @@ export const AskUserQuestionCard: React.FC<AskUserQuestionCardProps> = ({ reques
 
       <div className="copilot-divider-t tw-flex tw-flex-wrap tw-items-center tw-justify-end tw-gap-2 tw-px-3 tw-py-2">
         <Button variant="secondary" size="sm" disabled={busy} onClick={cancel}>
-          Cancel
+          {t("Cancel", "取消")}
         </Button>
         <Button
           variant="default"
@@ -173,7 +176,7 @@ export const AskUserQuestionCard: React.FC<AskUserQuestionCardProps> = ({ reques
           disabled={busy || (isFinalQuestion ? !canSubmit : !canAdvance)}
           onClick={runPrimaryAction}
         >
-          {isFinalQuestion ? "Submit" : "Next"}
+          {isFinalQuestion ? t("Submit", "提交") : t("Next", "下一步")}
         </Button>
       </div>
     </div>
@@ -252,8 +255,10 @@ const QuestionPanel: React.FC<QuestionPanelProps> = ({
               />
             </span>
             <div className="tw-min-w-0">
-              <div className="tw-text-sm tw-leading-5">Other</div>
-              <div className="tw-text-xs tw-text-muted">Type your own response</div>
+              <div className="tw-text-sm tw-leading-5">{t("Other", "其他")}</div>
+              <div className="tw-text-xs tw-text-muted">
+                {t("Type your own response", "输入自定义回答")}
+              </div>
             </div>
           </label>
         ) : null}
@@ -262,7 +267,7 @@ const QuestionPanel: React.FC<QuestionPanelProps> = ({
       {otherActive ? (
         <textarea
           className="tw-min-h-9 tw-w-full tw-resize-y tw-rounded tw-border tw-border-solid tw-border-border tw-bg-primary tw-px-2 tw-py-1 tw-text-sm tw-text-normal tw-outline-none focus:tw-border-border-focus"
-          placeholder="Type your response…"
+          placeholder={t("Type your response…", "输入你的回答…")}
           value={customText}
           disabled={disabled}
           autoFocus

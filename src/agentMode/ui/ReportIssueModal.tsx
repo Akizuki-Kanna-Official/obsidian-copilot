@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import { frameSink } from "@/agentMode/session/debugSink";
 import { logError, logInfo, logWarn } from "@/logger";
 import { flushRecordedPromptPayloadToLog } from "@/LLMProviders/chainRunner/utils/promptPayloadRecorder";
@@ -117,7 +118,7 @@ export async function uploadReport(
     return { ok: true, reportId, issueUrl: buildLinkedReportIssueUrl(report.issueDraft, reportId) };
   } catch (err) {
     logError("[ReportIssue] could not upload the report:", err);
-    const generic = "Something went wrong while uploading the report.";
+    const generic = t("Something went wrong while uploading the report.", "上传报告时出错。");
     return { ok: false, error: err instanceof ReportUploadError ? err.message : generic };
   }
 }
@@ -144,12 +145,14 @@ export class ReportIssueModal extends Modal {
   constructor(private readonly params: ReportIssueModalParams) {
     super(params.app);
     // @ts-ignore — setTitle exists at runtime (see ConfirmModal).
-    this.setTitle("Report an issue");
+    this.setTitle(t("Report an issue", "报告问题"));
   }
 
   onOpen() {
     if (!isDesktopRuntime()) {
-      new Notice("Reporting an issue is available on desktop only.");
+      new Notice(
+        t("Reporting an issue is available on desktop only.", "报告问题功能仅在桌面端可用。")
+      );
       this.close();
       return;
     }
@@ -194,16 +197,20 @@ export class ReportIssueModal extends Modal {
     const settings = getSettings();
     const activityLogOn = settings.agentMode.debugFullFrames;
     const sources: ReportSourceOption[] = [
-      { id: "screenshot", label: "Screenshot of the Obsidian window", defaultChecked: true },
+      {
+        id: "screenshot",
+        label: t("Screenshot of the Obsidian window", "Obsidian 窗口截图"),
+        defaultChecked: true,
+      },
       {
         id: "activityLog",
-        label: "Agent activity log",
+        label: t("Agent activity log", "智能体活动日志"),
         description: activityLogOn ? undefined : "turned off in Settings → Advanced",
         defaultChecked: activityLogOn,
       },
       {
         id: "chatLog",
-        label: "Copilot log",
+        label: t("Copilot log", "Copilot 日志"),
         description: "includes agent errors",
         // OpenCode 2's server errors reach only this log, and reporters skipped it unchecked.
         // https://github.com/Brevilabs/obsidian-copilot-private/issues/649
@@ -213,7 +220,7 @@ export class ReportIssueModal extends Modal {
     if (this.params.activeBackend === OPENCODE_BACKEND_ID) {
       sources.push({
         id: "opencodeLog",
-        label: "OpenCode log",
+        label: t("OpenCode log", "OpenCode 日志"),
         description: "may include unrelated sessions",
         // A report opened from a chat is about that chat, so it ticks the log Settings leaves off for privacy.
         // https://github.com/Brevilabs/obsidian-copilot-private/issues/672
@@ -311,7 +318,10 @@ export class ReportIssueModal extends Modal {
     // so a success hands it over with a way to the issue; a failure asks nothing
     // of them and the zip stays put (https://github.com/Brevilabs/obsidian-copilot-private/issues/202).
     if (outcome.ok) {
-      this.issueLinkNotice(`Report uploaded (ID ${outcome.reportId}).`, outcome.issueUrl);
+      this.issueLinkNotice(
+        t(`Report uploaded (ID ${outcome.reportId}).`, `报告已上传（编号 ${outcome.reportId}）。`),
+        outcome.issueUrl
+      );
     } else {
       logWarn(
         `[ReportIssue] the upload failed after the dialog closed; the zip is still at ${report.zipPath}:`,
@@ -326,13 +336,21 @@ export class ReportIssueModal extends Modal {
     const opened = openIssuePageWith(getElectronShell(), issueUrl);
     this.close();
     if (await opened) {
-      new Notice("Report uploaded. Finish the issue in your browser.");
+      new Notice(
+        t(
+          "Report uploaded. Finish the issue in your browser.",
+          "报告已上传，请在浏览器中完成问题提交。"
+        )
+      );
     } else {
       // The report is stored either way; what is missing is the way to the
       // issue page, so the notice carries it in place of the browser
       // (https://github.com/Brevilabs/obsidian-copilot-private/issues/202).
       this.issueLinkNotice(
-        `Report uploaded (ID ${reportId}), but Copilot could not open your browser.`,
+        t(
+          `Report uploaded (ID ${reportId}), but Copilot could not open your browser.`,
+          `报告已上传（编号 ${reportId}），但 Copilot 无法打开浏览器。`
+        ),
         issueUrl
       );
     }
@@ -344,28 +362,44 @@ export class ReportIssueModal extends Modal {
     // (https://github.com/Brevilabs/obsidian-copilot-private/issues/202).
     this.prepared = null;
     if (!(await openIssuePageWith(getElectronShell(), url))) {
-      this.issueLinkNotice("Copilot could not open your browser.", url);
+      this.issueLinkNotice(
+        t("Copilot could not open your browser.", "Copilot 无法打开浏览器。"),
+        url
+      );
     }
   }
 
   private issueLinkNotice(text: string, url: string): void {
     const fragment = this.contentEl.doc.win.createFragment();
     fragment.append(`${text} `);
-    fragment.createEl("a", { href: url, text: "Open the GitHub issue page" });
+    fragment.createEl("a", {
+      href: url,
+      text: t("Open the GitHub issue page", "打开 GitHub 问题页面"),
+    });
     new Notice(fragment, 0);
   }
 
   private revealFile(path: string): void {
     const shell = getElectronShell();
     if (!shell?.showItemInFolder) {
-      new Notice(`Copilot could not open the folder. The report is at ${path}`);
+      new Notice(
+        t(
+          `Copilot could not open the folder. The report is at ${path}`,
+          `Copilot 无法打开文件夹。报告位于 ${path}`
+        )
+      );
       return;
     }
     try {
       shell.showItemInFolder(path);
     } catch (err) {
       logError("[ReportIssue] could not reveal the report:", err);
-      new Notice(`Copilot could not open the folder. The report is at ${path}`);
+      new Notice(
+        t(
+          `Copilot could not open the folder. The report is at ${path}`,
+          `Copilot 无法打开文件夹。报告位于 ${path}`
+        )
+      );
     }
   }
 }
@@ -373,11 +407,20 @@ export class ReportIssueModal extends Modal {
 async function activityLogRequest(): Promise<ReportLogRequest> {
   const base = { id: "activityLog", name: FRAME_LOG_NAME };
   if (!getSettings().agentMode.debugFullFrames) {
-    return { ...base, unavailableReason: "The agent activity log is turned off." };
+    return {
+      ...base,
+      unavailableReason: t("The agent activity log is turned off.", "智能体活动日志已关闭。"),
+    };
   }
   const path = await frameSink.getValidatedPath();
   return path === null
-    ? { ...base, unavailableReason: "The agent activity log's location is unavailable." }
+    ? {
+        ...base,
+        unavailableReason: t(
+          "The agent activity log's location is unavailable.",
+          "无法获取智能体活动日志的位置。"
+        ),
+      }
     : { ...base, path };
 }
 
@@ -387,13 +430,15 @@ async function chatLogRequest(): Promise<ReportLogRequest> {
   const text = logFileManager.exportLogText();
   return text.length > 0
     ? { ...base, text }
-    : { ...base, unavailableReason: "No chat log entries." };
+    : { ...base, unavailableReason: t("No chat log entries.", "暂无聊天日志。") };
 }
 
 async function opencodeLogRequest(): Promise<ReportLogRequest> {
   const base = { id: "opencodeLog", name: OPENCODE_LOG_NAME };
   const path = await resolveOpencodeLogPath();
-  return path ? { ...base, path } : { ...base, unavailableReason: "No OpenCode log was found." };
+  return path
+    ? { ...base, path }
+    : { ...base, unavailableReason: t("No OpenCode log was found.", "未找到 OpenCode 日志。") };
 }
 
 async function resolveOpencodeLogPath(): Promise<string | null> {

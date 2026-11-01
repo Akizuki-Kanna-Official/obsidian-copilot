@@ -1,3 +1,4 @@
+import * as obsidian from "obsidian";
 import type { PermissionOption, PermissionPrompt, SessionId } from "@/agentMode/session/types";
 import { ToolPermissionCard } from "@/agentMode/ui/ToolPermissionCard";
 import { fireEvent, render, screen } from "@testing-library/react";
@@ -24,6 +25,24 @@ function makeRequest(options: PermissionOption[]): PermissionPrompt {
 
 describe("ToolPermissionCard", () => {
   describe("ToolPermissionCard()", () => {
+    it("localizes permission chrome without changing agent-provided commands or option IDs", () => {
+      const language = jest.spyOn(obsidian, "getLanguage").mockReturnValue("zh");
+      try {
+        const request = makeRequest([
+          { optionId: "allow_once_123", name: "Allow once", kind: "allow_once" },
+        ]);
+        request.toolCall.title = "Bash: wc -w Welcome.md";
+        const onResolve = jest.fn();
+        render(<ToolPermissionCard request={request} onResolve={onResolve} />);
+        expect(screen.getByText("需要授权")).toBeTruthy();
+        expect(screen.getByText("Bash: wc -w Welcome.md")).toBeTruthy();
+        fireEvent.click(screen.getByRole("button", { name: "Allow once" }));
+        expect(onResolve).toHaveBeenCalledWith(TOOL_CALL_ID, "allow_once_123");
+      } finally {
+        language.mockRestore();
+      }
+    });
+
     it("names the tool when the request title carries only its argument for https://github.com/Brevilabs/obsidian-copilot-private/issues/599", () => {
       const request = makeRequest([]);
       request.toolCall.title = "latest stable Node.js version";

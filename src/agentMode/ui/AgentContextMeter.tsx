@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import type { AgentChatBackend } from "@/agentMode/session/AgentChatBackend";
 import { withoutExpiredWindows } from "@/agentMode/session/planUsage";
 import type { PlanUsage, SessionUsage } from "@/agentMode/session/types";
@@ -63,15 +64,19 @@ function formatResetsIn(resetsAt: number | undefined, now: number): string | nul
   const ms = resetsAt - now;
   if (ms <= 0) return null;
   const minutes = Math.round(ms / 60_000);
-  if (minutes < 60) return `resets in ${minutes}m`;
+  if (minutes < 60) return t(`resets in ${minutes}m`, `${minutes} 分钟后重置`);
   const hours = Math.floor(minutes / 60);
   if (hours < 24) {
     const rest = minutes % 60;
-    return rest === 0 ? `resets in ${hours}h` : `resets in ${hours}h ${rest}m`;
+    return rest === 0
+      ? t(`resets in ${hours}h`, `${hours} 小时后重置`)
+      : t(`resets in ${hours}h ${rest}m`, `${hours} 小时 ${rest} 分钟后重置`);
   }
   const days = Math.floor(hours / 24);
   const restHours = hours % 24;
-  return restHours === 0 ? `resets in ${days}d` : `resets in ${days}d ${restHours}h`;
+  return restHours === 0
+    ? t(`resets in ${days}d`, `${days} 天后重置`)
+    : t(`resets in ${days}d ${restHours}h`, `${days} 天 ${restHours} 小时后重置`);
 }
 
 function PlanUsageRows({ planUsage }: { planUsage: PlanUsage }) {
@@ -134,7 +139,7 @@ export function UsageMeter({ usage, contextWindow, planUsage }: UsageMeterProps)
           variant="ghost2"
           size="icon"
           className={cn(isWarning ? "tw-text-warning" : "tw-text-accent")}
-          aria-label="Usage"
+          aria-label={t("Usage", "使用量")}
         >
           {!hasUsage || hasContext ? <ContextRing fraction={fraction} /> : formatTokens(used)}
         </Button>
@@ -144,7 +149,9 @@ export function UsageMeter({ usage, contextWindow, planUsage }: UsageMeterProps)
           {hasUsage && (
             <>
               <div className="tw-flex tw-items-center tw-justify-between tw-gap-3 tw-text-ui-smaller">
-                <span className="tw-whitespace-nowrap tw-text-muted">Context window</span>
+                <span className="tw-whitespace-nowrap tw-text-muted">
+                  {t("Context window", "上下文窗口")}
+                </span>
                 <span
                   className={cn(
                     "tw-whitespace-nowrap tw-tabular-nums",

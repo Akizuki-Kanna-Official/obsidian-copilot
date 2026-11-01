@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import { AgentTrail } from "@/agentMode/ui/AgentTrailView";
 import { AskUserQuestionCard } from "@/agentMode/ui/AskUserQuestionCard";
 import { FanoutMessageCard } from "@/agentMode/ui/FanoutMessageCard";
@@ -271,7 +272,7 @@ const AgentChatMessages = memo(
         {pendingActionId ? (
           <div
             role="region"
-            aria-label="Pending agent actions"
+            aria-label={t("Pending agent actions", "待处理的智能体操作")}
             data-testid="agent-action-rail"
             // A verbose question can exceed a short chat pane. Bound and scroll
             // the rail so its resolution controls remain reachable.

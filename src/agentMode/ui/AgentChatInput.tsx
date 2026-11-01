@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import type { AgentChatBackend } from "@/agentMode/session/AgentChatBackend";
 import { expandCustomCommandPrefix } from "@/agentMode/session/expandCustomCommandPrefix";
 import { resolveActiveNoteToken } from "@/agentMode/session/resolveActiveNoteToken";
@@ -295,7 +296,7 @@ export const AgentChatInput = memo(function AgentChatInput({
         await turn;
       } catch (error) {
         logError("Error sending agent message:", error);
-        new Notice("Failed to send message. Please try again.");
+        new Notice(t("Failed to send message. Please try again.", "发送消息失败，请重试。"));
       } finally {
         setLoading(false);
       }
@@ -311,7 +312,7 @@ export const AgentChatInput = memo(function AgentChatInput({
         if (item.rawInput) updateUserMessageHistory(item.rawInput);
       } catch (error) {
         logError("Error sending agent message:", error);
-        new Notice("Failed to send message. Please try again.");
+        new Notice(t("Failed to send message. Please try again.", "发送消息失败，请重试。"));
         restoreToComposer([item]);
       }
     },
@@ -386,7 +387,12 @@ export const AgentChatInput = memo(function AgentChatInput({
       // Failed image reads must not turn an image-only message into an empty request.
       // https://github.com/logancyang/obsidian-copilot/issues/2850
       if (images.length > 0 && !resolvedText && content.length === 0) {
-        new Notice("Could not read the attached images. Please attach them again.");
+        new Notice(
+          t(
+            "Could not read the attached images. Please attach them again.",
+            "无法读取附加的图片，请重新添加。"
+          )
+        );
         return;
       }
 
@@ -496,7 +502,10 @@ export const AgentChatInput = memo(function AgentChatInput({
           ref={chatInputRef}
           key={chatInputId}
           isAgentMode
-          placeholder="Ask anything • @ to add context • / for commands"
+          placeholder={t(
+            "Ask anything • @ to add context • / for commands",
+            "随时提问 · @ 添加上下文 · / 使用命令"
+          )}
           inputMessage={inputMessage}
           setInputMessage={setInputMessage}
           handleSendMessage={safeAsyncHandler((meta) => handleSendMessage(meta?.webTabs))}

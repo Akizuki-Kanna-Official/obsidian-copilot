@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import type { ChatBookmarkState } from "@/agentMode/ui/hooks/useAgentHistoryControls";
 import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
 import { HelpTooltip } from "@/components/ui/help-tooltip";
@@ -36,14 +37,17 @@ export function ChatBookmarkMenuItem({
         onSelect={() => openBookmarksPluginSettings(app)}
       >
         <Bookmark />
-        Add to bookmarks
+        {t("Add to bookmarks", "添加到书签")}
         <span className="tw-ml-auto">
           <HelpTooltip
             side="bottom"
             contentClassName="tw-max-w-60"
             content="Turn on the Bookmarks core plugin to bookmark chats. Select to open it in Settings."
           >
-            <Info className="tw-size-3.5" aria-label="Bookmarks is turned off" />
+            <Info
+              className="tw-size-3.5"
+              aria-label={t("Bookmarks is turned off", "书签功能未开启")}
+            />
           </HelpTooltip>
         </span>
       </DropdownMenuItem>
@@ -54,7 +58,9 @@ export function ChatBookmarkMenuItem({
   return (
     <DropdownMenuItem onSelect={() => onSetBookmarked(!bookmarked)}>
       {bookmarked ? <BookmarkMinus /> : <Bookmark />}
-      {bookmarked ? "Remove from bookmarks" : "Add to bookmarks"}
+      {bookmarked
+        ? t("Remove from bookmarks", "从书签中移除")
+        : t("Add to bookmarks", "添加到书签")}
     </DropdownMenuItem>
   );
 }

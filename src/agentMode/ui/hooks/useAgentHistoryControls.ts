@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import { backendRegistry } from "@/agentMode/backends/registry";
 import { formatChatDeleteNotice } from "@/lib/chatDeleteText";
 import type { AgentSessionManager } from "@/agentMode/session/AgentSessionManager";
@@ -210,7 +211,10 @@ export function useAgentHistoryControls(
     async (id: string, title: string, bookmarked: boolean) => {
       await runWithNotice(bookmarked ? "bookmark chat" : "remove bookmark", async () => {
         const bookmarks = getUrlBookmarks(plugin.app);
-        if (!bookmarks) throw new Error("The Bookmarks core plugin is not enabled.");
+        if (!bookmarks)
+          throw new Error(
+            t("The Bookmarks core plugin is not enabled.", "尚未启用核心插件“书签”。")
+          );
         // A bookmark opens the chat through its link, which only a saved note has.
         // https://github.com/Brevilabs/obsidian-copilot-private/issues/694
         const notePath = bookmarked ? await manager.ensureChatNote(id) : id;
@@ -218,10 +222,10 @@ export function useAgentHistoryControls(
         if (!link) throw new Error(`No chat link for "${notePath}".`);
         if (bookmarked) {
           bookmarks.add(link, title);
-          new Notice("Bookmarked.");
+          new Notice(t("Bookmarked.", "已添加到书签。"));
         } else {
           bookmarks.remove(link);
-          new Notice("Removed from bookmarks.");
+          new Notice(t("Removed from bookmarks.", "已从书签中移除。"));
         }
         replaceChatRowId(id, notePath);
       });
@@ -243,7 +247,8 @@ export function useAgentHistoryControls(
         const file = path ? plugin.app.vault.getAbstractFileByPath(path) : null;
         // A bookmark opens the chat through its note's link, so a chat that failed to save gets none.
         // https://github.com/Brevilabs/obsidian-copilot-private/issues/702
-        if (!(file instanceof TFile)) throw new Error("The active chat has no saved note.");
+        if (!(file instanceof TFile))
+          throw new Error(t("The active chat has no saved note.", "当前聊天尚未保存为笔记。"));
         // A renamed tab keeps its title in the session label, which the note's topic and filename miss.
         // https://github.com/Brevilabs/obsidian-copilot-private/issues/702
         await setChatBookmarked(file.path, label ?? extractChatTitle(plugin.app, file), bookmarked);

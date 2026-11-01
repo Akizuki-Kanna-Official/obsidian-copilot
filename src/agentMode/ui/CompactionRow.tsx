@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import type { CompactionPart } from "@/agentMode/ui/agentTrail";
 import { AgentTurnDurationIndicator } from "@/agentMode/ui/AgentTurnDurationIndicator";
 import { cn } from "@/lib/utils";
@@ -9,8 +10,8 @@ interface CompactionRowProps {
 }
 
 const RUNNING_LABEL = {
-  manual: "Compacting conversation…",
-  auto: "Context is full, compacting…",
+  manual: t("Compacting conversation…", "正在压缩对话…"),
+  auto: t("Context is full, compacting…", "上下文已满，正在压缩…"),
 } as const;
 
 function formatTokens(count: number): string {
@@ -20,7 +21,10 @@ function formatTokens(count: number): string {
 // Not every backend reports both token counts, and an automatic compaction says so because the user didn't ask for it.
 // https://github.com/Brevilabs/obsidian-copilot-private/issues/633
 function completedText(part: CompactionPart): string {
-  const label = part.trigger === "auto" ? "Context compacted automatically" : "Context compacted";
+  const label =
+    part.trigger === "auto"
+      ? t("Context compacted automatically", "上下文已自动压缩")
+      : t("Context compacted", "上下文已压缩");
   return part.preTokens !== undefined && part.postTokens !== undefined
     ? `${label} · ${formatTokens(part.preTokens)} → ${formatTokens(part.postTokens)} tokens`
     : label;
@@ -71,12 +75,16 @@ export const CompactionRow: React.FC<CompactionRowProps> = ({ part }) => {
           className="tw-flex tw-items-center tw-gap-1.5 tw-py-1 tw-pl-1 tw-text-ui-small tw-text-muted"
         >
           <CompactionIcon className="tw-text-warning" />
-          <span>{part.error ? `Couldn't compact: ${part.error}` : "Couldn't compact"}</span>
+          <span>
+            {part.error
+              ? t(`Couldn't compact: ${part.error}`, `无法压缩：${part.error}`)
+              : t("Couldn't compact", "无法压缩")}
+          </span>
         </div>
       );
     case "cancelled":
-      return <StatusLine>Compaction cancelled</StatusLine>;
+      return <StatusLine>{t("Compaction cancelled", "压缩已取消")}</StatusLine>;
     case "skipped":
-      return <StatusLine>Nothing to compact yet</StatusLine>;
+      return <StatusLine>{t("Nothing to compact yet", "暂无可压缩的内容")}</StatusLine>;
   }
 };

@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import { ProjectConfig } from "@/aiParams";
 import { AddProjectModal } from "@/components/modals/project/AddProjectModal";
 import { ConfirmModal } from "@/components/modals/ConfirmModal";
@@ -61,13 +62,18 @@ export const AgentProjectRowActions = memo(
             onDeleted?.(project.id);
           } catch (e) {
             logError("[AgentProjectRowActions] deleteProject failed", e);
-            new Notice(`Failed to delete project "${project.name}".`);
+            new Notice(
+              t(`Failed to delete project "${project.name}".`, `删除项目“${project.name}”失败。`)
+            );
           }
         },
-        `Delete project "${project.name}"? This removes its configuration; your notes stay in the vault.`,
-        "Delete project",
-        "Delete",
-        "Cancel"
+        t(
+          `Delete project "${project.name}"? This removes its configuration; your notes stay in the vault.`,
+          `删除项目“${project.name}”吗？此操作将移除项目配置，但笔记仍保留在仓库中。`
+        ),
+        t("Delete project", "删除项目"),
+        t("Delete", "删除"),
+        t("Cancel", "取消")
       ).open();
     };
 
@@ -76,8 +82,8 @@ export const AgentProjectRowActions = memo(
         <Button
           size="sm"
           variant="ghost"
-          aria-label={`Reveal ${project.name} in vault`}
-          title="Reveal in vault"
+          aria-label={t(`Reveal ${project.name} in vault`, `在仓库中显示 ${project.name}`)}
+          title={t("Reveal in vault", "在仓库中显示")}
           className="tw-size-5 tw-p-0"
           onClick={(e) => {
             e.stopPropagation();
@@ -89,8 +95,8 @@ export const AgentProjectRowActions = memo(
         <Button
           size="sm"
           variant="ghost"
-          aria-label={`Edit project ${project.name}`}
-          title="Edit project"
+          aria-label={t(`Edit project ${project.name}`, `编辑项目 ${project.name}`)}
+          title={t("Edit project", "编辑项目")}
           className="tw-size-5 tw-p-0"
           onClick={(e) => {
             e.stopPropagation();
@@ -102,8 +108,8 @@ export const AgentProjectRowActions = memo(
         <Button
           size="sm"
           variant="ghost"
-          aria-label={`Delete project ${project.name}`}
-          title="Delete"
+          aria-label={t(`Delete project ${project.name}`, `删除项目 ${project.name}`)}
+          title={t("Delete", "删除")}
           className="tw-size-5 tw-p-0 tw-text-error hover:tw-text-error"
           onClick={(e) => {
             e.stopPropagation();

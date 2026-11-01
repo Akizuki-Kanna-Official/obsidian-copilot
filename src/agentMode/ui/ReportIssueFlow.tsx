@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Textarea } from "@/components/ui/textarea";
@@ -150,24 +151,31 @@ function DetailsPage({
   return (
     <>
       {error && (
-        <Callout tone="error" title="Could not prepare the report">
+        <Callout tone="error" title={t("Could not prepare the report", "无法准备报告")}>
           {error}
         </Callout>
       )}
 
       <div className="tw-flex tw-flex-col tw-gap-1">
-        <span className="tw-text-sm tw-font-medium">What went wrong?</span>
+        <span className="tw-text-sm tw-font-medium">
+          {t("What went wrong?", "遇到了什么问题？")}
+        </span>
         <Textarea
           autoFocus
           value={note}
           onChange={(e) => onNoteChange(e.target.value)}
-          placeholder="Describe what you were doing and what happened…"
+          placeholder={t(
+            "Describe what you were doing and what happened…",
+            "请描述当时的操作和遇到的问题…"
+          )}
           className="tw-min-h-24"
         />
       </div>
 
       <div className="tw-flex tw-flex-col tw-gap-2">
-        <span className="tw-text-sm tw-font-medium">Attachments — bundled into one zip</span>
+        <span className="tw-text-sm tw-font-medium">
+          {t("Attachments — bundled into one zip", "附件（打包为一个 ZIP 文件）")}
+        </span>
         {sources.map((source) => (
           <label key={source.id} className="tw-flex tw-items-start tw-gap-2 tw-text-sm">
             <Checkbox
@@ -185,18 +193,19 @@ function DetailsPage({
         ))}
       </div>
 
-      <Callout tone="warning" title="Before you upload">
-        Copilot redacts common sensitive data from diagnostic text on your device before upload.
-        Review it before sending; screenshots are not automatically redacted. Reports are private
-        and deleted after 60 days.
+      <Callout tone="warning" title={t("Before you upload", "上传前请注意")}>
+        {t(
+          "Copilot redacts common sensitive data from diagnostic text on your device before upload. Review it before sending; screenshots are not automatically redacted. Reports are private and deleted after 60 days.",
+          "Copilot 会在上传前，在你的设备上对诊断文本中的常见敏感信息进行脱敏。请在发送前检查内容；截图不会自动脱敏。报告仅私下可见，并会在 60 天后删除。"
+        )}
       </Callout>
 
       <div className="tw-flex tw-justify-end tw-gap-2">
         <Button variant="secondary" onClick={onCancel}>
-          Cancel
+          {t("Cancel", "取消")}
         </Button>
         <Button variant="default" onClick={onSubmit}>
-          Prepare report
+          {t("Prepare report", "准备报告")}
         </Button>
       </div>
     </>
@@ -278,7 +287,7 @@ function ReviewPage({
   return (
     <>
       <div className="tw-flex tw-flex-col tw-gap-2">
-        <span className="tw-text-sm tw-font-medium">Report contents</span>
+        <span className="tw-text-sm tw-font-medium">{t("Report contents", "报告内容")}</span>
         {report ? (
           <ul className="tw-m-0 tw-flex tw-list-none tw-flex-col tw-gap-1 tw-p-0 tw-text-sm">
             {report.attachments.map((attachment) => (
@@ -300,16 +309,23 @@ function ReviewPage({
           </ul>
         ) : (
           <span role="status" className="tw-text-sm tw-text-muted">
-            Preparing report…
+            {t("Preparing report…", "正在准备报告…")}
           </span>
         )}
       </div>
 
       {failure !== null && (
-        <Callout tone="error" title="Could not upload the report">
-          {failure} The zip is still on your machine; retrying sends the same report and stores it
-          at most once. Or use <span className="tw-font-medium">Open issue anyway</span> — that
-          issue carries no report ID, so you would have to attach the zip to it yourself.
+        <Callout tone="error" title={t("Could not upload the report", "无法上传报告")}>
+          {failure}
+          {t(
+            " The zip is still on your machine; retrying sends the same report and stores it at most once. Or use ",
+            "ZIP 文件仍保留在你的设备上。重试会发送同一份报告，并且最多只保存一次。你也可以选择"
+          )}{" "}
+          <span className="tw-font-medium">{t("Open issue anyway", "仍然打开问题页面")}</span>
+          {t(
+            " — that issue carries no report ID, so you would have to attach the zip to it yourself. ",
+            "——这样创建的问题不包含报告编号，需要你手动附上 ZIP 文件。"
+          )}
         </Callout>
       )}
 
@@ -319,26 +335,26 @@ function ReviewPage({
           role="status"
         >
           <Loader2 className="tw-size-4 tw-animate-spin" aria-hidden="true" />
-          Uploading — this can&apos;t be canceled…
+          {t("Uploading — this can't be canceled…", "正在上传，无法取消…")}
         </span>
       ) : (
         <div className="tw-flex tw-flex-wrap tw-justify-end tw-gap-2">
           <Button variant="secondary" onClick={onCancel}>
-            Cancel
+            {t("Cancel", "取消")}
           </Button>
           <Button
             variant="secondary"
             disabled={report === null}
             onClick={() => report && revealFile(report.zipPath)}
           >
-            Show zip
+            {t("Show zip", "显示 ZIP 文件")}
           </Button>
           {failure !== null && (
             <Button
               variant="secondary"
               onClick={() => report && openIssuePage(report.manualIssueUrl)}
             >
-              Open issue anyway
+              {t("Open issue anyway", "仍然打开问题页面")}
             </Button>
           )}
           <Button
@@ -346,7 +362,9 @@ function ReviewPage({
             disabled={report === null}
             onClick={() => report && void runUpload(report)}
           >
-            {failure !== null ? "Retry upload" : "Upload & open issue"}
+            {failure !== null
+              ? t("Retry upload", "重新上传")
+              : t("Upload & open issue", "上传并打开问题页面")}
           </Button>
         </div>
       )}

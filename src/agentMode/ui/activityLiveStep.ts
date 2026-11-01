@@ -1,7 +1,8 @@
+import { t } from "@/lib/i18n";
 import type { ActivityMember } from "@/agentMode/ui/activityGroups";
 import { lookupToolSummary, type ToolSummaryContext } from "@/agentMode/ui/toolSummaries";
 
-const REASONING_LABEL = "Reasoning";
+const REASONING_LABEL = t("Reasoning", "推理过程");
 
 export function isReasoningActive(members: ActivityMember[], atLiveEdge: boolean): boolean {
   const trailingMember = members[members.length - 1];

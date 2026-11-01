@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import type { EffortOption } from "@/agentMode/session/types";
 import { SettingItem } from "@/components/ui/setting-item";
 import React from "react";
@@ -23,7 +24,7 @@ export function AgentDefaultEffortSetting({
   return (
     <SettingItem
       type="select"
-      title="Default effort"
+      title={t("Default effort", "默认推理强度")}
       value={supported ? (value ?? "") : ""}
       onChange={(nextValue) => onChange(nextValue === "" ? null : nextValue)}
       options={selectOptions}

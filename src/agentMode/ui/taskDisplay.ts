@@ -1,14 +1,15 @@
+import { t } from "@/lib/i18n";
 import type { AgentTask } from "@/agentMode/session/AgentSession";
 import type { AgentToolStatus, PermissionPrompt } from "@/agentMode/session/types";
 
 export type TaskDisplayStatus = AgentTask["status"] | "needs_approval";
 
 const STATUS_LABELS: Record<TaskDisplayStatus, string> = {
-  running: "Running",
-  needs_approval: "Needs approval",
-  completed: "Completed",
-  failed: "Failed",
-  stopped: "Stopped",
+  running: t("Running", "正在运行"),
+  needs_approval: t("Needs approval", "需要批准"),
+  completed: t("Completed", "已完成"),
+  failed: t("Failed", "失败"),
+  stopped: t("Stopped", "已停止"),
 };
 
 const BADGE_STATUS: Record<TaskDisplayStatus, AgentToolStatus> = {
@@ -20,7 +21,7 @@ const BADGE_STATUS: Record<TaskDisplayStatus, AgentToolStatus> = {
 };
 
 export function taskTitle(task: AgentTask): string {
-  return task.description || task.subagentType || task.command || "Task";
+  return task.description || task.subagentType || task.command || t("Task", "任务");
 }
 
 // A subagent is listed from its launch, before its description has streamed in. https://github.com/Brevilabs/obsidian-copilot-private/issues/749
@@ -30,8 +31,8 @@ export function taskLabel(task: AgentTask): string {
 }
 
 export function taskKindLabel(task: AgentTask): string {
-  if (task.kind === "command") return "Command";
-  return task.subagentType ?? "Subagent";
+  if (task.kind === "command") return t("Command", "命令");
+  return task.subagentType ?? t("Subagent", "子智能体");
 }
 
 export function taskStatusLabel(status: TaskDisplayStatus): string {

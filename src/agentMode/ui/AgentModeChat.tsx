@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import { AgentStatusCard } from "@/agentMode/ui/AgentStatusCard";
 import { useBackendAuthState } from "@/agentMode/session/useBackendAuthState";
 import { AgentChatControls } from "@/agentMode/ui/AgentChatControls";
@@ -93,7 +94,7 @@ export const AgentModeChat: React.FC<Props> = ({
       <div className="tw-flex tw-size-full tw-flex-col tw-overflow-hidden">
         <div className="tw-flex-1" />
         <AgentStatusCard
-          summary={`Updating ${descriptor.displayName}…`}
+          summary={t(`Updating ${descriptor.displayName}…`, `正在更新 ${descriptor.displayName}…`)}
           message={managedInstall.label}
           progress={{ percent: managedInstall.percent }}
         />
@@ -125,7 +126,9 @@ export const AgentModeChat: React.FC<Props> = ({
   if (!preloadReady || awaitingAuth) {
     return (
       <div className="tw-flex tw-size-full tw-items-center tw-justify-center tw-text-muted">
-        {awaitingAuth ? "Checking agent sign-in…" : "Loading agent models…"}
+        {awaitingAuth
+          ? t("Checking agent sign-in…", "正在检查智能体登录状态…")
+          : t("Loading agent models…", "正在加载智能体模型…")}
       </div>
     );
   }

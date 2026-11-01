@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import { resolveEffort } from "@/lib/model-effort";
 import { SettingItem } from "@/components/ui/setting-item";
 import { logError } from "@/logger";
@@ -19,8 +20,8 @@ interface Props {
 }
 
 const AGENT_DEFAULT_VALUE = "__agent_default__";
-const AGENT_DEFAULT_LABEL = "Agent default";
-const EFFORT_NOT_SUPPORTED_LABEL = "Not supported";
+const AGENT_DEFAULT_LABEL = t("Agent default", "智能体默认值");
+const EFFORT_NOT_SUPPORTED_LABEL = t("Not supported", "不支持");
 
 export const AgentDefaultModelSetting: React.FC<Props> = ({ descriptor, manager }) => {
   const subscribe = useManagerSubscribe(manager);
@@ -84,8 +85,11 @@ export const AgentDefaultModelSetting: React.FC<Props> = ({ descriptor, manager 
     <>
       <SettingItem
         type="select"
-        title="Default model"
-        description="Used for new chats and multi-agent answers on this agent. Open chats switch on their next turn."
+        title={t("Default model", "默认模型")}
+        description={t(
+          "Used for new chats and multi-agent answers on this agent. Open chats switch on their next turn.",
+          "用于此智能体的新聊天和多智能体回答。已打开的聊天将在下一轮切换。"
+        )}
         value={selectedBaseId}
         onChange={onModelChange}
         options={modelOptions}

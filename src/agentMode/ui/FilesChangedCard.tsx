@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import React from "react";
 import { FileDiff, FileText } from "lucide-react";
 import type { TurnFileChange } from "@/agentMode/session/types";
@@ -20,7 +21,7 @@ export const FilesChangedCard: React.FC<FilesChangedCardProps> = ({ changes, onO
         <div className="copilot-divider-b tw-flex tw-items-center tw-gap-1.5 tw-px-3 tw-py-2">
           <FileDiff className="tw-size-3.5 tw-shrink-0 tw-text-muted" />
           <span className="tw-min-w-0 tw-flex-1 tw-truncate tw-text-sm tw-font-medium">
-            Files changed ({rows.length})
+            {t(`Files changed (${rows.length})`, `已更改的文件（${rows.length}）`)}
           </span>
           <FileChangeCounts additions={additions} deletions={deletions} />
         </div>

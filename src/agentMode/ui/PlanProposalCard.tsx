@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import { Button } from "@/components/ui/button";
 import { logWarn } from "@/logger";
 import type { AgentChatBackend } from "@/agentMode/session/AgentChatBackend";
@@ -12,7 +13,7 @@ import { App } from "obsidian";
 import React, { useEffect, useState } from "react";
 import { safeAsyncHandler } from "@/utils/safeAsyncHandler";
 
-const FEEDBACK_PLACEHOLDER = "Give feedback to redirect the plan…";
+const FEEDBACK_PLACEHOLDER = t("Give feedback to redirect the plan…", "提供反馈，调整计划方向…");
 
 interface PlanProposalCardProps {
   plan: CurrentPlan;
@@ -69,7 +70,7 @@ export const PlanProposalCard: React.FC<PlanProposalCardProps> = ({ plan, app, c
         <div className="tw-flex tw-min-w-0 tw-items-center tw-gap-2">
           <ClipboardList className="tw-size-4 tw-shrink-0 tw-text-accent" />
           <div className="tw-truncate tw-text-sm tw-font-medium">
-            {plan.title || "Plan proposed"}
+            {plan.title || t("Plan proposed", "已提出计划")}
           </div>
         </div>
         <DecisionChip decision={plan.decision} />
@@ -82,7 +83,7 @@ export const PlanProposalCard: React.FC<PlanProposalCardProps> = ({ plan, app, c
       <div className="copilot-divider-t tw-flex tw-flex-wrap tw-items-center tw-justify-end tw-gap-2 tw-px-3 tw-py-2">
         <Button variant="secondary" size="sm" onClick={safeAsyncHandler(handleOpen)}>
           <FileText className="tw-size-4" />
-          Open
+          {t("Open", "打开")}
         </Button>
         {isPending ? (
           <>
@@ -93,7 +94,7 @@ export const PlanProposalCard: React.FC<PlanProposalCardProps> = ({ plan, app, c
               onClick={safeAsyncHandler(() => decide("reject"))}
             >
               <XIcon className="tw-size-4" />
-              Reject
+              {t("Reject", "拒绝")}
             </Button>
             <Button
               variant="success"
@@ -102,7 +103,7 @@ export const PlanProposalCard: React.FC<PlanProposalCardProps> = ({ plan, app, c
               onClick={safeAsyncHandler(() => decide("approve"))}
             >
               <Check className="tw-size-4" />
-              Approve
+              {t("Approve", "批准")}
             </Button>
           </>
         ) : null}
@@ -131,7 +132,7 @@ export const PlanProposalCard: React.FC<PlanProposalCardProps> = ({ plan, app, c
             onClick={() => void handleFeedbackSubmit()}
           >
             <Send className="tw-size-4" />
-            Send
+            {t("Send", "发送")}
           </Button>
         </div>
       ) : null}
@@ -140,10 +141,13 @@ export const PlanProposalCard: React.FC<PlanProposalCardProps> = ({ plan, app, c
 };
 
 const DECISION_CHIP: Record<PlanProposalDecision, { label: string; cls: string }> = {
-  pending: { label: "Pending", cls: "tw-bg-modifier-message tw-text-muted" },
-  approved: { label: "Approved", cls: "tw-bg-success tw-text-success" },
-  rejected: { label: "Rejected", cls: "tw-bg-error tw-text-error" },
-  rejected_with_feedback: { label: "Feedback sent", cls: "tw-bg-error tw-text-error" },
+  pending: { label: t("Pending", "待处理"), cls: "tw-bg-modifier-message tw-text-muted" },
+  approved: { label: t("Approved", "已批准"), cls: "tw-bg-success tw-text-success" },
+  rejected: { label: t("Rejected", "已拒绝"), cls: "tw-bg-error tw-text-error" },
+  rejected_with_feedback: {
+    label: t("Feedback sent", "反馈已发送"),
+    cls: "tw-bg-error tw-text-error",
+  },
 };
 
 const DecisionChip: React.FC<{ decision: PlanProposalDecision }> = ({ decision }) => {

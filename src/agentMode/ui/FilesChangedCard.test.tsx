@@ -1,3 +1,4 @@
+import * as obsidian from "obsidian";
 import React from "react";
 import { fireEvent, render, screen, within } from "@testing-library/react";
 import { FilesChangedCard } from "@/agentMode/ui/FilesChangedCard";
@@ -26,6 +27,19 @@ function rowNames(): string[] {
 
 describe("FilesChangedCard", () => {
   describe("FilesChangedCard()", () => {
+    it("renders a Chinese count while preserving English file paths and open callbacks", () => {
+      const language = jest.spyOn(obsidian, "getLanguage").mockReturnValue("zh");
+      try {
+        const changes = [change("notes/English title.md"), change("other.md")];
+        const { onOpen } = renderCard(changes);
+        expect(screen.getByText("已更改的文件（2）")).toBeTruthy();
+        fireEvent.click(screen.getByRole("button", { name: /English title\.md/ }));
+        expect(onOpen).toHaveBeenCalledWith(changes[0]);
+      } finally {
+        language.mockRestore();
+      }
+    });
+
     it("titles the card with the file count and the summed additions and deletions", () => {
       renderCard([
         change("notes/a.md", { additions: 30, deletions: 2 }),

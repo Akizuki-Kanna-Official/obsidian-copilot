@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import { backendRegistry } from "@/agentMode/backends/registry";
 import { TruncatedText } from "@/components/TruncatedText";
 import { Button } from "@/components/ui/button";
@@ -94,7 +95,7 @@ function useSessionDisplay(session: AgentSession) {
     label,
     needsAttention: session.getNeedsAttention(),
     descriptor,
-    displayLabel: label ?? descriptor?.displayName ?? "Session",
+    displayLabel: label ?? descriptor?.displayName ?? t("Session", "会话"),
   };
 }
 
@@ -194,13 +195,13 @@ export const AgentTabStrip: React.FC<Props> = ({ manager }) => {
             size="icon"
             onClick={handleNew}
             disabled={isCreating}
-            aria-label="New chat"
+            aria-label={t("New chat", "新聊天")}
             className="tw-my-1 tw-shrink-0"
           >
             <Plus className="tw-size-4" />
           </Button>
         </TooltipTrigger>
-        <TooltipContent>New chat</TooltipContent>
+        <TooltipContent>{t("New chat", "新聊天")}</TooltipContent>
       </Tooltip>
     </div>
   );
@@ -287,8 +288,8 @@ const SessionTab: React.FC<TabProps> = ({
         </div>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="start" className="tw-w-32">
-        <DropdownMenuItem onSelect={onStartRename}>Rename</DropdownMenuItem>
-        <DropdownMenuItem onSelect={onClose}>Close</DropdownMenuItem>
+        <DropdownMenuItem onSelect={onStartRename}>{t("Rename", "重命名")}</DropdownMenuItem>
+        <DropdownMenuItem onSelect={onClose}>{t("Close", "关闭")}</DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );
@@ -370,7 +371,7 @@ const BrandIcon: React.FC<BrandIconProps> = ({
         <Button
           variant="ghost2"
           size="icon"
-          aria-label="Close chat"
+          aria-label={t("Close chat", "关闭聊天")}
           onClick={(e) => {
             e.stopPropagation();
             onCloseOnHover();
@@ -410,7 +411,10 @@ const OverflowMenu: React.FC<OverflowMenuProps> = ({ sessions, activeId, onActiv
           variant="ghost2"
           size="icon"
           className="tw-my-1 tw-shrink-0"
-          aria-label={`Show ${sessions.length} more chat${sessions.length === 1 ? "" : "s"}`}
+          aria-label={t(
+            `Show ${sessions.length} more chat${sessions.length === 1 ? "" : "s"}`,
+            `显示另外 ${sessions.length} 个聊天`
+          )}
         >
           <MoreHorizontal className="tw-size-4" />
         </Button>
@@ -463,7 +467,7 @@ const OverflowRow: React.FC<OverflowRowProps> = ({ session, isActive, onActivate
       <Button
         variant="ghost2"
         size="icon"
-        aria-label="Close chat"
+        aria-label={t("Close chat", "关闭聊天")}
         onClick={(e) => {
           e.stopPropagation();
           onClose();

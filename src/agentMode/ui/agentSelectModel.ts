@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import type { BackendDescriptor, BackendId, InstallState } from "@/agentMode/session/types";
 
 export type AgentSelectStatus =
@@ -68,16 +69,16 @@ export function buildAgentSelectRows(
 export function resolveAgentSelectCta(row: AgentSelectRow): AgentSelectCta {
   if (row.status === "checking") {
     return {
-      label: "Checking…",
-      note: `Checking ${row.name} setup…`,
+      label: t("Checking…", "正在检查…"),
+      note: t(`Checking ${row.name} setup…`, `正在检查 ${row.name} 的设置…`),
       action: "wait",
     };
   }
   if (row.status === "installed") {
-    return { label: "Start chat", note: null, action: "start" };
+    return { label: t("Start chat", "开始聊天"), note: null, action: "start" };
   }
   return {
-    label: "Configure",
+    label: t("Configure", "配置"),
     note: row.statusMessage ?? `${row.name} isn't set up on this machine yet.`,
     action: "configure",
   };

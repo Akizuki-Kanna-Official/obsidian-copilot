@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import { TruncatedText } from "@/components/TruncatedText";
 import { Button } from "@/components/ui/button";
 import { ProjectFolderIcon } from "@/components/ui/ProjectFolderIcon";
@@ -26,8 +27,8 @@ export const AgentProjectHeader = memo(
         variant="ghost2"
         size="sm"
         onClick={onExit}
-        aria-label="Leave project"
-        title="Leave project"
+        aria-label={t("Leave project", "退出项目")}
+        title={t("Leave project", "退出项目")}
         className="tw-flex tw-shrink-0 tw-items-center tw-px-1.5 tw-text-muted hover:tw-text-normal"
       >
         <ChevronLeft className="tw-size-4" />
@@ -35,7 +36,7 @@ export const AgentProjectHeader = memo(
 
       {orphaned ? (
         <span className="tw-min-w-0 tw-flex-1 tw-text-ui-small tw-text-muted">
-          This project no longer exists
+          {t("This project no longer exists", "此项目已不存在")}
         </span>
       ) : (
         <>

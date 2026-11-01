@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import { useChatRelevantNotesContext } from "@/agentMode/ui/hooks/useChatRelevantNotesContext";
 import AgentChatMessages from "@/agentMode/ui/AgentChatMessages";
 import { AgentChatControls } from "@/agentMode/ui/AgentChatControls";
@@ -146,13 +147,18 @@ const AgentHomeInternal: React.FC<AgentHomeProps> = ({
     try {
       const result = await manager.saveActiveSession();
       if (result) {
-        new Notice("Chat saved as note.");
+        new Notice(t("Chat saved as note.", "聊天已保存为笔记。"));
       } else {
-        new Notice("Nothing to save yet.");
+        new Notice(t("Nothing to save yet.", "暂无可保存的内容。"));
       }
     } catch (error) {
       logError("[AgentMode] manual save failed", error);
-      new Notice("Failed to save chat as note. Check the Copilot log for details.");
+      new Notice(
+        t(
+          "Failed to save chat as note. Check the Copilot log for details.",
+          "无法将聊天保存为笔记。请查看 Copilot 日志了解详情。"
+        )
+      );
     }
   }, [manager]);
 
@@ -166,7 +172,7 @@ const AgentHomeInternal: React.FC<AgentHomeProps> = ({
         await manager.replaceSessionInPlace(oldId, active.backendId);
       } catch (e) {
         logError("[AgentMode] new chat failed", e);
-        new Notice("Failed to start a new chat. Please try again.");
+        new Notice(t("Failed to start a new chat. Please try again.", "无法开始新聊天，请重试。"));
       }
     })();
   }, [manager]);
@@ -227,7 +233,7 @@ const AgentHomeInternal: React.FC<AgentHomeProps> = ({
       } catch (error) {
         logError("[AgentMode] close chat session failed", error);
         new Notice(
-          `Could not close chat: ${error instanceof Error ? error.message : "Try again."}`
+          `Could not close chat: ${error instanceof Error ? error.message : t("Try again.", "请重试。")}`
         );
       }
     },
@@ -243,7 +249,7 @@ const AgentHomeInternal: React.FC<AgentHomeProps> = ({
   const handleExitProject = useCallback(() => {
     manager.exitProject().catch((e) => {
       logError("[AgentMode] exit project failed", e);
-      new Notice("Failed to leave project. Please try again.");
+      new Notice(t("Failed to leave project. Please try again.", "无法退出项目，请重试。"));
     });
   }, [manager]);
 
@@ -262,7 +268,7 @@ const AgentHomeInternal: React.FC<AgentHomeProps> = ({
     (project: ProjectConfig) => {
       manager.enterProject(project.id).catch((e) => {
         logError("[AgentMode] enter project failed", e);
-        new Notice("Failed to open project. Please try again.");
+        new Notice(t("Failed to open project. Please try again.", "无法打开项目，请重试。"));
       });
     },
     [manager]
@@ -293,7 +299,7 @@ const AgentHomeInternal: React.FC<AgentHomeProps> = ({
   }, []);
 
   useEffect(() => {
-    if (isOrphanedProject) new Notice("This project no longer exists.");
+    if (isOrphanedProject) new Notice(t("This project no longer exists.", "此项目已不存在。"));
   }, [isOrphanedProject]);
 
   const modelPickerOverride = useAgentModelPicker(manager, plugin);
@@ -403,7 +409,7 @@ const AgentHomeInternal: React.FC<AgentHomeProps> = ({
       {
         id: "chats",
         icon: <MessageSquare className="tw-size-4" />,
-        title: "Recent chats",
+        title: t("Recent chats", "最近聊天"),
         renderBody: () => (
           <GlobalRecentChatsSection
             items={chatHistoryItems}
@@ -431,7 +437,7 @@ const AgentHomeInternal: React.FC<AgentHomeProps> = ({
             {
               id: "relevant-notes",
               icon: <FileSearch className="tw-size-4" />,
-              title: "Relevant Notes",
+              title: t("Relevant Notes", "相关笔记"),
               renderBody: () => (
                 <RelevantNotesShelfPanel onPopOut={() => void plugin.activateRelevantNotesView()}>
                   <RelevantNotes
@@ -445,7 +451,7 @@ const AgentHomeInternal: React.FC<AgentHomeProps> = ({
       {
         id: "projects",
         icon: <Folder className="tw-size-4" />,
-        title: "Projects",
+        title: t("Projects", "项目"),
         count: projects.length,
         renderBody: () => (
           <ProjectPickerList
@@ -494,7 +500,7 @@ const AgentHomeInternal: React.FC<AgentHomeProps> = ({
       {
         id: "project-chats",
         icon: <MessageSquare className="tw-size-4" />,
-        title: "Recent chats",
+        title: t("Recent chats", "最近聊天"),
         renderBody: () => (
           <GlobalRecentChatsSection
             items={chatHistoryItems}
@@ -519,7 +525,7 @@ const AgentHomeInternal: React.FC<AgentHomeProps> = ({
       {
         id: "project-context",
         icon: <Files className="tw-size-4" />,
-        title: "Context",
+        title: t("Context", "上下文"),
         count: contextSummary.totalItems,
         renderBody: () => (
           <AgentContextSection app={app} projectId={activeProjectId} popoverContainer={rootEl} />
@@ -598,7 +604,9 @@ const AgentHomeInternal: React.FC<AgentHomeProps> = ({
     ) : null;
 
   const showProjectHero = isProjectLanding && !isOrphanedProject;
-  const heroText = showProjectHero ? `Chat in ${projectName}` : greeting;
+  const heroText = showProjectHero
+    ? t(`Chat in ${projectName}`, `在 ${projectName} 中聊天`)
+    : greeting;
   const hero = (
     <div className="tw-flex tw-min-w-0 tw-items-center tw-justify-center tw-gap-3">
       <CopilotBrandIcon className="tw-size-6 tw-shrink-0 tw-text-normal" />
@@ -678,7 +686,7 @@ const AgentHomeInternal: React.FC<AgentHomeProps> = ({
               />
               {isDragActive && (
                 <div className="tw-pointer-events-none tw-absolute tw-inset-0 tw-z-modal tw-flex tw-items-center tw-justify-center tw-rounded-md tw-border tw-border-dashed tw-bg-primary tw-opacity-80">
-                  <span>Drop files here...</span>
+                  <span>{t("Drop files here...", "将文件拖到此处…")}</span>
                 </div>
               )}
               <div

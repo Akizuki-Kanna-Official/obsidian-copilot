@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import type { ProjectConfig } from "@/aiParams";
 import { logWarn } from "@/logger";
 import { ProjectFileManager } from "@/projects/ProjectFileManager";
@@ -50,7 +51,7 @@ async function persistInclusions(
 ): Promise<number> {
   const record = getCachedProjectRecordById(projectId);
   if (!record) {
-    new Notice("Project not found — could not add to context");
+    new Notice(t("Project not found — could not add to context", "未找到项目，无法添加到上下文"));
     return 0;
   }
 
@@ -158,7 +159,12 @@ export function usePersistentContextDrop(
       const files = stringItems.length > 0 ? await collectDroppedFiles(app, stringItems) : [];
       if (files.length === 0) {
         if (hasExternalFiles) {
-          new Notice("Only vault files or folders can be added to project context");
+          new Notice(
+            t(
+              "Only vault files or folders can be added to project context",
+              "只能将仓库中的文件或文件夹添加到项目上下文"
+            )
+          );
         }
         return;
       }
@@ -166,13 +172,13 @@ export function usePersistentContextDrop(
       try {
         const added = await persistInclusions(app, projectId, files);
         if (added > 0) {
-          new Notice("Added to project context");
+          new Notice(t("Added to project context", "已添加到项目上下文"));
         } else {
-          new Notice("Already in project context");
+          new Notice(t("Already in project context", "已在项目上下文中"));
         }
       } catch (err) {
         logWarn("[project-context] failed to add dropped inclusion", err);
-        new Notice("Could not add to project context");
+        new Notice(t("Could not add to project context", "无法添加到项目上下文"));
       }
     };
 

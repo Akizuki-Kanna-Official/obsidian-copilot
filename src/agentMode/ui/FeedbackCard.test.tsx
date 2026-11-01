@@ -1,3 +1,4 @@
+import * as obsidian from "obsidian";
 import { fireEvent, render, screen } from "@testing-library/react";
 import React from "react";
 import { FeedbackCard, findFeedbackCardIndex } from "./FeedbackCard";
@@ -63,6 +64,17 @@ describe("FeedbackCard", () => {
   });
 
   describe("FeedbackCard()", () => {
+    it("translates the feedback label without translating the user's quoted words", () => {
+      const language = jest.spyOn(obsidian, "getLanguage").mockReturnValue("zh");
+      try {
+        renderCard();
+        expect(screen.getByText(`你的反馈：“${OPEN_OFFER.draft.userSaid}”`)).toBeTruthy();
+        expect(screen.getByText(OPEN_OFFER.draft.title)).toBeTruthy();
+      } finally {
+        language.mockRestore();
+      }
+    });
+
     it("shows the drafted title and the user's own words with review, dismiss and opt-out actions", () => {
       renderCard();
 

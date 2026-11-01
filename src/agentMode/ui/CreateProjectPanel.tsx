@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import { AgentProjectCreateForm } from "@/agentMode/ui/AgentProjectCreateForm";
 import { computeVerticalPlacement } from "@/utils/panelPlacement";
 import * as React from "react";
@@ -83,12 +84,12 @@ export function CreateProjectPanel({
     <div
       ref={panelRef}
       role="dialog"
-      aria-label="New project"
+      aria-label={t("New project", "新项目")}
       className="tw-fixed tw-z-popover tw-w-[260px] tw-rounded-md tw-border tw-border-solid tw-border-border tw-bg-primary tw-p-3 tw-shadow-lg"
       style={{ top: position.top, left: position.left }}
     >
       <AgentProjectCreateForm
-        title="New project"
+        title={t("New project", "新项目")}
         subtitle="Create a new project in your vault"
         onSave={onSave}
         onCancel={onClose}

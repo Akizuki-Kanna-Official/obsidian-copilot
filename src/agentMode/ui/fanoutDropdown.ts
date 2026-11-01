@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import { backendRegistry } from "@/agentMode/backends/registry";
 import {
   isDirectAnswerTurn,
@@ -63,7 +64,7 @@ export function buildFanoutOptions(turn: FanoutTurn): FanoutOption[] {
   const backendIds = Object.keys(turn.answers);
   const options: FanoutOption[] = isDirectAnswerTurn(turn)
     ? []
-    : [{ value: FANOUT_SUMMARY_OPTION, label: "Summary" }];
+    : [{ value: FANOUT_SUMMARY_OPTION, label: t("Summary", "摘要") }];
   for (const backendId of backendIds) {
     const answer = turn.answers[backendId];
     const { displayName, Icon } = brandFor(backendId);

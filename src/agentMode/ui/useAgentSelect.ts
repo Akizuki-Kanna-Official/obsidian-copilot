@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import { useBackendAuthState } from "@/agentMode/session/useBackendAuthState";
 import {
   backendDisplayOrder,
@@ -74,8 +75,8 @@ export function useAgentSelect(
     if (resolved.action === "start" && isStarting) {
       return {
         action: "wait",
-        label: "Starting…",
-        note: "Wait for the current agent to finish starting.",
+        label: t("Starting…", "正在启动…"),
+        note: t("Wait for the current agent to finish starting.", "请等待当前智能体启动完成。"),
       };
     }
     return resolved;

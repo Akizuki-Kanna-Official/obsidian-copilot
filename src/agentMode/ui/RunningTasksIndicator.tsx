@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import type { AgentTask } from "@/agentMode/session/AgentSession";
 import { lastOutputLine } from "@/agentMode/session/taskOutputTail";
 import type { PermissionPrompt } from "@/agentMode/session/types";
@@ -13,7 +14,10 @@ import { Bot, Loader2, Square, Terminal } from "lucide-react";
 import React, { useRef, useState } from "react";
 
 const ROW_OUTPUT_BYTES = 4096;
-export const STOP_UNAVAILABLE_UNTIL_STARTED = "Can stop once the task starts";
+export const STOP_UNAVAILABLE_UNTIL_STARTED = t(
+  "Can stop once the task starts",
+  "任务开始后即可停止"
+);
 const HOVER_CLOSE_MS = 150;
 
 interface RunningTasksIndicatorProps {
@@ -66,7 +70,7 @@ export const RunningTasksIndicator: React.FC<RunningTasksIndicatorProps> = ({
           onPointerLeave={hideSoon}
         >
           <Loader2 className="tw-size-3 tw-animate-spin tw-text-loading" />
-          {pluralize(running.length, "task")} running
+          {t(`${pluralize(running.length, "task")} running`, `${running.length} 个任务正在运行`)}
         </Button>
       </PopoverTrigger>
       <PopoverContent
@@ -116,7 +120,7 @@ const StopTaskButton: React.FC<{
             "tw-mt-2 tw-shrink-0 tw-p-1 tw-text-muted",
             disabled ? "tw-cursor-not-allowed tw-opacity-50" : "hover:tw-text-error"
           )}
-          aria-label="Stop task"
+          aria-label={t("Stop task", "停止任务")}
           aria-disabled={disabled || undefined}
           onClick={() => {
             if (!disabled) onStopTask(taskId);
@@ -165,7 +169,7 @@ const CommandOutputLine: React.FC<{ outputFile: string | undefined }> = ({ outpu
   const line = lastOutputLine(output.text);
   return (
     <span className="tw-truncate tw-pl-5 tw-font-mono tw-text-xs tw-text-muted">
-      {line || "No output yet"}
+      {line || t("No output yet", "暂无输出")}
     </span>
   );
 };

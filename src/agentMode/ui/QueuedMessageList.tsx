@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import type { QueuedAgentMessage } from "@/agentMode/session/AgentInputDraftStore";
 import type { QueuedPrompt } from "@/agentMode/session/types";
 import { Button } from "@/components/ui/button";
@@ -40,8 +41,8 @@ const QueuedMessageRow: React.FC<QueuedMessageRowProps> = ({ message, children }
   const label =
     message.text ||
     (message.promptContent?.some((block) => block.type === "image")
-      ? "Image attachment"
-      : "Empty message");
+      ? t("Image attachment", "图片附件")
+      : t("Empty message", "空消息"));
   return (
     <div
       className="tw-flex tw-min-w-0 tw-items-center tw-gap-2 tw-rounded-md tw-bg-secondary-alt tw-px-2 tw-py-1 tw-text-ui-smaller"
@@ -76,7 +77,7 @@ export const QueuedMessageList: React.FC<QueuedMessageListProps> = ({
       {delivering.length > 0 && (
         <div className="tw-flex tw-min-w-0 tw-items-center tw-gap-2">
           <div className="tw-min-w-0 tw-flex-1 tw-truncate tw-px-1 tw-text-ui-smaller tw-text-muted">
-            The agent reads these at its next step
+            {t("The agent reads these at its next step", "智能体将在下一步读取这些消息")}
           </div>
           {/* Interrupting hands Claude every waiting message at once, so Send now belongs to the section, not to a row. https://github.com/Brevilabs/obsidian-copilot-private/issues/789 */}
           {onSendNow && (
@@ -84,11 +85,14 @@ export const QueuedMessageList: React.FC<QueuedMessageListProps> = ({
               variant="ghost2"
               size="fit"
               className="tw-shrink-0 tw-whitespace-nowrap tw-text-ui-smaller tw-text-muted"
-              aria-label="Send waiting messages now"
-              title="Stop the agent's current reply and have it read these now"
+              aria-label={t("Send waiting messages now", "立即发送等待中的消息")}
+              title={t(
+                "Stop the agent's current reply and have it read these now",
+                "停止智能体当前的回复，并让它立即读取这些消息"
+              )}
               onClick={onSendNow}
             >
-              Send now
+              {t("Send now", "立即发送")}
             </Button>
           )}
         </div>
@@ -96,14 +100,22 @@ export const QueuedMessageList: React.FC<QueuedMessageListProps> = ({
       {delivering.map((m) => (
         <QueuedMessageRow key={m.id} message={m}>
           {onWithdraw && (
-            <RemoveButton label="Withdraw queued message" onClick={() => onWithdraw(m.id)} />
+            <RemoveButton
+              label={t("Withdraw queued message", "撤回排队消息")}
+              onClick={() => onWithdraw(m.id)}
+            />
           )}
         </QueuedMessageRow>
       ))}
-      {held.length > 0 && <GroupCaption>Sends when the agent finishes</GroupCaption>}
+      {held.length > 0 && (
+        <GroupCaption>{t("Sends when the agent finishes", "智能体完成后发送")}</GroupCaption>
+      )}
       {held.map((m) => (
         <QueuedMessageRow key={m.id} message={m}>
-          <RemoveButton label="Remove queued message" onClick={() => onRemove(m.id)} />
+          <RemoveButton
+            label={t("Remove queued message", "移除排队消息")}
+            onClick={() => onRemove(m.id)}
+          />
         </QueuedMessageRow>
       ))}
     </div>

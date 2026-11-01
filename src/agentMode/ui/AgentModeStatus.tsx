@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import { AgentStatusCard } from "@/agentMode/ui/AgentStatusCard";
 import { useBackendAuthState } from "@/agentMode/session/useBackendAuthState";
 import {
@@ -45,14 +46,20 @@ export const AgentModeStatus: React.FC<Props> = ({ manager, plugin, onInstallCli
   const handleUpgrade = React.useCallback(() => {
     const action = descriptor.managedInstall;
     if (!action || managedInstall.kind === "running") return;
-    new Notice(`Updating ${descriptor.displayName}…`);
+    new Notice(t(`Updating ${descriptor.displayName}…`, `正在更新 ${descriptor.displayName}…`));
     action
       .run(plugin)
-      .then(() => new Notice(`${descriptor.displayName} updated.`))
+      .then(
+        () =>
+          new Notice(t(`${descriptor.displayName} updated.`, `${descriptor.displayName} 已更新。`))
+      )
       .catch((e) => {
         logError("[AgentMode] upgrade failed", e);
         new Notice(
-          `Failed to update ${descriptor.displayName}. Check the Copilot log for details.`
+          t(
+            `Failed to update ${descriptor.displayName}. Check the Copilot log for details.`,
+            `更新 ${descriptor.displayName} 失败。请查看 Copilot 日志了解详情。`
+          )
         );
       });
   }, [descriptor, plugin, managedInstall.kind]);
@@ -60,14 +67,24 @@ export const AgentModeStatus: React.FC<Props> = ({ manager, plugin, onInstallCli
   if (installState.kind === "absent") {
     return (
       <AgentStatusCard
-        message={`${descriptor.displayName} not installed`}
-        action={{ label: `Install ${descriptor.displayName}`, onClick: onInstallClick }}
+        message={t(`${descriptor.displayName} not installed`, `${descriptor.displayName} 尚未安装`)}
+        action={{
+          label: t(`Install ${descriptor.displayName}`, `安装 ${descriptor.displayName}`),
+          onClick: onInstallClick,
+        }}
       />
     );
   }
 
   if (installState.kind === "checking") {
-    return <AgentStatusCard message={`Checking ${descriptor.displayName} version…`} />;
+    return (
+      <AgentStatusCard
+        message={t(
+          `Checking ${descriptor.displayName} version…`,
+          `正在检查 ${descriptor.displayName} 的版本…`
+        )}
+      />
+    );
   }
 
   if (installState.kind === "incompatible") {
@@ -81,10 +98,10 @@ export const AgentModeStatus: React.FC<Props> = ({ manager, plugin, onInstallCli
         // https://github.com/Brevilabs/obsidian-copilot-private/issues/410
         summary={
           upgrading
-            ? `Updating ${descriptor.displayName}…`
+            ? t(`Updating ${descriptor.displayName}…`, `正在更新 ${descriptor.displayName}…`)
             : failed
-              ? `${descriptor.displayName} update failed`
-              : `${descriptor.displayName} update required`
+              ? t(`${descriptor.displayName} update failed`, `${descriptor.displayName} 更新失败`)
+              : t(`${descriptor.displayName} update required`, `${descriptor.displayName} 需要更新`)
         }
         message={
           upgrading ? managedInstall.label : failed ? managedInstall.message : installState.message
@@ -92,11 +109,11 @@ export const AgentModeStatus: React.FC<Props> = ({ manager, plugin, onInstallCli
         action={{
           label: canUpgrade
             ? upgrading
-              ? "Updating…"
+              ? t("Updating…", "正在更新…")
               : failed
-                ? "Retry"
-                : "Update"
-            : `Configure ${descriptor.displayName}`,
+                ? t("Retry", "重试")
+                : t("Update", "更新")
+            : t(`Configure ${descriptor.displayName}`, `配置 ${descriptor.displayName}`),
           disabled: canUpgrade && upgrading,
           onClick: canUpgrade ? handleUpgrade : () => descriptor.openInstallUI(plugin),
         }}
@@ -108,10 +125,10 @@ export const AgentModeStatus: React.FC<Props> = ({ manager, plugin, onInstallCli
     return (
       <AgentStatusCard
         tone="error"
-        summary={`${descriptor.displayName} setup error`}
+        summary={t(`${descriptor.displayName} setup error`, `${descriptor.displayName} 设置出错`)}
         message={installState.message}
         action={{
-          label: `Configure ${descriptor.displayName}`,
+          label: t(`Configure ${descriptor.displayName}`, `配置 ${descriptor.displayName}`),
           onClick: () => descriptor.openInstallUI(plugin),
         }}
       />
@@ -123,15 +140,15 @@ export const AgentModeStatus: React.FC<Props> = ({ manager, plugin, onInstallCli
       <AgentStatusCard
         message={
           auth.signingIn
-            ? `Signing in to ${descriptor.displayName}…`
-            : `${descriptor.displayName} not signed in`
+            ? t(`Signing in to ${descriptor.displayName}…`, `正在登录 ${descriptor.displayName}…`)
+            : t(`${descriptor.displayName} not signed in`, `${descriptor.displayName} 尚未登录`)
         }
         action={
           auth.signingIn
             ? auth.url
-              ? { label: "Open sign-in page", href: auth.url }
+              ? { label: t("Open sign-in page", "打开登录页面"), href: auth.url }
               : undefined
-            : { label: "Sign in", onClick: auth.signIn }
+            : { label: t("Sign in", "登录"), onClick: auth.signIn }
         }
       />
     );
@@ -152,9 +169,12 @@ export const AgentModeStatus: React.FC<Props> = ({ manager, plugin, onInstallCli
     return (
       <AgentStatusCard
         layout="row"
-        message={`${descriptor.displayName} settings changed`}
+        message={t(
+          `${descriptor.displayName} settings changed`,
+          `${descriptor.displayName} 设置已更改`
+        )}
         action={{
-          label: reloading ? "Reloading…" : "Reload",
+          label: reloading ? t("Reloading…", "正在重新加载…") : t("Reload", "重新加载"),
           disabled: reloading,
           onClick: handleReload,
         }}
@@ -177,9 +197,12 @@ export const AgentModeStatus: React.FC<Props> = ({ manager, plugin, onInstallCli
   return (
     <AgentStatusCard
       tone="error"
-      summary={`${descriptor.displayName} ran into a problem`}
+      summary={t(
+        `${descriptor.displayName} ran into a problem`,
+        `${descriptor.displayName} 遇到了问题`
+      )}
       message={bootError}
-      action={{ label: "Retry", onClick: handleRetry }}
+      action={{ label: t("Retry", "重试"), onClick: handleRetry }}
     />
   );
 };

@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import type { AgentTask } from "@/agentMode/session/AgentSession";
 import type { AgentChatMessage, AgentMessagePart } from "@/agentMode/session/types";
 import { AgentTrail } from "@/agentMode/ui/AgentTrailView";
@@ -37,7 +38,7 @@ export const TaskDetailView: React.FC<TaskDetailViewProps> = ({
   const Icon = task.kind === "command" ? Terminal : Bot;
   const subtitle =
     task.kind === "command"
-      ? "Background command"
+      ? t("Background command", "后台命令")
       : [taskKindLabel(task), task.model].filter(Boolean).join(" · ");
 
   return (
@@ -49,7 +50,13 @@ export const TaskDetailView: React.FC<TaskDetailViewProps> = ({
       }}
     >
       <div className="copilot-divider-b tw-flex tw-items-center tw-gap-2 tw-px-2 tw-py-1.5">
-        <Button variant="ghost2" size="icon" aria-label="Back to chat" onClick={onBack} autoFocus>
+        <Button
+          variant="ghost2"
+          size="icon"
+          aria-label={t("Back to chat", "返回聊天")}
+          onClick={onBack}
+          autoFocus
+        >
           <ArrowLeft className="tw-size-4" />
         </Button>
         <Icon className="tw-size-4 tw-shrink-0 tw-text-normal" />
@@ -64,9 +71,9 @@ export const TaskDetailView: React.FC<TaskDetailViewProps> = ({
       {/* Permission requests and questions show only in the main chat, so a task's view must point there. https://github.com/Brevilabs/obsidian-copilot-private/issues/749 */}
       {chatAwaitsAnswer ? (
         <div className="tw-flex tw-items-center tw-justify-between tw-gap-2 tw-bg-callout-warning/10 tw-px-3 tw-py-1 tw-text-xs tw-text-warning">
-          The chat is waiting for your answer.
+          {t("The chat is waiting for your answer.", "聊天正在等待你的回答。")}
           <Button variant="link" size="fit" className="tw-shrink-0" onClick={onBack}>
-            Open chat
+            {t("Open chat", "打开聊天")}
           </Button>
         </div>
       ) : null}
@@ -109,7 +116,9 @@ const SubagentDetail: React.FC<{
           {parts.length > 0 ? (
             <AgentTrail parts={parts} isStreaming={running} app={app} />
           ) : (
-            <div className="tw-text-sm tw-text-muted">{running ? "Starting…" : "No activity"}</div>
+            <div className="tw-text-sm tw-text-muted">
+              {running ? t("Starting…", "正在启动…") : t("No activity", "暂无活动")}
+            </div>
           )}
           {fileChanges.length > 0 ? (
             <FilesChangedCard
@@ -143,13 +152,18 @@ const CommandDetail: React.FC<{ task: AgentTask }> = ({ task }) => {
           </pre>
         ) : null}
         {output.truncated ? (
-          <div className="tw-text-xs tw-text-muted">Showing the last 256 KB of output.</div>
+          <div className="tw-text-xs tw-text-muted">
+            {t("Showing the last 256 KB of output.", "显示最后 256 KB 的输出内容。")}
+          </div>
         ) : null}
         <pre
           data-testid="task-command-output"
           className="tw-m-0 tw-whitespace-pre-wrap tw-break-words tw-font-mono tw-text-xs tw-text-normal"
         >
-          {output.text || (task.status === "running" ? "No output yet" : "No output")}
+          {output.text ||
+            (task.status === "running"
+              ? t("No output yet", "暂无输出")
+              : t("No output", "没有输出"))}
         </pre>
       </div>
     </div>

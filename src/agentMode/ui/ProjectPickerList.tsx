@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import {
   AgentHomeCreateRow,
   AgentHomeListRow,
@@ -106,20 +107,22 @@ export const ProjectPickerList = memo(
           className
         )}
       >
-        {onCreate && <AgentHomeCreateRow label="New project" onClick={onCreate} />}
+        {onCreate && <AgentHomeCreateRow label={t("New project", "新项目")} onClick={onCreate} />}
         {projects.length > 0 && (
           <div className="tw-p-1">
             <SearchBar
               value={searchQuery}
               onChange={setSearchQuery}
-              placeholder="Search projects..."
+              placeholder={t("Search projects...", "搜索项目…")}
               inputClassName="!tw-h-7"
             />
           </div>
         )}
         {filteredProjects.length === 0 ? (
           <div className="tw-flex tw-flex-1 tw-items-center tw-justify-center tw-px-2 tw-py-1.5 tw-text-xs tw-text-muted">
-            {projects.length > 0 ? "No matching projects" : "No projects available"}
+            {projects.length > 0
+              ? t("No matching projects", "没有匹配的项目")
+              : t("No projects available", "暂无项目")}
           </div>
         ) : (
           <AgentHomePreviewList>

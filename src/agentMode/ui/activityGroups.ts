@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import type { RenderNode, ThoughtPart, ToolCallPart } from "@/agentMode/ui/agentTrail";
 import { pluralize } from "@/agentMode/ui/toolSummaries";
 import { miyoSearchRun } from "@/miyo/agentMode/miyoSearchRun";
@@ -136,9 +137,9 @@ function fileFamilyFor(part: ToolCallPart): FileActivityFamily | null {
 function filePhraseFor(family: FileActivityFamily, n: number): string {
   switch (family) {
     case "read":
-      return `read ${pluralize(n, "file")}`;
+      return t(`read ${pluralize(n, "file")}`, `已读取 ${n} 个文件`);
     case "edit":
-      return `edited ${pluralize(n, "file")}`;
+      return t(`edited ${pluralize(n, "file")}`, `已编辑 ${n} 个文件`);
   }
 }
 
@@ -209,7 +210,8 @@ export function summarizeActivity(
     else for (const path of paths) count.paths.add(path);
   }
 
-  const parts = commands > 0 ? [`ran ${pluralize(commands, "command")}`] : [];
+  const parts =
+    commands > 0 ? [t(`ran ${pluralize(commands, "command")}`, `已运行 ${commands} 条命令`)] : [];
   for (const family of fileOrder) {
     const count = fileCounts.get(family)!;
     parts.push(filePhraseFor(family, count.paths.size + count.withoutPath));
@@ -217,13 +219,16 @@ export function summarizeActivity(
 
   const thinkingMs = completedThinkingMs + (options.thinkingMs ?? 0);
   if (thoughts > 0) {
-    if (thinkingMs >= 1000) parts.push(`thought for ${formatDuration(thinkingMs)}`);
-    else if (parts.length === 0) parts.push("thought");
+    if (thinkingMs >= 1000)
+      parts.push(
+        t(`thought for ${formatDuration(thinkingMs)}`, `已思考 ${formatDuration(thinkingMs)}`)
+      );
+    else if (parts.length === 0) parts.push(t("thought", "已思考"));
   }
 
   const line = parts.join(", ");
   return {
-    line: line.length > 0 ? line.charAt(0).toUpperCase() + line.slice(1) : "Worked",
+    line: line.length > 0 ? line.charAt(0).toUpperCase() + line.slice(1) : t("Worked", "已处理"),
     failed,
   };
 }

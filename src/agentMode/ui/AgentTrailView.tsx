@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import React, { useMemo } from "react";
 import { agentResponseText, buildAgentTrail } from "@/agentMode/ui/agentTrail";
 import type { AgentMessagePart, StopReason, TurnFileChange } from "@/agentMode/session/types";
@@ -48,16 +49,19 @@ const noopOpenFileChange = () => {};
 
 // A turn that ends early without an error leaves a reply that looks finished. https://github.com/Brevilabs/obsidian-copilot-private/issues/739
 const EARLY_STOP_CAUSES: Partial<Record<StopReason, string>> = {
-  max_tokens: "the model hit its output limit",
-  max_turn_requests: "the agent hit its step limit",
-  refusal: "the model's safety system stopped it",
+  max_tokens: t("the model hit its output limit", "模型已达到输出上限"),
+  max_turn_requests: t("the agent hit its step limit", "智能体已达到步骤上限"),
+  refusal: t("the model's safety system stopped it", "模型的安全系统中止了响应"),
 };
 
 function stopReasonNotice(stopReason: StopReason | undefined): string | undefined {
   const cause = stopReason && EARLY_STOP_CAUSES[stopReason];
   return (
     cause &&
-    `**Stopped early:** ${cause}, so its last step may not have run. Send another message to continue.`
+    t(
+      `**Stopped early:** ${cause}, so its last step may not have run. Send another message to continue.`,
+      `**提前停止：**${cause}，最后一步可能尚未执行。请发送新消息以继续。`
+    )
   );
 }
 
@@ -327,7 +331,7 @@ interface PlanPillProps {
 const PlanPill: React.FC<PlanPillProps> = ({ entries }) =>
   entries.length === 0 ? null : (
     <div className="tw-my-1 tw-rounded tw-border tw-border-border tw-bg-secondary tw-px-2 tw-py-1">
-      <p className="tw-mb-1 tw-text-xs tw-text-muted">Plan</p>
+      <p className="tw-mb-1 tw-text-xs tw-text-muted">{t("Plan", "计划")}</p>
       <ul className="tw-flex tw-flex-col tw-gap-0.5 tw-text-sm">
         {entries.map((e, i) => (
           // eslint-disable-next-line @eslint-react/no-array-index-key -- plan entries are positional and may share content

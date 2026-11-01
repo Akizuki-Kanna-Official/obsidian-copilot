@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import { revealProjectFolder } from "@/agentMode/ui/AgentProjectRowActions";
 import type { AgentTodoListEntry } from "@/agentMode/session/types";
 import { ProjectConfig } from "@/aiParams";
@@ -56,7 +57,9 @@ function ProgressSection({ todoList }: ProgressSectionProps) {
   return (
     <div className="tw-px-3 tw-py-2.5">
       <div className="tw-mb-1.5 tw-flex tw-items-baseline tw-justify-between">
-        <span className="tw-text-ui-smaller tw-font-semibold tw-text-faint">Progress</span>
+        <span className="tw-text-ui-smaller tw-font-semibold tw-text-faint">
+          {t("Progress", "进度")}
+        </span>
         <span className="tw-text-ui-smaller tw-text-faint">
           {done}/{todoList.length}
         </span>
@@ -118,11 +121,13 @@ export function ProjectFilesList({
   return (
     <div className="tw-px-3 tw-py-2.5">
       <div className="tw-mb-1 tw-flex tw-items-center tw-justify-between">
-        <span className="tw-text-ui-smaller tw-font-semibold tw-text-faint">Project files</span>
+        <span className="tw-text-ui-smaller tw-font-semibold tw-text-faint">
+          {t("Project files", "项目文件")}
+        </span>
         <Button
           variant="ghost2"
           size="icon"
-          aria-label="Reveal project files in vault"
+          aria-label={t("Reveal project files in vault", "在仓库中显示项目文件")}
           className="tw-size-5 tw-text-faint hover:tw-text-normal"
           onClick={onReveal}
         >
@@ -177,11 +182,13 @@ export function ProjectFilesList({
         ) : (
           <ChevronRight className="tw-size-3.5" aria-hidden="true" />
         )}
-        <span className="tw-text-ui-small tw-font-medium">Outputs</span>
+        <span className="tw-text-ui-small tw-font-medium">{t("Outputs", "输出结果")}</span>
         <span className="tw-text-ui-smaller tw-text-faint">(0)</span>
       </div>
       {outputsOpen && (
-        <div className="tw-py-1 tw-pl-6 tw-text-ui-smaller tw-text-faint">No outputs yet</div>
+        <div className="tw-py-1 tw-pl-6 tw-text-ui-smaller tw-text-faint">
+          {t("No outputs yet", "暂无输出结果")}
+        </div>
       )}
     </div>
   );
@@ -249,7 +256,7 @@ function ProjectFilesSection({ app, project, onClose }: ProjectFilesSectionProps
       )
       .catch((error) => {
         logError("[ProjectInfoPopover] Failed to open project AGENTS.md", error);
-        new Notice("Failed to open project AGENTS.md.");
+        new Notice(t("Failed to open project AGENTS.md.", "无法打开项目的 AGENTS.md。"));
       });
   };
 
@@ -299,7 +306,7 @@ export const ProjectInfoPopover = memo(
           <Button
             variant="ghost2"
             size="icon"
-            aria-label={`Project info for ${project.name}`}
+            aria-label={t(`Project info for ${project.name}`, `项目 ${project.name} 的信息`)}
             className="tw-size-7 tw-text-muted hover:tw-text-normal"
           >
             <List className="tw-size-4" />
@@ -321,7 +328,7 @@ export const ProjectInfoPopover = memo(
             <Button
               variant="ghost2"
               size="icon"
-              aria-label={`Edit project ${project.name}`}
+              aria-label={t(`Edit project ${project.name}`, `编辑项目 ${project.name}`)}
               className="tw-size-6 tw-text-muted hover:tw-text-normal"
               onClick={handleEdit}
             >
@@ -330,7 +337,7 @@ export const ProjectInfoPopover = memo(
             <Button
               variant="ghost2"
               size="icon"
-              aria-label="Reveal project folder in vault"
+              aria-label={t("Reveal project folder in vault", "在仓库中显示项目文件夹")}
               className="tw-size-6 tw-text-muted hover:tw-text-normal"
               onClick={() => {
                 setOpen(false);

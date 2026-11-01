@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import React, { useState } from "react";
 import { ChevronDown, ChevronRight } from "lucide-react";
 import { App } from "obsidian";
@@ -57,7 +58,7 @@ export const SubAgentCard: React.FC<SubAgentCardProps> = ({
             onClick={() => setPromptOpen((v) => !v)}
             role="button"
           >
-            <span className="tw-flex-1 tw-truncate">Prompt</span>
+            <span className="tw-flex-1 tw-truncate">{t("Prompt", "提示词")}</span>
             {promptOpen ? (
               <ChevronDown className="tw-size-3" />
             ) : (
@@ -73,7 +74,10 @@ export const SubAgentCard: React.FC<SubAgentCardProps> = ({
       ) : null}
       {truncated ? (
         <div className="tw-text-xs tw-text-muted">
-          This subagent's steps are nested too deep to show here.
+          {t(
+            "This subagent's steps are nested too deep to show here.",
+            "此子智能体的步骤嵌套过深，无法在此显示。"
+          )}
         </div>
       ) : (
         childNodes.map((c, i) => renderNode(c, i))
@@ -110,9 +114,9 @@ function countChildren(nodes: GroupedTrailNode[]): ChildCounts {
 }
 
 function describeCounts(c: ChildCounts, truncated?: boolean): string {
-  if (truncated) return "Nested";
+  if (truncated) return t("Nested", "嵌套");
   const bits: string[] = [];
   if (c.tools > 0) bits.push(`${c.tools} ${c.tools === 1 ? "tool" : "tools"}`);
   if (c.reasoning > 0) bits.push(`${c.reasoning} reasoning`);
-  return bits.length > 0 ? bits.join(" · ") : "No activity";
+  return bits.length > 0 ? bits.join(" · ") : t("No activity", "暂无活动");
 }

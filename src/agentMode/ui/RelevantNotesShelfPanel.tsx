@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import { Button } from "@/components/ui/button";
 import { ExternalLink } from "lucide-react";
 import React from "react";
@@ -22,7 +23,7 @@ export function RelevantNotesShelfPanel({ onPopOut, children }: RelevantNotesShe
         onClick={onPopOut}
       >
         <ExternalLink className="tw-size-3" aria-hidden="true" />
-        Open in separate pane
+        {t("Open in separate pane", "在独立面板中打开")}
       </Button>
     </div>
   );

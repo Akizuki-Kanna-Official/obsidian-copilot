@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import type { FeedbackOffer } from "@/agentMode/session/feedback/feedbackOffer";
 import type { AgentChatMessage } from "@/agentMode/session/types";
 import { Button } from "@/components/ui/button";
@@ -44,7 +45,9 @@ export const FeedbackCard: React.FC<FeedbackCardProps> = ({
           <MessageSquareWarning className="tw-size-4 tw-shrink-0 tw-text-accent" />
         )}
         <div className="tw-truncate tw-text-sm tw-font-medium">
-          {report ? "Report sent to the Copilot team" : "Report this to the Copilot team?"}
+          {report
+            ? t("Report sent to the Copilot team", "报告已发送给 Copilot 团队")
+            : t("Report this to the Copilot team?", "要向 Copilot 团队报告此问题吗？")}
         </div>
       </div>
 
@@ -52,12 +55,12 @@ export const FeedbackCard: React.FC<FeedbackCardProps> = ({
         <div className="tw-break-words">{draft.title}</div>
         {!report && draft.userSaid ? (
           <div className="tw-line-clamp-2 tw-break-words tw-text-muted">
-            You said: “{draft.userSaid}”
+            {t(`You said: “${draft.userSaid}”`, `你的反馈：“${draft.userSaid}”`)}
           </div>
         ) : null}
         {report ? (
           <div className="tw-text-muted">
-            Report ID{" "}
+            {t("Report ID", "报告编号")}{" "}
             <span className="tw-break-all tw-font-mono tw-text-normal">{report.reportId}</span>
           </div>
         ) : null}
@@ -66,19 +69,19 @@ export const FeedbackCard: React.FC<FeedbackCardProps> = ({
       <div className="copilot-divider-t tw-flex tw-flex-wrap tw-items-center tw-gap-2 tw-px-3 tw-py-2">
         {report ? (
           <a href={report.issueUrl} className="tw-text-xs">
-            Open the GitHub issue
+            {t("Open the GitHub issue", "打开 GitHub 问题页面")}
           </a>
         ) : (
           <>
             <Button variant="ghost2" size="sm" className="tw-px-0" onClick={onTurnOff}>
-              Don&apos;t offer again
+              {t("Don't offer again", "不再提示")}
             </Button>
             <div className="tw-ml-auto tw-flex tw-gap-2">
               <Button variant="secondary" size="sm" onClick={onDismiss}>
-                Dismiss
+                {t("Dismiss", "关闭")}
               </Button>
               <Button variant="default" size="sm" onClick={onReview}>
-                Review & report
+                {t("Review & report", "检查并报告")}
               </Button>
             </div>
           </>

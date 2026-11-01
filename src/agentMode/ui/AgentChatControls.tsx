@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import { backendRegistry } from "@/agentMode/backends/registry";
 import { ChatBookmarkMenuItem } from "@/agentMode/ui/ChatBookmarkMenuItem";
 import type { ChatBookmarkState } from "@/agentMode/ui/hooks/useAgentHistoryControls";
@@ -42,7 +43,9 @@ const NeedsMessageMenuItem: React.FC<{ children: React.ReactNode }> = ({ childre
         <DropdownMenuItem disabled>{children}</DropdownMenuItem>
       </div>
     </TooltipTrigger>
-    <TooltipContent side="left">Send a message to the chat first.</TooltipContent>
+    <TooltipContent side="left">
+      {t("Send a message to the chat first.", "请先在聊天中发送一条消息。")}
+    </TooltipContent>
   </Tooltip>
 );
 
@@ -105,11 +108,16 @@ export const AgentChatControls: React.FC<AgentChatControlsProps> = ({
         {onNewChat && (
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button variant="ghost2" size="icon" title="New chat" onClick={onNewChat}>
+              <Button
+                variant="ghost2"
+                size="icon"
+                title={t("New chat", "新聊天")}
+                onClick={onNewChat}
+              >
                 <MessageCirclePlus className="tw-size-4" />
               </Button>
             </TooltipTrigger>
-            <TooltipContent>New chat</TooltipContent>
+            <TooltipContent>{t("New chat", "新聊天")}</TooltipContent>
           </Tooltip>
         )}
         {!settings.autosaveChat && onSaveAsNote && (
@@ -118,13 +126,13 @@ export const AgentChatControls: React.FC<AgentChatControlsProps> = ({
               <Button
                 variant="ghost2"
                 size="icon"
-                title="Save chat as note"
+                title={t("Save chat as note", "将聊天保存为笔记")}
                 onClick={() => void onSaveAsNote()}
               >
                 <Download className="tw-size-4" />
               </Button>
             </TooltipTrigger>
-            <TooltipContent>Save chat as note</TooltipContent>
+            <TooltipContent>{t("Save chat as note", "将聊天保存为笔记")}</TooltipContent>
           </Tooltip>
         )}
         {historyAvailable && (
@@ -145,7 +153,7 @@ export const AgentChatControls: React.FC<AgentChatControlsProps> = ({
                 <Button
                   variant="ghost2"
                   size="icon"
-                  title="Chat history"
+                  title={t("Chat history", "聊天记录")}
                   onClick={() => {
                     void onLoadHistory?.();
                   }}
@@ -154,13 +162,18 @@ export const AgentChatControls: React.FC<AgentChatControlsProps> = ({
                 </Button>
               </TooltipTrigger>
             </ChatHistoryPopover>
-            <TooltipContent>Chat history</TooltipContent>
+            <TooltipContent>{t("Chat history", "聊天记录")}</TooltipContent>
           </Tooltip>
         )}
         {onNewChat && (
           <DropdownMenu modal={false}>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost2" size="icon" title="More actions" ref={trackMoreActionsBody}>
+              <Button
+                variant="ghost2"
+                size="icon"
+                title={t("More actions", "更多操作")}
+                ref={trackMoreActionsBody}
+              >
                 <MoreHorizontal className="tw-size-4" />
               </Button>
             </DropdownMenuTrigger>
@@ -168,12 +181,12 @@ export const AgentChatControls: React.FC<AgentChatControlsProps> = ({
               {onCopyChatLink ? (
                 <DropdownMenuItem onSelect={() => void onCopyChatLink()}>
                   <Link />
-                  Copy chat link
+                  {t("Copy chat link", "复制聊天链接")}
                 </DropdownMenuItem>
               ) : (
                 <NeedsMessageMenuItem>
                   <Link />
-                  Copy chat link
+                  {t("Copy chat link", "复制聊天链接")}
                 </NeedsMessageMenuItem>
               )}
               {onSetChatBookmarked &&
@@ -185,7 +198,7 @@ export const AgentChatControls: React.FC<AgentChatControlsProps> = ({
                 ) : (
                   <NeedsMessageMenuItem>
                     <Bookmark />
-                    Add to bookmarks
+                    {t("Add to bookmarks", "添加到书签")}
                   </NeedsMessageMenuItem>
                 ))}
               {/* A report from here names the chat's agent, model and session, so only a host with a chat offers it.
@@ -193,7 +206,7 @@ export const AgentChatControls: React.FC<AgentChatControlsProps> = ({
               {onReportError && (
                 <DropdownMenuItem onSelect={onReportError}>
                   <Bug />
-                  Report an issue
+                  {t("Report an issue", "报告问题")}
                 </DropdownMenuItem>
               )}
             </DropdownMenuContent>

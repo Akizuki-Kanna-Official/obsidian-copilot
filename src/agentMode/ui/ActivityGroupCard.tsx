@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import React from "react";
 import { Layers, Loader2, type LucideIcon } from "lucide-react";
 import {
@@ -38,7 +39,10 @@ export const ActivityGroupCard: React.FC<ActivityGroupCardProps> = ({
       trailing={
         <>
           {summary.failed > 0 ? (
-            <span className="tw-shrink-0 tw-text-xs tw-text-muted">{summary.failed} failed</span>
+            <span className="tw-shrink-0 tw-text-xs tw-text-muted">
+              {summary.failed}
+              {t(" failed", "失败")}
+            </span>
           ) : null}
           {isProcessing ? (
             <Loader2 className="tw-size-3 tw-shrink-0 tw-animate-spin tw-text-loading" />

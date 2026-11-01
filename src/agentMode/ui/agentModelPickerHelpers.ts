@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import { sortEffortOptions } from "@/lib/model-effort";
 import { Notice } from "obsidian";
 import { logError } from "@/logger";
@@ -25,7 +26,7 @@ import type { AgentModelPickerOverride } from "./useAgentModelPicker";
 
 export const EMPTY_EFFORT_OPTIONS = Object.freeze([]) as unknown as EffortOption[];
 
-export const MISSING_KEY_LABEL = "Add API key";
+export const MISSING_KEY_LABEL = t("Add API key", "添加 API 密钥");
 
 export function handlePickerSwitchError(err: unknown, action: "model" | "effort" | "mode"): void {
   if (err instanceof MethodUnsupportedError) {
@@ -108,18 +109,18 @@ function credentialDisabledReason(
   reported: boolean
 ): string | undefined {
   if (state === "missing_key") return MISSING_KEY_LABEL;
-  if (!reported) return "Not offered by agent";
+  if (!reported) return t("Not offered by agent", "此智能体未提供");
   return undefined;
 }
 
 export function backendReadinessReason(state: InstallState): string | undefined {
   switch (state.kind) {
     case "absent":
-      return "Not set up";
+      return t("Not set up", "未设置");
     case "incompatible":
-      return "Update required";
+      return t("Update required", "需要更新");
     case "error":
-      return "Setup error";
+      return t("Setup error", "设置出错");
     case "checking":
     case "ready":
       return undefined;
@@ -155,10 +156,10 @@ function synthesizePreloadPlaceholder(
   return {
     ...synthesizeAgentEntry(
       `__preload_${status}__`,
-      pending ? "Loading models…" : "Failed to load",
+      pending ? t("Loading models…", "正在加载模型…") : t("Failed to load", "加载失败"),
       descriptor
     ),
-    _disabledReason: pending ? "Loading…" : "Unavailable",
+    _disabledReason: pending ? t("Loading…", "正在加载…") : t("Unavailable", "不可用"),
   };
 }
 
@@ -335,7 +336,10 @@ function runCrossBackendPick(
     } catch (err) {
       logError("[AgentMode] cross-backend pick failed", err);
       new Notice(
-        `Failed to start ${targetDescriptor.displayName}. Check the Copilot log for details.`
+        t(
+          `Failed to start ${targetDescriptor.displayName}. Check the Copilot log for details.`,
+          `启动 ${targetDescriptor.displayName} 失败。请查看 Copilot 日志了解详情。`
+        )
       );
     }
   })();
@@ -362,7 +366,9 @@ export function buildModelOnChange(
     }
     const baseModelId = resolveBaseModelId(entry);
     if (!baseModelId) {
-      new Notice("Couldn't find that model. Pick another one.");
+      new Notice(
+        t("Couldn't find that model. Pick another one.", "找不到该模型，请选择其他模型。")
+      );
       return;
     }
 
@@ -380,7 +386,12 @@ export function buildModelOnChange(
     }
     manager.setDefaultBackend(targetBackendId);
     if (activeChatUIState?.canSwitchModel() === false) {
-      new Notice("This agent doesn't support switching models mid-chat.");
+      new Notice(
+        t(
+          "This agent doesn't support switching models mid-chat.",
+          "此智能体不支持在聊天过程中切换模型。"
+        )
+      );
       return;
     }
     manager.applySelection({ baseModelId }).catch((err) => {
@@ -450,7 +461,12 @@ function buildCommitSelection(
       return;
     }
     if (activeChatUIState?.canSwitchModel() === false) {
-      new Notice("This agent doesn't support switching models mid-chat.");
+      new Notice(
+        t(
+          "This agent doesn't support switching models mid-chat.",
+          "此智能体不支持在聊天过程中切换模型。"
+        )
+      );
       return;
     }
     manager.applySelection({ baseModelId, effort }).catch((err) => {

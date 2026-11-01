@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import type { LucideIcon } from "lucide-react";
 import { Bot, MessageCircleQuestion } from "lucide-react";
 import { pickToolIcon } from "@/agentMode/ui/toolIcons";
@@ -76,7 +77,7 @@ function humanizeToolName(name: string): string {
 function genericToolLabel(part: ToolCallPart): string {
   if (!part.vendorToolName && /\s/.test(part.title)) return part.title;
   const bare = part.vendorToolName ?? part.title;
-  return humanizeToolName(bare) || "Tool call";
+  return humanizeToolName(bare) || t("Tool call", "工具调用");
 }
 
 function firstQuestionText(part: ToolCallPart): string | null {
@@ -173,7 +174,7 @@ function approxTokens(part: ToolCallPart): number {
 const READ_SUMMARY: ToolSummary = {
   icon: pickToolIcon({ vendorToolName: "Read" }),
   collapsedLine: (p, ctx) =>
-    `${verb(p, "Reading", "Read")} ${displayTargetFromPath(p, ctx?.vaultBase ?? null) ?? targetFromTitle(p)}`,
+    `${verb(p, t("Reading", "正在读取"), t("Read", "已读取"))} ${displayTargetFromPath(p, ctx?.vaultBase ?? null) ?? targetFromTitle(p)}`,
   outcome: (p) => {
     const t = approxTokens(p);
     return t > 0 ? `~${formatTokens(t)} tokens` : null;
@@ -184,9 +185,9 @@ const READ_SUMMARY: ToolSummary = {
 const LIST_SUMMARY: ToolSummary = {
   icon: pickToolIcon({ vendorToolName: "LS" }),
   collapsedLine: (p, ctx) => {
-    const v = verb(p, "Listing", "Listed");
+    const v = verb(p, t("Listing", "正在列出"), t("Listed", "已列出"));
     const path = displayTargetFromPath(p, ctx?.vaultBase ?? null);
-    return path ? `${v} ${path}` : `${v} vault root`;
+    return path ? `${v} ${path}` : t(`${v} vault root`, `${v}仓库根目录`);
   },
   outcome: () => null,
 };
@@ -195,17 +196,22 @@ const EDIT_SUMMARY: ToolSummary = {
   icon: pickToolIcon({ vendorToolName: "Edit" }),
   collapsedLine: (p, ctx) => {
     const diffPathCount = diffTargetPaths(p.output).length;
-    const lead = fileChangeVerb(p, "Editing", "Edited", createsNewFile(p) ? "create" : "edit");
+    const lead = fileChangeVerb(
+      p,
+      t("Editing", "正在编辑"),
+      t("Edited", "已编辑"),
+      createsNewFile(p) ? "create" : "edit"
+    );
     return `${lead} ${
       diffPathCount > 1
-        ? pluralize(diffPathCount, "file")
-        : (displayTargetFromPath(p, ctx?.vaultBase ?? null) ?? "files")
+        ? t(pluralize(diffPathCount, "file"), `${diffPathCount} 个文件`)
+        : (displayTargetFromPath(p, ctx?.vaultBase ?? null) ?? t("files", "文件"))
     }`;
   },
   outcome: (p) => {
     const { added, removed } = diffStats(p);
     if (added === 0 && removed === 0) return null;
-    return `+${added} / −${removed} lines`;
+    return t(`+${added} / −${removed} lines`, `+${added} / −${removed} 行`);
   },
   targetPath: (p, ctx) =>
     diffTargetPaths(p.output).length > 1 ? null : targetFromPath(p, ctx?.vaultBase ?? null),
@@ -218,7 +224,7 @@ const BASH_SUMMARY: ToolSummary = {
     if (typeof input?.description === "string" && input.description.length > 0) {
       return input.description;
     }
-    const v = verb(p, "Running", "Ran");
+    const v = verb(p, t("Running", "正在运行"), t("Ran", "已运行"));
     if (typeof input?.command === "string") {
       const cmd = input.command.length > 60 ? input.command.slice(0, 60) + "…" : input.command;
       return `${v} \`${cmd}\``;
@@ -239,7 +245,7 @@ const BASH_SUMMARY: ToolSummary = {
 const SEARCH_VAULT_SUMMARY: ToolSummary = {
   icon: pickToolIcon({ vendorToolName: "Grep" }),
   collapsedLine: (p) => {
-    const v = verb(p, "Searching vault", "Searched vault");
+    const v = verb(p, t("Searching vault", "正在搜索仓库"), t("Searched vault", "已搜索仓库"));
     const q = queryFromInput(p);
     return q ? `${v} · "${q}"` : `${v} · ${targetFromTitle(p)}`;
   },
@@ -249,7 +255,7 @@ const SEARCH_VAULT_SUMMARY: ToolSummary = {
 const WEB_SEARCH_SUMMARY: ToolSummary = {
   icon: pickToolIcon({ vendorToolName: "WebSearch" }),
   collapsedLine: (p) => {
-    const v = verb(p, "Searching web", "Searched web");
+    const v = verb(p, t("Searching web", "正在搜索网页"), t("Searched web", "已搜索网页"));
     const q = queryFromInput(p);
     return q ? `${v} · "${q}"` : `${v} · ${targetFromTitle(p)}`;
   },
@@ -259,7 +265,7 @@ const WEB_SEARCH_SUMMARY: ToolSummary = {
 const WEB_FETCH_SUMMARY: ToolSummary = {
   icon: pickToolIcon({ vendorToolName: "WebFetch" }),
   collapsedLine: (p) => {
-    const v = verb(p, "Fetching", "Fetched");
+    const v = verb(p, t("Fetching", "正在获取"), t("Fetched", "已获取"));
     const input = p.input as { url?: unknown } | null | undefined;
     if (typeof input?.url === "string") return `${v} ${input.url}`;
     return `${v} ${targetFromTitle(p)}`;
@@ -281,7 +287,7 @@ const TASK_SUMMARY: ToolSummary = {
         : typeof input?.prompt === "string"
           ? input.prompt.slice(0, 60)
           : targetFromTitle(p);
-    return agent ? `${agent} · "${desc}"` : `Sub-agent · "${desc}"`;
+    return agent ? `${agent} · "${desc}"` : t(`Sub-agent · "${desc}"`, `子智能体 · “${desc}”`);
   },
   outcome: (p) => {
     const progress = p.progress;
@@ -291,7 +297,7 @@ const TASK_SUMMARY: ToolSummary = {
       bits.push(progress.description.trim());
     }
     if (progress.toolUses !== undefined) {
-      bits.push(pluralize(progress.toolUses, "tool"));
+      bits.push(t(pluralize(progress.toolUses, "tool"), `${progress.toolUses} 次工具调用`));
     }
     if (progress.durationMs !== undefined) bits.push(formatDuration(progress.durationMs));
     return bits.length > 0 ? bits.join(" · ") : null;
@@ -300,26 +306,28 @@ const TASK_SUMMARY: ToolSummary = {
 
 const TODO_SUMMARY: ToolSummary = {
   icon: pickToolIcon({ vendorToolName: "TodoWrite" }),
-  collapsedLine: (p) => `${verb(p, "Updating", "Updated")} task list`,
+  collapsedLine: (p) =>
+    `${verb(p, t("Updating", "正在更新"), t("Updated", "已更新"))} ${t("task list", "任务列表")}`,
   outcome: (p) => {
     const input = p.input as { todos?: unknown[] } | null | undefined;
     const n = Array.isArray(input?.todos) ? input.todos.length : 0;
-    return n > 0 ? pluralize(n, "task") : null;
+    return n > 0 ? t(pluralize(n, "task"), `${n} 个任务`) : null;
   },
 };
 
 const EXIT_PLAN_SUMMARY: ToolSummary = {
   icon: pickToolIcon({ vendorToolName: "ExitPlanMode" }),
-  collapsedLine: (p) => `${verb(p, "Proposing", "Proposed")} plan`,
+  collapsedLine: (p) =>
+    `${verb(p, t("Proposing", "正在提出"), t("Proposed", "已提出"))} ${t("plan", "计划")}`,
   outcome: () => null,
 };
 
 const ASK_USER_QUESTION_SUMMARY: ToolSummary = {
   icon: MessageCircleQuestion,
   collapsedLine: (p) => {
-    const v = verb(p, "Asking", "Asked");
+    const v = verb(p, t("Asking", "正在询问"), t("Asked", "已询问"));
     const q = firstQuestionText(p);
-    return q ? `${v}: "${q}"` : `${v} a question`;
+    return q ? `${v}: "${q}"` : t(`${v} a question`, `${v}问题`);
   },
   outcome: () => null,
 };
@@ -327,9 +335,9 @@ const ASK_USER_QUESTION_SUMMARY: ToolSummary = {
 const SKILL_SUMMARY: ToolSummary = {
   icon: pickToolIcon({ vendorToolName: "Skill" }),
   collapsedLine: (p) => {
-    const v = verb(p, "Running", "Ran");
+    const v = verb(p, t("Running", "正在运行"), t("Ran", "已运行"));
     const name = skillNameFromInput(p);
-    return name ? `${v} skill ${name}` : `${v} a skill`;
+    return name ? t(`${v} skill ${name}`, `${v}技能 ${name}`) : t(`${v} a skill`, `${v}技能`);
   },
   outcome: () => null,
   expandedDetails: (p) => {
@@ -360,7 +368,7 @@ const VENDOR_SUMMARIES: Record<string, ToolSummary> = {
 const KIND_SEARCH_SUMMARY: ToolSummary = {
   icon: pickToolIcon({ toolKind: "search" }),
   collapsedLine: (p) => {
-    const v = verb(p, "Searching", "Searched");
+    const v = verb(p, t("Searching", "正在搜索"), t("Searched", "已搜索"));
     const q = queryFromInput(p);
     return q ? `${v} · "${q}"` : `${v} · ${targetFromTitle(p)}`;
   },
@@ -377,13 +385,13 @@ const KIND_FETCH_SUMMARY: ToolSummary = {
 const KIND_DELETE_SUMMARY: ToolSummary = {
   icon: pickToolIcon({ toolKind: "delete" }),
   collapsedLine: (p, ctx) =>
-    `${fileChangeVerb(p, "Deleting", "Deleted", "delete")} ${displayTargetFromPath(p, ctx?.vaultBase ?? null) ?? targetFromTitle(p)}`,
+    `${fileChangeVerb(p, t("Deleting", "正在删除"), t("Deleted", "已删除"), "delete")} ${displayTargetFromPath(p, ctx?.vaultBase ?? null) ?? targetFromTitle(p)}`,
   outcome: () => null,
 };
 const KIND_MOVE_SUMMARY: ToolSummary = {
   icon: pickToolIcon({ toolKind: "move" }),
   collapsedLine: (p, ctx) =>
-    `${verb(p, "Moving", "Moved")} ${displayTargetFromPath(p, ctx?.vaultBase ?? null) ?? targetFromTitle(p)}`,
+    `${verb(p, t("Moving", "正在移动"), t("Moved", "已移动"))} ${displayTargetFromPath(p, ctx?.vaultBase ?? null) ?? targetFromTitle(p)}`,
   outcome: () => null,
 };
 const KIND_SWITCH_MODE_SUMMARY: ToolSummary = {
@@ -392,7 +400,7 @@ const KIND_SWITCH_MODE_SUMMARY: ToolSummary = {
 };
 const KIND_THINK_SUMMARY: ToolSummary = {
   icon: pickToolIcon({ toolKind: "think" }),
-  collapsedLine: (p) => verb(p, "Thinking", "Thought"),
+  collapsedLine: (p) => verb(p, t("Thinking", "正在思考"), t("Thought", "思考过程")),
   outcome: () => null,
 };
 

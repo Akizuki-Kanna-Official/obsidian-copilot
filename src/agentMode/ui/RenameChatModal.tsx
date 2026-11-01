@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import { ReactModal } from "@/components/modals/ReactModal";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -28,7 +29,7 @@ export function RenameChatForm({
       }}
     >
       <Input
-        aria-label="Chat title"
+        aria-label={t("Chat title", "聊天标题")}
         value={title}
         autoFocus
         onFocus={(event) => event.currentTarget.select()}
@@ -36,10 +37,10 @@ export function RenameChatForm({
       />
       <div className="tw-flex tw-justify-end tw-gap-2">
         <Button type="button" variant="secondary" onClick={onCancel}>
-          Cancel
+          {t("Cancel", "取消")}
         </Button>
         <Button type="submit" disabled={!trimmedTitle}>
-          Save
+          {t("Save", "保存")}
         </Button>
       </div>
     </form>
@@ -52,7 +53,7 @@ export class RenameChatModal extends ReactModal {
     private readonly currentTitle: string,
     private readonly onRename: (title: string) => Promise<void>
   ) {
-    super(app, "Rename chat");
+    super(app, t("Rename chat", "重命名聊天"));
   }
 
   protected renderContent(close: () => void): React.ReactElement {

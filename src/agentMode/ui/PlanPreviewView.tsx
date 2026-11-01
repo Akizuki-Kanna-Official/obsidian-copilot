@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import { Button } from "@/components/ui/button";
 import { PLAN_PREVIEW_VIEW_TYPE } from "@/constants";
 import { logWarn } from "@/logger";
@@ -34,7 +35,7 @@ export class PlanPreviewView extends ItemView {
   }
 
   getDisplayText(): string {
-    return this.state?.title?.trim() || "Plan proposal";
+    return this.state?.title?.trim() || t("Plan proposal", "计划提案");
   }
 
   getProposalId(): string | undefined {
@@ -98,7 +99,7 @@ const PlanPreviewRoot: React.FC<PlanPreviewRootProps> = ({ app, state }) => {
   }, [state.chatBackend]);
 
   const planMarkdown = currentPlan ? currentPlan.body : state.planMarkdown;
-  const title = currentPlan?.title?.trim() || state.title?.trim() || "Plan proposal";
+  const title = currentPlan?.title?.trim() || state.title?.trim() || t("Plan proposal", "计划提案");
   const liveProposalId = currentPlan?.id ?? state.proposalId;
   const liveRevision = currentPlan?.revision ?? 0;
   const isPending = currentPlan?.decision === "pending";
@@ -149,25 +150,28 @@ const PlanPreviewRoot: React.FC<PlanPreviewRootProps> = ({ app, state }) => {
           <FileText className="tw-size-4 tw-shrink-0 tw-text-muted" />
           <div className="tw-truncate tw-text-sm tw-font-medium">{title}</div>
           <span className="tw-rounded tw-bg-secondary tw-px-2 tw-py-0.5 tw-text-xs tw-text-muted">
-            Read-only
+            {t("Read-only", "只读")}
           </span>
         </div>
         {canDecide ? (
           <div className="tw-flex tw-items-center tw-gap-2">
             <Button variant="destructive" size="sm" onClick={() => void decide("reject")}>
               <XIcon className="tw-size-4" />
-              Reject
+              {t("Reject", "拒绝")}
             </Button>
             <Button variant="success" size="sm" onClick={() => void decide("approve")}>
               <Check className="tw-size-4" />
-              Approve
+              {t("Approve", "批准")}
             </Button>
           </div>
         ) : null}
       </div>
       {showEmpty ? (
         <div className="tw-flex tw-flex-1 tw-items-center tw-justify-center tw-px-6 tw-py-4 tw-text-sm tw-text-muted">
-          Plan no longer pending. Switch back to plan mode to start a new review.
+          {t(
+            "Plan no longer pending. Switch back to plan mode to start a new review.",
+            "此计划已不再等待处理。切回计划模式可发起新的审核。"
+          )}
         </div>
       ) : (
         <div ref={renderTargetRef} className="tw-flex-1 tw-overflow-auto tw-px-6 tw-py-4" />

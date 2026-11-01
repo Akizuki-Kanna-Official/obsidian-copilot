@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import { AgentMarkdownText } from "@/agentMode/ui/AgentMarkdownText";
 import {
   buildFanoutOptions,
@@ -83,7 +84,11 @@ export const FanoutTurnView: React.FC<FanoutTurnViewProps> = memo(
 
     return (
       <div className="tw-flex tw-flex-col tw-gap-2">
-        <div role="tablist" aria-label="Agent answers" className="tw-flex tw-flex-wrap tw-gap-1">
+        <div
+          role="tablist"
+          aria-label={t("Agent answers", "智能体回答")}
+          className="tw-flex tw-flex-wrap tw-gap-1"
+        >
           {options.map((option) => (
             <FanoutTab
               key={option.value}
@@ -162,7 +167,11 @@ const FanoutTurnBody: React.FC<FanoutTurnBodyProps> = ({ turn, value, app }) => 
               <CircleSlash className="tw-size-4 tw-text-muted" />
             )
           }
-          text={isError ? answer.error?.trim() || "This agent failed to answer." : "Cancelled"}
+          text={
+            isError
+              ? answer.error?.trim() || t("This agent failed to answer.", "此智能体回答失败。")
+              : t("Cancelled", "已取消")
+          }
           tone={isError ? "error" : undefined}
         />
       </FanoutTerminalState>

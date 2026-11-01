@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import type { TurnFileChange } from "@/agentMode/session/types";
 import {
   ChangeScroller,
@@ -58,7 +59,7 @@ export class TurnDiffView extends ItemView {
   }
 
   getDisplayText(): string {
-    return this.state ? basename(this.state.path) : "File diff";
+    return this.state ? basename(this.state.path) : t("File diff", "文件差异");
   }
 
   stepChange(direction: ChangeStep, checking: boolean): boolean {

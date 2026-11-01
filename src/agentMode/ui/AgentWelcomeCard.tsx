@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { FolderPlus, Sparkles, X } from "lucide-react";
@@ -21,7 +22,7 @@ export const AgentWelcomeCard = memo(
         variant="ghost2"
         size="icon"
         onClick={onDismiss}
-        aria-label="Dismiss"
+        aria-label={t("Dismiss", "关闭")}
         className="tw-absolute tw-right-1 tw-top-1 tw-size-6 tw-text-muted hover:tw-text-normal"
       >
         <X className="tw-size-4" />
@@ -29,12 +30,14 @@ export const AgentWelcomeCard = memo(
 
       <div className="tw-flex tw-items-center tw-gap-1.5 tw-pr-6 tw-text-ui-small tw-font-semibold tw-text-normal">
         <Sparkles className="tw-size-4 tw-shrink-0 tw-text-accent" />
-        <span>Try a project</span>
+        <span>{t("Try a project", "试试项目功能")}</span>
       </div>
 
       <p className="tw-m-0 tw-text-ui-smaller tw-text-muted">
-        Group notes, URLs, PDFs, and folders into a focused context. The agent answers only within
-        those materials, and each project keeps its own chat history.
+        {t(
+          "Group notes, URLs, PDFs, and folders into a focused context. The agent answers only within those materials, and each project keeps its own chat history.",
+          "将笔记、网址、PDF 和文件夹组织为专属上下文。智能体只根据这些材料回答，每个项目都有独立的聊天记录。"
+        )}
       </p>
 
       <Button
@@ -44,7 +47,7 @@ export const AgentWelcomeCard = memo(
         className="tw-mt-1 tw-w-full tw-gap-2"
       >
         <FolderPlus className="tw-size-4" />
-        New project
+        {t("New project", "新项目")}
       </Button>
     </div>
   )

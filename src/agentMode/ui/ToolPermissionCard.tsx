@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { extractDiffContents, formatAgentInput, renderDiff } from "@/agentMode/ui/diffRender";
@@ -30,8 +31,10 @@ const QUOTED_CODE = /\s*`([^`\n]+)`/;
 
 // Every "always" grant says on hover what it covers and how long it lasts, even when the agent
 // does not. https://github.com/logancyang/obsidian-copilot/issues/2889
-const UNKNOWN_ALWAYS_SCOPE =
-  "The agent decides what this covers, and it may keep it for later chats. Undo it in the agent's own settings.";
+const UNKNOWN_ALWAYS_SCOPE = t(
+  "The agent decides what this covers, and it may keep it for later chats. Undo it in the agent's own settings.",
+  "授权范围由智能体决定，并可能保留用于后续聊天。如需撤销，请前往该智能体自身的设置。"
+);
 
 interface OptionLabel {
   text: string;
@@ -43,9 +46,10 @@ export const ToolPermissionCard: React.FC<ToolPermissionCardProps> = ({
   request,
   onResolve,
   toolName,
-  requester = "The agent",
+  requester,
 }) => {
   const { toolCall, options } = request;
+  const displayRequester = requester ?? t("The agent", "智能体");
   const [busy, setBusy] = useState(false);
   const orderedOptions = useMemo(() => sortOptions(options), [options]);
   const optionLabels = useMemo(() => orderedOptions.map(optionLabel), [orderedOptions]);
@@ -55,7 +59,7 @@ export const ToolPermissionCard: React.FC<ToolPermissionCardProps> = ({
   );
   const diffContents = useMemo(() => extractDiffContents(toolCall.content), [toolCall.content]);
   const inputJson = useMemo(() => formatAgentInput(toolCall.rawInput), [toolCall.rawInput]);
-  const title = toolCall.title ?? "Tool call";
+  const title = toolCall.title ?? t("Tool call", "工具调用");
   const namedTool =
     toolName && !title.toLowerCase().includes(toolName.toLowerCase()) ? toolName : undefined;
 
@@ -69,24 +73,31 @@ export const ToolPermissionCard: React.FC<ToolPermissionCardProps> = ({
     <div className="tw-w-full tw-rounded-md tw-border tw-border-solid tw-border-border tw-bg-secondary">
       <div className="copilot-divider-b tw-flex tw-items-center tw-gap-2 tw-px-3 tw-py-2">
         <ShieldQuestion className="tw-size-4 tw-shrink-0 tw-text-accent" />
-        <div className="tw-truncate tw-text-sm tw-font-medium">Permission required</div>
+        <div className="tw-truncate tw-text-sm tw-font-medium">
+          {t("Permission required", "需要授权")}
+        </div>
       </div>
 
       <div className="tw-flex tw-flex-col tw-gap-2 tw-px-3 tw-py-2">
         <p className="tw-m-0 tw-text-sm">
           {namedTool ? (
             <>
-              {requester} wants to use <strong>{namedTool}</strong>: {title}.
+              {displayRequester}
+              {t(" wants to use ", "希望使用")}
+              <strong>{namedTool}</strong>: {title}.
             </>
           ) : (
             <>
-              {requester} wants to run <strong>{title}</strong>.
+              {displayRequester}
+              {t(" wants to run ", "希望执行")}
+              <strong>{title}</strong>.
             </>
           )}
         </p>
         {toolCall.kind ? (
           <p className="tw-m-0 tw-text-xs tw-text-muted">
-            Type: <code>{toolCall.kind}</code>
+            {t("Type:", "类型：")}
+            <code>{toolCall.kind}</code>
           </p>
         ) : null}
 
@@ -107,7 +118,9 @@ export const ToolPermissionCard: React.FC<ToolPermissionCardProps> = ({
           </div>
         ) : inputJson ? (
           <details>
-            <summary className="tw-cursor-pointer tw-text-xs tw-text-muted">Show details</summary>
+            <summary className="tw-cursor-pointer tw-text-xs tw-text-muted">
+              {t("Show details", "显示详情")}
+            </summary>
             <pre className="tw-mt-1 tw-max-h-48 tw-overflow-auto tw-rounded tw-bg-primary tw-p-2 tw-text-xs">
               {inputJson}
             </pre>

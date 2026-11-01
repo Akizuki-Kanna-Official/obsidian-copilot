@@ -1,3 +1,4 @@
+import { t } from "@/lib/i18n";
 import { backendRegistry } from "@/agentMode/backends/registry";
 import { AgentHomePreviewList } from "@/agentMode/ui/AgentHomeSection";
 import { RecentChatProjectBadge, RecentChatTitle } from "@/agentMode/ui/RecentChatTitle";
@@ -195,7 +196,7 @@ function RecentChatMenu({
   return (
     <DropdownMenu open={open} onOpenChange={onOpenChange} modal={false}>
       <DropdownMenuTrigger asChild>
-        <RowActionButton label="More actions" ref={trackRowBody}>
+        <RowActionButton label={t("More actions", "更多操作")} ref={trackRowBody}>
           <MoreHorizontal className="tw-size-4" />
         </RowActionButton>
       </DropdownMenuTrigger>
@@ -208,12 +209,12 @@ function RecentChatMenu({
       >
         <DropdownMenuItem onSelect={() => safeAsyncHandler(onSetChatPinned)(item.id, !pinned)}>
           {pinned ? <PinOff /> : <Pin />}
-          {pinned ? "Unpin chat" : "Pin chat"}
+          {pinned ? t("Unpin chat", "取消置顶") : t("Pin chat", "置顶聊天")}
         </DropdownMenuItem>
         {isNoteBacked && (
           <DropdownMenuItem onSelect={() => onOpenSourceFile(item.id)}>
             <ArrowUpRight />
-            Open source note
+            {t("Open source note", "打开源笔记")}
           </DropdownMenuItem>
         )}
         <DropdownMenuItem
@@ -222,11 +223,11 @@ function RecentChatMenu({
           }
         >
           <Pencil />
-          Rename
+          {t("Rename", "重命名")}
         </DropdownMenuItem>
         <DropdownMenuItem onSelect={() => safeAsyncHandler(onCopyChatLink)(item.id)}>
           <Link />
-          Copy chat link
+          {t("Copy chat link", "复制聊天链接")}
         </DropdownMenuItem>
         <ChatBookmarkMenuItem
           getBookmarkState={readBookmarkState}
@@ -238,7 +239,7 @@ function RecentChatMenu({
         {isSessionOpen && onCloseSession && (
           <DropdownMenuItem onSelect={() => safeAsyncHandler(onCloseSession)(item.id)}>
             <Power />
-            Close chat
+            {t("Close chat", "关闭聊天")}
           </DropdownMenuItem>
         )}
         <DropdownMenuItem
@@ -248,14 +249,14 @@ function RecentChatMenu({
               app,
               () => onDeleteChat(item.id),
               describeChatDelete(item.backendId ? backendRegistry[item.backendId] : undefined),
-              "Delete chat",
-              "Delete",
-              "Cancel"
+              t("Delete chat", "删除聊天"),
+              t("Delete", "删除"),
+              t("Cancel", "取消")
             ).open()
           }
         >
           <Trash2 />
-          Delete
+          {t("Delete", "删除")}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
@@ -322,7 +323,7 @@ const RecentChatRow = memo(function RecentChatRow({
               "tw-size-3.5 tw-shrink-0 tw-animate-spin tw-text-accent",
               menuOpen ? "tw-hidden" : "group-focus-within:tw-hidden group-hover:tw-hidden"
             )}
-            aria-label="Responding"
+            aria-label={t("Responding", "正在回复")}
           />
         ) : (
           <span
@@ -344,21 +345,24 @@ const RecentChatRow = memo(function RecentChatRow({
           )}
         >
           <RowActionButton
-            label={pinned ? "Unpin chat" : "Pin chat"}
+            label={pinned ? t("Unpin chat", "取消置顶") : t("Pin chat", "置顶聊天")}
             onClick={() => safeAsyncHandler(onSetChatPinned)(item.id, !pinned)}
           >
             {pinned ? <PinOff className="tw-size-3.5" /> : <Pin className="tw-size-3.5" />}
           </RowActionButton>
           {isSessionOpen && onCloseSession && (
             <RowActionButton
-              label="Close chat"
+              label={t("Close chat", "关闭聊天")}
               onClick={() => safeAsyncHandler(onCloseSession)(item.id)}
             >
               <Power className="tw-size-3" />
             </RowActionButton>
           )}
           {isNoteBacked && (
-            <RowActionButton label="Open source note" onClick={() => onOpenSourceFile(item.id)}>
+            <RowActionButton
+              label={t("Open source note", "打开源笔记")}
+              onClick={() => onOpenSourceFile(item.id)}
+            >
               <ArrowUpRight className="tw-size-4" />
             </RowActionButton>
           )}
@@ -476,7 +480,7 @@ export const GlobalRecentChatsSection = memo(function GlobalRecentChatsSection({
           <SearchBar
             value={query}
             onChange={setQuery}
-            placeholder="Search chats..."
+            placeholder={t("Search chats...", "搜索聊天…")}
             inputClassName="!tw-h-7"
           />
         </div>
@@ -484,10 +488,10 @@ export const GlobalRecentChatsSection = memo(function GlobalRecentChatsSection({
       {filteredItems.length === 0 ? (
         <div className="tw-flex tw-flex-1 tw-items-center tw-justify-center tw-px-2 tw-py-1.5 tw-text-xs tw-text-muted">
           {items.length > 0
-            ? "No matching chats"
+            ? t("No matching chats", "没有匹配的聊天")
             : variant === "project"
-              ? "No chats in this project yet"
-              : "No recent chats"}
+              ? t("No chats in this project yet", "此项目还没有聊天记录")
+              : t("No recent chats", "暂无最近聊天")}
         </div>
       ) : (
         <AgentHomePreviewList>
