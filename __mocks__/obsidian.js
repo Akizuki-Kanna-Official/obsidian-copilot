@@ -9,6 +9,7 @@ let requestUrlImpl = jest.fn().mockResolvedValue({
 });
 
 module.exports = {
+  getLanguage: jest.fn(() => "en"),
   moment: jest.requireActual("moment"),
   requestUrl: (...args) => requestUrlImpl(...args),
   __setRequestUrlImpl: (impl) => {
